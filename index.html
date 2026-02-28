@@ -2071,13 +2071,13 @@ $ /hooks
 
     <!-- Left: Video container — all three preloaded, only one visible -->
     <div class="typeless-video-container qa-video-wrap" style="border-radius: clamp(8px, 1vw, 14px); overflow: hidden; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; max-height: min(60vh, 520px);">
-      <video id="typeless-vid-natural" class="typeless-vid active" style="display:block" autoplay loop muted playsinline>
+      <video id="typeless-vid-natural" class="typeless-vid active" style="display:block" muted playsinline preload="auto">
         <source src="typeless-natural-speech.mp4" type="video/mp4">
       </video>
-      <video id="typeless-vid-ask" class="typeless-vid" style="display:none" loop muted playsinline preload="auto">
+      <video id="typeless-vid-ask" class="typeless-vid" style="display:none" muted playsinline preload="auto">
         <source src="typeless-ask-anything.mp4" type="video/mp4">
       </video>
-      <video id="typeless-vid-translate" class="typeless-vid" style="display:none" loop muted playsinline preload="auto">
+      <video id="typeless-vid-translate" class="typeless-vid" style="display:none" muted playsinline preload="auto">
         <source src="typeless-translation.mp4" type="video/mp4">
       </video>
     </div>
@@ -2897,9 +2897,18 @@ class SlidePresentation {
             // Determine current slide index from the visible entry
             const idx = this.slides.indexOf(entry.target);
             if (idx !== -1) this._updateUI(idx);
+            // Typeless slide: restart the active video on entry
+            if (entry.target.dataset.title === 'Typeless') {
+              const active = entry.target.querySelector('.typeless-vid.active');
+              if (active) { active.currentTime = 0; active.play().catch(() => {}); }
+            }
           } else {
             // Remove .visible so animations retrigger on re-entry
             entry.target.classList.remove('visible');
+            // Typeless slide: pause when leaving
+            if (entry.target.dataset.title === 'Typeless') {
+              entry.target.querySelectorAll('.typeless-vid').forEach(v => v.pause());
+            }
           }
         });
       },
