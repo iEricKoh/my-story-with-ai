@@ -1,0 +1,3075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Story with AI — Neon Circuit</title>
+
+<!-- =====================================================================
+     FONTS — Clash Display + JetBrains Mono (self-hosted subset via Google)
+     ===================================================================== -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* Clash Display approximation using system + Inter as fallback */
+@font-face {
+  font-family: 'Clash Display';
+  src: local('Clash Display'), local('ClashDisplay-Variable'), local('Inter');
+  font-weight: 100 900;
+  font-display: swap;
+}
+</style>
+
+<!-- =====================================================================
+     MASTER STYLESHEET
+     ===================================================================== -->
+<style>
+/* -----------------------------------------------------------------------
+   CSS CUSTOM PROPERTIES
+   ----------------------------------------------------------------------- */
+:root {
+  --bg-primary: #06080f;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-card-hover: rgba(255,255,255,0.06);
+  --cyan: #00ffcc;
+  --purple: #7850ff;
+  --pink: #ff50a0;
+  --white: #f0f2f8;
+  --muted: #8892a4;
+  --font-display: 'Clash Display', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --text: #f0f2f8;
+  --slide-pad-x: clamp(1.5rem, 5vw, 6rem);
+  --slide-pad-y: clamp(1.5rem, 4vh, 4rem);
+  --glow-cyan: 0 0 40px rgba(0,255,204,0.3);
+  --glow-purple: 0 0 40px rgba(120,80,255,0.3);
+}
+
+/* -----------------------------------------------------------------------
+   RESET & BASE
+   ----------------------------------------------------------------------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  background: var(--bg-primary);
+  scrollbar-width: thin;
+  scrollbar-color: var(--cyan) transparent;
+}
+
+body {
+  font-family: var(--font-display);
+  color: var(--white);
+  background: var(--bg-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* -----------------------------------------------------------------------
+   ANIMATED GRID BACKGROUND
+   ----------------------------------------------------------------------- */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.grid-bg::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image:
+    linear-gradient(rgba(0,255,204,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,204,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridMove 25s linear infinite;
+}
+
+@keyframes gridMove {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(60px, 60px) rotate(0.5deg); }
+}
+
+/* Glowing orbs */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+}
+.orb--cyan   { width: 500px; height: 500px; background: var(--cyan);   top: -10%; left: -5%;  animation: orbFloat1 20s ease-in-out infinite; }
+.orb--purple { width: 600px; height: 600px; background: var(--purple); bottom: -15%; right: -10%; animation: orbFloat2 25s ease-in-out infinite; }
+.orb--pink   { width: 400px; height: 400px; background: var(--pink);   top: 40%; right: 20%; animation: orbFloat3 22s ease-in-out infinite; }
+
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0); }
+  33%      { transform: translate(80px, 60px); }
+  66%      { transform: translate(-40px, 80px); }
+}
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0); }
+  33%      { transform: translate(-60px, -80px); }
+  66%      { transform: translate(60px, -40px); }
+}
+@keyframes orbFloat3 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-80px, 60px); }
+}
+
+/* Floating particles (CSS-only) */
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--cyan);
+  opacity: 0;
+  animation: particleRise linear infinite;
+}
+.particle:nth-child(odd)  { background: var(--purple); }
+.particle:nth-child(3n)   { background: var(--pink); width: 2px; height: 2px; }
+
+@keyframes particleRise {
+  0%   { opacity: 0; transform: translateY(100vh) scale(0); }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+}
+
+/* -----------------------------------------------------------------------
+   PROGRESS BAR
+   ----------------------------------------------------------------------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink));
+  z-index: 1000;
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 12px var(--cyan);
+}
+
+/* -----------------------------------------------------------------------
+   NAVIGATION DOTS (right side)
+   ----------------------------------------------------------------------- */
+.nav-dots {
+  position: fixed;
+  right: clamp(0.75rem, 2vw, 1.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.nav-dot:hover {
+  background: rgba(0,255,204,0.4);
+  transform: scale(1.3);
+}
+.nav-dot.active {
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+  transform: scale(1.2);
+}
+.nav-dot .tooltip {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(6,8,15,0.95);
+  border: 1px solid rgba(0,255,204,0.2);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  font-family: var(--font-mono);
+  color: var(--cyan);
+}
+.nav-dot:hover .tooltip { opacity: 1; }
+
+/* -----------------------------------------------------------------------
+   SLIDE COUNTER
+   ----------------------------------------------------------------------- */
+.slide-counter {
+  position: fixed;
+  bottom: clamp(0.75rem, 2vh, 1.5rem);
+  right: clamp(0.75rem, 2vw, 1.5rem);
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
+  color: var(--muted);
+  z-index: 999;
+  letter-spacing: 0.05em;
+}
+.slide-counter .current {
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+/* -----------------------------------------------------------------------
+   SLIDE BASE
+   ----------------------------------------------------------------------- */
+.slide {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--slide-pad-y) var(--slide-pad-x);
+  z-index: 1;
+}
+
+/* -----------------------------------------------------------------------
+   REVEAL ANIMATION SYSTEM
+   ----------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide.visible .reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children */
+.slide.visible .reveal:nth-child(1)  { transition-delay: 0.05s; }
+.slide.visible .reveal:nth-child(2)  { transition-delay: 0.15s; }
+.slide.visible .reveal:nth-child(3)  { transition-delay: 0.25s; }
+.slide.visible .reveal:nth-child(4)  { transition-delay: 0.35s; }
+.slide.visible .reveal:nth-child(5)  { transition-delay: 0.45s; }
+.slide.visible .reveal:nth-child(6)  { transition-delay: 0.55s; }
+.slide.visible .reveal:nth-child(7)  { transition-delay: 0.65s; }
+.slide.visible .reveal:nth-child(8)  { transition-delay: 0.75s; }
+.slide.visible .reveal:nth-child(9)  { transition-delay: 0.85s; }
+.slide.visible .reveal:nth-child(10) { transition-delay: 0.95s; }
+
+/* Reveal from left */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(calc(-1 * clamp(20px, 4vw, 60px)));
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
+
+/* Reveal from right */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(clamp(20px, 4vw, 60px));
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide.visible .reveal-right { opacity: 1; transform: translateX(0); }
+
+/* Scale-in */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slide.visible .reveal-scale { opacity: 1; transform: scale(1); }
+
+/* -----------------------------------------------------------------------
+   TYPOGRAPHY
+   ----------------------------------------------------------------------- */
+.slide-label {
+  font-family: var(--font-mono);
+  font-size: clamp(0.65rem, 1vw, 0.85rem);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--cyan);
+  margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
+}
+
+.slide-title {
+  font-size: clamp(1.8rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
+  background: linear-gradient(135deg, var(--white) 0%, var(--cyan) 50%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.slide-title--large {
+  font-size: clamp(2.2rem, 7vw, 5.5rem);
+}
+
+.slide-subtitle {
+  font-size: clamp(0.95rem, 2vw, 1.4rem);
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 1100px;
+  text-wrap: pretty;
+}
+
+.slide-body {
+  font-size: clamp(0.85rem, 1.5vw, 1.15rem);
+  color: rgba(240,242,248,0.8);
+  line-height: 1.7;
+  max-width: 1100px;
+  text-wrap: pretty;
+}
+
+.accent {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.highlight {
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* -----------------------------------------------------------------------
+   SPEAKER BYLINE (title slide)
+   ----------------------------------------------------------------------- */
+.speaker-byline {
+  position: absolute;
+  bottom: var(--slide-pad-y);
+  right: var(--slide-pad-x);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.4rem, 0.8vw, 0.6rem);
+  text-decoration: none;
+  color: var(--muted);
+  transition: color 0.3s ease;
+}
+.speaker-byline:hover {
+  color: rgba(136,146,164,0.9);
+}
+.speaker-byline__handle {
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 1vw, 0.88rem);
+  letter-spacing: 0.02em;
+}
+.speaker-byline__slack {
+  opacity: 0.4;
+  transition: opacity 0.3s ease, color 0.3s ease;
+  display: inline-flex;
+}
+.speaker-byline:hover .speaker-byline__slack {
+  opacity: 0.8;
+  color: var(--cyan);
+}
+
+/* -----------------------------------------------------------------------
+   CARDS
+   ----------------------------------------------------------------------- */
+.card-grid {
+  display: grid;
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
+}
+.card-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid--5 { grid-template-columns: repeat(5, 1fr); }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: clamp(8px, 1vw, 14px);
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0,255,204,0.15), transparent 50%, rgba(120,80,255,0.15));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-cyan);
+}
+
+.card-icon {
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  margin-bottom: clamp(0.3rem, 1vh, 0.75rem);
+}
+
+.card-title {
+  font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+  font-weight: 700;
+  margin-bottom: clamp(0.2rem, 0.5vh, 0.4rem);
+  color: var(--white);
+}
+
+.card-text {
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* -----------------------------------------------------------------------
+   TWO-COLUMN LAYOUT
+   ----------------------------------------------------------------------- */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
+}
+
+.col-header {
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  font-weight: 700;
+  margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.col-header .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.col-header .dot--cyan   { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.col-header .dot--purple { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+
+/* -----------------------------------------------------------------------
+   VERTICAL TIMELINE (Slide 18 — Before vs After)
+   ----------------------------------------------------------------------- */
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.2rem, 0.5vh, 0.4rem);
+  max-width: 1100px;
+  width: 100%;
+  margin-top: clamp(0.5rem, 1.5vh, 1rem);
+}
+
+/* Vertical line down the center — grows downward */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--cyan), var(--purple));
+  opacity: 0.3;
+  transform: translateX(-50%);
+  transform-origin: top;
+  scale: 1 0;
+}
+.slide.visible .timeline::before {
+  scale: 1 1;
+  transition: scale 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+}
+
+/* Column headers row */
+.timeline-header {
+  display: grid;
+  grid-template-columns: 1fr clamp(5rem, 8vw, 7rem) 1fr;
+  gap: 0;
+  align-items: center;
+  margin-bottom: clamp(0.3rem, 1vh, 0.6rem);
+}
+
+.timeline-header-label {
+  font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0;
+}
+.slide.visible .timeline-header-label {
+  opacity: 1;
+  transition: opacity 0.6s ease 0.2s;
+}
+
+.timeline-header-label--before {
+  text-align: right;
+  padding-right: clamp(1.2rem, 3vw, 2.5rem);
+  color: var(--muted);
+}
+
+.timeline-header-label--after {
+  text-align: left;
+  padding-left: clamp(1.2rem, 3vw, 2.5rem);
+  color: var(--cyan);
+}
+
+.timeline-header-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+/* Each timeline row */
+.timeline-row {
+  display: grid;
+  grid-template-columns: 1fr clamp(5rem, 8vw, 7rem) 1fr;
+  gap: 0;
+  align-items: center;
+  min-height: clamp(3rem, 7vh, 4.2rem);
+}
+
+/* Center node: number + stage label */
+.timeline-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+  z-index: 1;
+  position: relative;
+}
+
+.timeline-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(1.8rem, 2.8vw, 2.2rem);
+  height: clamp(1.8rem, 2.8vw, 2.2rem);
+  border-radius: 50%;
+  background: var(--cyan);
+  color: var(--bg-primary);
+  font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+  font-weight: 700;
+  flex-shrink: 0;
+  scale: 0;
+  box-shadow: 0 0 0px rgba(0,255,204,0);
+  position: relative;
+}
+.slide.visible .timeline-num {
+  scale: 1;
+  box-shadow: 0 0 14px rgba(0,255,204,0.5);
+  transition: scale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.4s ease;
+}
+
+/* Pulse ring on the node */
+.timeline-num::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--cyan);
+  opacity: 0;
+  scale: 0.8;
+}
+.slide.visible .timeline-num::after {
+  animation: nodePulse 0.8s ease-out forwards;
+}
+@keyframes nodePulse {
+  0%   { scale: 0.8; opacity: 0.8; }
+  100% { scale: 1.6; opacity: 0; }
+}
+
+.timeline-stage-label {
+  font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+  color: var(--muted);
+  white-space: nowrap;
+  font-weight: 600;
+  opacity: 0;
+}
+.slide.visible .timeline-stage-label {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+/* Before side (left) — appears in white, then dims + strikethrough fades in */
+.timeline-before {
+  text-align: right;
+  padding-right: clamp(1.2rem, 3vw, 2.5rem);
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  color: var(--white);
+  line-height: 1.45;
+  opacity: 0;
+  text-decoration: line-through;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1.5px;
+}
+.slide.visible .timeline-before {
+  opacity: 1;
+  color: rgba(136,146,164,0.55);
+  text-decoration-color: rgba(255,80,160,0.45);
+  transition: opacity 0.4s ease,
+              color 0.6s ease 0.3s,
+              text-decoration-color 0.6s ease 0.35s;
+}
+
+/* After side (right) — scales up from nothing with glow burst */
+/* After side (right) — deblurs + glow burst */
+.timeline-after {
+  text-align: left;
+  padding-left: clamp(1.2rem, 3vw, 2.5rem);
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  color: var(--white);
+  line-height: 1.45;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateX(10px);
+}
+.slide.visible .timeline-after {
+  opacity: 1;
+  filter: blur(0px);
+  transform: translateX(0);
+  animation: afterGlow 1.5s ease forwards;
+  transition: opacity 0.5s ease,
+              filter 0.5s ease,
+              transform 0.4s ease;
+}
+@keyframes afterGlow {
+  0%   { text-shadow: 0 0 25px rgba(0,255,204,0.8), 0 0 50px rgba(0,255,204,0.3); }
+  50%  { text-shadow: 0 0 25px rgba(0,255,204,0.8), 0 0 50px rgba(0,255,204,0.3); }
+  100% { text-shadow: 0 0 0px rgba(0,255,204,0); }
+}
+
+/* Stagger: node → before appears + dims → after bursts in */
+/* Row 1 (nth-child 2 because header is child 1) */
+.slide.visible .timeline-row:nth-child(2) .timeline-num   { transition-delay: 0.3s; }
+.slide.visible .timeline-row:nth-child(2) .timeline-num::after { animation-delay: 0.3s; }
+.slide.visible .timeline-row:nth-child(2) .timeline-stage-label { transition-delay: 0.4s; }
+.slide.visible .timeline-row:nth-child(2) .timeline-before { transition-delay: 0.4s; }
+.slide.visible .timeline-row:nth-child(2) .timeline-after  { transition-delay: 0.85s; animation-delay: 0.85s; }
+
+/* Row 2 */
+.slide.visible .timeline-row:nth-child(3) .timeline-num   { transition-delay: 0.7s; }
+.slide.visible .timeline-row:nth-child(3) .timeline-num::after { animation-delay: 0.7s; }
+.slide.visible .timeline-row:nth-child(3) .timeline-stage-label { transition-delay: 0.8s; }
+.slide.visible .timeline-row:nth-child(3) .timeline-before { transition-delay: 0.8s; }
+.slide.visible .timeline-row:nth-child(3) .timeline-after  { transition-delay: 1.25s; animation-delay: 1.25s; }
+
+/* Row 3 */
+.slide.visible .timeline-row:nth-child(4) .timeline-num   { transition-delay: 1.1s; }
+.slide.visible .timeline-row:nth-child(4) .timeline-num::after { animation-delay: 1.1s; }
+.slide.visible .timeline-row:nth-child(4) .timeline-stage-label { transition-delay: 1.2s; }
+.slide.visible .timeline-row:nth-child(4) .timeline-before { transition-delay: 1.2s; }
+.slide.visible .timeline-row:nth-child(4) .timeline-after  { transition-delay: 1.65s; animation-delay: 1.65s; }
+
+/* Row 4 */
+.slide.visible .timeline-row:nth-child(5) .timeline-num   { transition-delay: 1.5s; }
+.slide.visible .timeline-row:nth-child(5) .timeline-num::after { animation-delay: 1.5s; }
+.slide.visible .timeline-row:nth-child(5) .timeline-stage-label { transition-delay: 1.6s; }
+.slide.visible .timeline-row:nth-child(5) .timeline-before { transition-delay: 1.6s; }
+.slide.visible .timeline-row:nth-child(5) .timeline-after  { transition-delay: 2.05s; animation-delay: 2.05s; }
+
+/* Row 5 */
+.slide.visible .timeline-row:nth-child(6) .timeline-num   { transition-delay: 1.9s; }
+.slide.visible .timeline-row:nth-child(6) .timeline-num::after { animation-delay: 1.9s; }
+.slide.visible .timeline-row:nth-child(6) .timeline-stage-label { transition-delay: 2.0s; }
+.slide.visible .timeline-row:nth-child(6) .timeline-before { transition-delay: 2.0s; }
+.slide.visible .timeline-row:nth-child(6) .timeline-after  { transition-delay: 2.45s; animation-delay: 2.45s; }
+
+/* Row 6 */
+.slide.visible .timeline-row:nth-child(7) .timeline-num   { transition-delay: 2.3s; }
+.slide.visible .timeline-row:nth-child(7) .timeline-num::after { animation-delay: 2.3s; }
+.slide.visible .timeline-row:nth-child(7) .timeline-stage-label { transition-delay: 2.4s; }
+.slide.visible .timeline-row:nth-child(7) .timeline-before { transition-delay: 2.4s; }
+.slide.visible .timeline-row:nth-child(7) .timeline-after  { transition-delay: 2.85s; animation-delay: 2.85s; }
+
+.timeline-skill {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  color: var(--cyan);
+  background: rgba(0,255,204,0.1);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  border: 1px solid rgba(0,255,204,0.15);
+}
+
+/* -----------------------------------------------------------------------
+   TYPELESS VIDEO TABS
+   ----------------------------------------------------------------------- */
+.typeless-tab {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(0.5rem, 1vw, 0.8rem);
+  padding: clamp(0.6rem, 1.2vh, 0.9rem) clamp(0.8rem, 1.5vw, 1.2rem);
+  border-radius: clamp(8px, 1vw, 12px);
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  outline: none;
+  width: 100%;
+  position: relative;
+  z-index: 5;
+  color: inherit;
+  font: inherit;
+}
+.typeless-tab:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.15);
+}
+.typeless-tab.active {
+  background: rgba(0,255,204,0.04);
+  border-color: rgba(0,255,204,0.18);
+  box-shadow: 0 0 18px rgba(0,255,204,0.06);
+}
+.typeless-tab-icon {
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  flex-shrink: 0;
+  margin-top: 0.1em;
+}
+.typeless-tab-body {
+  min-width: 0;
+}
+.typeless-tab-title {
+  font-family: var(--font-sans);
+  font-size: clamp(0.8rem, 1.15vw, 0.95rem);
+  font-weight: 600;
+  color: rgba(240,242,248,0.9);
+  margin: 0 0 0.15em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.typeless-tab-desc {
+  font-family: var(--font-sans);
+  font-size: clamp(0.65rem, 0.9vw, 0.78rem);
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.4;
+}
+.typeless-tab-key {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.85vw, 0.72rem);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  color: rgba(240,242,248,0.4);
+}
+.typeless-tab.active .typeless-tab-key {
+  background: rgba(0,255,204,0.08);
+  border-color: rgba(0,255,204,0.2);
+  color: var(--cyan);
+}
+.typeless-video-container {
+  position: relative;
+  background: #0d1117;
+}
+.typeless-vid {
+  display: none;
+  width: 100%;
+  max-height: min(60vh, 520px);
+  object-fit: contain;
+  background: #0d1117;
+}
+.typeless-vid.active {
+  display: block;
+}
+
+/* -----------------------------------------------------------------------
+   BULLET LIST
+   ----------------------------------------------------------------------- */
+.bullet-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 1vh, 0.75rem);
+}
+.bullet-list li {
+  font-size: clamp(0.8rem, 1.3vw, 1rem);
+  color: rgba(240,242,248,0.8);
+  padding-left: 1.5em;
+  position: relative;
+  line-height: 1.5;
+}
+.bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan);
+}
+
+/* -----------------------------------------------------------------------
+   CODE / FILE-TREE
+   ----------------------------------------------------------------------- */
+.code-block {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: clamp(6px, 1vw, 12px);
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+  line-height: 1.7;
+  overflow-x: auto;
+  color: var(--muted);
+  margin-top: clamp(0.5rem, 1.5vh, 1rem);
+}
+.code-block .dir  { color: var(--cyan); }
+.code-block .file { color: var(--white); }
+.code-block .comment { color: rgba(136,146,164,0.6); }
+
+/* -----------------------------------------------------------------------
+   FLOW / STEPS
+   ----------------------------------------------------------------------- */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 1.25rem);
+  flex-wrap: wrap;
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
+}
+.flow-step {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: clamp(6px, 1vw, 10px);
+  padding: clamp(0.5rem, 1.2vw, 1rem) clamp(0.75rem, 1.8vw, 1.5rem);
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+  text-align: center;
+  position: relative;
+  transition: all 0.3s;
+}
+.flow-step:hover { border-color: rgba(0,255,204,0.3); }
+.flow-arrow {
+  color: var(--cyan);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  opacity: 0.5;
+}
+
+/* -----------------------------------------------------------------------
+   TIMELINE — JOURNEY (Slide 4)
+   ----------------------------------------------------------------------- */
+.timeline-journey {
+  position: relative;
+  margin-top: clamp(1rem, 3vh, 2rem);
+  padding-left: clamp(1.5rem, 3vw, 3rem);
+}
+.timeline-journey::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--cyan), var(--purple), var(--pink));
+  opacity: 0.4;
+}
+.timeline-journey .timeline-item {
+  position: relative;
+  padding-bottom: clamp(0.75rem, 2vh, 1.5rem);
+  padding-left: clamp(0.5rem, 1.5vw, 1rem);
+}
+.timeline-journey .timeline-item::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * clamp(1.5rem, 3vw, 3rem) + 4px);
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  border: 2px solid var(--bg-primary);
+  z-index: 1;
+  transition: all 0.3s;
+}
+.timeline-journey .timeline-item:hover::before {
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan);
+}
+.timeline-journey .timeline-item.hero::before {
+  background: var(--cyan);
+  box-shadow: 0 0 15px var(--cyan);
+  width: 14px;
+  height: 14px;
+  left: calc(-1 * clamp(1.5rem, 3vw, 3rem) + 2px);
+}
+.timeline-title {
+  font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+  font-weight: 700;
+  color: var(--white);
+}
+.timeline-item.hero .timeline-title {
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.timeline-desc {
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+/* -----------------------------------------------------------------------
+   NUMBERED STEPS
+   ----------------------------------------------------------------------- */
+.numbered-steps {
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.2vh, 0.9rem);
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
+}
+.numbered-step {
+  counter-increment: step;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(0.5rem, 1vw, 1rem);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  color: rgba(240,242,248,0.8);
+  line-height: 1.5;
+}
+.numbered-step::before {
+  content: counter(step);
+  flex-shrink: 0;
+  width: clamp(1.5rem, 2.5vw, 2rem);
+  height: clamp(1.5rem, 2.5vw, 2rem);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.65rem, 1vw, 0.8rem);
+  font-weight: 700;
+  color: var(--bg-primary);
+  font-family: var(--font-mono);
+}
+
+/* -----------------------------------------------------------------------
+   EQUATION / CONCEPT DIAGRAM
+   ----------------------------------------------------------------------- */
+.concept-eq {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  margin-top: clamp(1rem, 3vh, 2rem);
+  flex-wrap: wrap;
+}
+.concept-box {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: clamp(8px, 1vw, 14px);
+  padding: clamp(0.75rem, 2vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  font-weight: 700;
+  text-align: center;
+}
+.concept-box--glow {
+  border-color: rgba(0,255,204,0.3);
+  box-shadow: var(--glow-cyan);
+}
+.concept-op {
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  color: var(--cyan);
+  font-weight: 300;
+}
+
+/* -----------------------------------------------------------------------
+   HERO CARD (Slide 8)
+   ----------------------------------------------------------------------- */
+.hero-card {
+  background: linear-gradient(135deg, rgba(0,255,204,0.05), rgba(120,80,255,0.05));
+  border: 1px solid rgba(0,255,204,0.15);
+  border-radius: clamp(10px, 1.5vw, 20px);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--glow-cyan), var(--glow-purple);
+}
+.hero-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,255,204,0.03), transparent);
+  animation: heroShimmer 6s ease-in-out infinite;
+}
+@keyframes heroShimmer {
+  0%, 100% { transform: translateX(-50%); }
+  50%      { transform: translateX(50%); }
+}
+
+/* -----------------------------------------------------------------------
+   WORKFLOW STEPS (Slide 15)
+   ----------------------------------------------------------------------- */
+.workflow {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 1vh, 0.7rem);
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
+}
+.wf-step {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: clamp(6px, 0.8vw, 10px);
+  padding: clamp(0.5rem, 1.2vw, 1rem) clamp(0.75rem, 1.5vw, 1.25rem);
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+  color: rgba(240,242,248,0.8);
+  transition: all 0.3s;
+}
+.wf-step:hover {
+  border-color: rgba(0,255,204,0.2);
+  background: var(--bg-card-hover);
+}
+.wf-num {
+  flex-shrink: 0;
+  width: clamp(1.3rem, 2vw, 1.8rem);
+  height: clamp(1.3rem, 2vw, 1.8rem);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+  font-weight: 700;
+  color: var(--bg-primary);
+  font-family: var(--font-mono);
+}
+
+/* -----------------------------------------------------------------------
+   META SLIDE GLOW BORDER
+   ----------------------------------------------------------------------- */
+.meta-border {
+  position: relative;
+  border-radius: clamp(10px, 1.5vw, 20px);
+  padding: clamp(1.5rem, 3vw, 3rem);
+  background: var(--bg-card);
+  overflow: hidden;
+}
+.meta-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from 0deg, var(--cyan), var(--purple), var(--pink), var(--cyan));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderSpin 4s linear infinite;
+}
+@keyframes borderSpin {
+  to { filter: hue-rotate(360deg); }
+}
+
+/* -----------------------------------------------------------------------
+   Q&A SLIDE
+   ----------------------------------------------------------------------- */
+.qa-glyph {
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  animation: glyphPulse 3s ease-in-out infinite;
+}
+@keyframes glyphPulse {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.3); }
+}
+
+/* -----------------------------------------------------------------------
+   RESPONSIVE HEIGHT BREAKPOINTS
+   ----------------------------------------------------------------------- */
+@media (max-height: 700px) {
+  .slide-title       { font-size: clamp(1.5rem, 4.5vw, 3rem); margin-bottom: clamp(0.3rem, 1vh, 0.75rem); }
+  .slide-title--large { font-size: clamp(1.8rem, 6vw, 4rem); }
+  .slide-subtitle    { font-size: clamp(0.85rem, 1.5vw, 1.1rem); }
+  .slide-body        { font-size: clamp(0.78rem, 1.2vw, 0.95rem); }
+  .card              { padding: clamp(0.5rem, 1.5vw, 1rem); }
+  .card-title        { font-size: clamp(0.75rem, 1.1vw, 0.9rem); }
+  .card-text         { font-size: clamp(0.65rem, 0.9vw, 0.78rem); }
+  .bullet-list li    { font-size: clamp(0.72rem, 1.1vw, 0.9rem); }
+  .timeline-item     { padding-bottom: clamp(0.5rem, 1.2vh, 0.9rem); }
+}
+
+@media (max-height: 600px) {
+  .slide-title       { font-size: clamp(1.3rem, 4vw, 2.5rem); margin-bottom: clamp(0.2rem, 0.8vh, 0.5rem); }
+  .slide-title--large { font-size: clamp(1.5rem, 5vw, 3.5rem); }
+  .slide-subtitle    { font-size: clamp(0.78rem, 1.3vw, 1rem); }
+  .slide-body        { font-size: clamp(0.72rem, 1.1vw, 0.88rem); }
+  .slide-label       { font-size: clamp(0.6rem, 0.9vw, 0.72rem); margin-bottom: clamp(0.3rem, 0.8vh, 0.5rem); }
+  .bullet-list       { gap: clamp(0.25rem, 0.7vh, 0.5rem); }
+  .numbered-steps    { gap: clamp(0.3rem, 0.8vh, 0.5rem); }
+  .timeline-item     { padding-bottom: clamp(0.3rem, 0.8vh, 0.6rem); }
+  .card-grid         { gap: clamp(0.4rem, 0.8vw, 0.75rem); }
+  .nav-dots          { gap: 5px; }
+  .nav-dot           { width: 7px; height: 7px; }
+}
+
+@media (max-height: 500px) {
+  .slide-title       { font-size: clamp(1.1rem, 3.5vw, 2rem); }
+  .slide-title--large { font-size: clamp(1.3rem, 4.5vw, 3rem); }
+  .slide-subtitle    { font-size: clamp(0.72rem, 1.2vw, 0.9rem); }
+  .slide-body        { font-size: clamp(0.68rem, 1vw, 0.82rem); }
+  .slide             { padding: clamp(0.75rem, 2vh, 1.5rem) var(--slide-pad-x); }
+  .card-grid--5      { grid-template-columns: repeat(5, 1fr); gap: clamp(0.3rem, 0.6vw, 0.5rem); }
+}
+
+/* Narrow screens */
+@media (max-width: 768px) {
+  .card-grid--3 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid--5 { grid-template-columns: repeat(3, 1fr); }
+  .two-col      { grid-template-columns: 1fr; gap: clamp(1rem, 3vw, 1.5rem); }
+  .nav-dots     { display: none; }
+
+  /* Scale down background orbs to avoid overflow */
+  .orb--cyan   { width: 250px !important; height: 250px !important; }
+  .orb--purple { width: 300px !important; height: 300px !important; }
+  .orb--pink   { width: 200px !important; height: 200px !important; }
+
+  /* -----------------------------------------------------------------------
+     MOBILE LAYOUT — Content-aware stacking for two-column slides
+     ----------------------------------------------------------------------- */
+
+  /* Stack all two-column grids to single column */
+  .mobile-stack {
+    grid-template-columns: 1fr !important;
+    max-height: none !important;
+    gap: clamp(0.75rem, 2vh, 1.25rem) !important;
+  }
+
+  /* Reverse child order when secondary content should appear first
+     (e.g. Figma MCP Tip: instructional steps before video) */
+  .mobile-stack.mobile-reverse > *:first-child { order: 2; }
+  .mobile-stack.mobile-reverse > *:last-child  { order: 1; }
+
+  /* Videos: full width, capped height so content below remains visible */
+  .mobile-stack video {
+    max-height: min(40vh, 280px) !important;
+    width: 100% !important;
+  }
+  .mobile-stack .typeless-video-container,
+  .mobile-stack .qa-video-wrap {
+    max-height: min(40vh, 280px) !important;
+  }
+
+  /* Hide decorative ghost terminal text (Slide 6 — purely ornamental) */
+  [data-title="Why Claude Code (for me)"] [style*="position: absolute"] {
+    display: none !important;
+  }
+
+  /* Typeless tabs: 44px minimum touch targets */
+  .typeless-tab {
+    min-height: 44px;
+    padding: clamp(0.8rem, 2vh, 1.2rem) clamp(1rem, 3vw, 1.5rem) !important;
+  }
+  .typeless-tab .typeless-tab-title {
+    font-size: clamp(0.85rem, 2vw, 1rem) !important;
+  }
+
+  /* Touch-friendly speaker byline links */
+  .speaker-byline a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* -----------------------------------------------------------------------
+     BEFORE VS AFTER TIMELINE — Card-based mobile layout
+     Each row becomes a stacked card: stage header → before → after
+     ----------------------------------------------------------------------- */
+  .timeline-header { display: none !important; }
+  .timeline::before { display: none !important; }
+
+  .timeline-row {
+    grid-template-columns: 1fr !important;
+    gap: clamp(0.15rem, 0.4vh, 0.3rem) !important;
+    min-height: auto !important;
+    background: rgba(255,255,255,0.03);
+    border-radius: clamp(6px, 1vw, 10px);
+    padding: clamp(0.5rem, 1.5vw, 0.8rem) clamp(0.6rem, 2vw, 1rem);
+    margin-bottom: clamp(0.2rem, 0.5vh, 0.35rem);
+    border-left: 3px solid var(--cyan);
+  }
+
+  /* Stage node becomes inline card header */
+  .timeline-node {
+    flex-direction: row !important;
+    justify-content: flex-start;
+    gap: clamp(0.3rem, 1vw, 0.5rem);
+    margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);
+  }
+  .timeline-num {
+    width: clamp(1.4rem, 5vw, 1.7rem) !important;
+    height: clamp(1.4rem, 5vw, 1.7rem) !important;
+    font-size: clamp(0.65rem, 2vw, 0.8rem) !important;
+  }
+  .timeline-stage-label {
+    font-size: clamp(0.7rem, 2vw, 0.85rem) !important;
+    color: var(--white) !important;
+  }
+
+  /* Reorder: node first, then before, then after */
+  .timeline-node  { order: 1; }
+  .timeline-before { order: 2; }
+  .timeline-after  { order: 3; }
+
+  /* Left-align both sides, remove old padding */
+  .timeline-before {
+    text-align: left !important;
+    padding: 0 !important;
+    font-size: clamp(0.72rem, 2vw, 0.88rem) !important;
+  }
+  .timeline-after {
+    text-align: left !important;
+    padding: 0 !important;
+    font-size: clamp(0.72rem, 2vw, 0.88rem) !important;
+  }
+
+  /* Add "Before:" / "After:" labels via pseudo-elements for clarity */
+  .timeline-before::before {
+    content: 'Before: ';
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.85em;
+    text-decoration: none;
+    display: inline;
+  }
+  .timeline-after::before {
+    content: 'After: ';
+    color: var(--cyan);
+    font-weight: 600;
+    font-size: 0.85em;
+  }
+
+  /* Remove strikethrough on mobile — the "Before:" label makes it clear */
+  .timeline-before {
+    text-decoration: none !important;
+  }
+  .slide.visible .timeline-before {
+    color: var(--muted) !important;
+    text-decoration-color: transparent !important;
+  }
+
+  /* Pipeline parallel branches — stack vertically */
+  .pipeline-parallel {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* QA phase descriptions — hide to save vertical space */
+  .qa-phase-desc { display: none !important; }
+  .qa-phase-connector { height: clamp(8px, 1.5vh, 14px) !important; }
+}
+
+@media (max-width: 480px) {
+  .card-grid--2 { grid-template-columns: 1fr; }
+  .card-grid--3 { grid-template-columns: 1fr; }
+  .card-grid--5 { grid-template-columns: repeat(2, 1fr); }
+  .flow          { flex-direction: column; align-items: stretch; }
+  .flow-arrow    { transform: rotate(90deg); align-self: center; }
+
+  /* Tighter slide padding on small phones */
+  .slide { padding: clamp(0.75rem, 3vw, 1.25rem) clamp(0.75rem, 3vw, 1.25rem) !important; }
+
+  /* Takeaway numbers — smaller */
+  .mobile-stack .takeaway-num {
+    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+  }
+
+  /* Videos even smaller on phones */
+  .mobile-stack video {
+    max-height: min(35vh, 220px) !important;
+  }
+  .mobile-stack .typeless-video-container,
+  .mobile-stack .qa-video-wrap {
+    max-height: min(35vh, 220px) !important;
+  }
+
+  /* Pipeline footnote — hide on small screens */
+  .pipeline-footnote { display: none !important; }
+}
+
+/* -----------------------------------------------------------------------
+   REDUCED MOTION
+   ----------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.15s !important;
+  }
+  html { scroll-behavior: auto; }
+  .reveal, .reveal-left, .reveal-right, .reveal-scale {
+    opacity: 1;
+    transform: none;
+  }
+  .pipeline-node { background: var(--pipeline-active) !important; opacity: 1 !important; }
+  .pipeline-spinner { display: none !important; }
+  .pipeline-check { opacity: 1 !important; transform: scale(1) !important; }
+  .pipeline-connector { opacity: 1 !important; transform: scaleY(1) !important; }
+  .pipeline-parallel { opacity: 1 !important; }
+}
+
+/* -----------------------------------------------------------------------
+   PIPELINE ANIMATION — Neon Circuit
+   ----------------------------------------------------------------------- */
+
+/* — Keyframes — */
+@keyframes pipelineStepExecute {
+  0%   { background: rgba(0,255,204,0.06); border-color: rgba(0,255,204,0.15); box-shadow: none; }
+  15%  { background: rgba(0,255,204,0.15); border-color: rgba(0,255,204,0.6); box-shadow: 0 0 12px rgba(0,255,204,0.3); }
+  70%  { background: rgba(0,255,204,0.25); border-color: var(--cyan); box-shadow: 0 0 18px rgba(0,255,204,0.4); }
+  100% { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 8px rgba(0,255,204,0.2); }
+}
+@keyframes pipelineStepExecutePurple {
+  0%   { background: rgba(168,85,247,0.06); border-color: rgba(168,85,247,0.15); box-shadow: none; }
+  15%  { background: rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.6); box-shadow: 0 0 12px rgba(168,85,247,0.3); }
+  70%  { background: rgba(168,85,247,0.25); border-color: #a855f7; box-shadow: 0 0 18px rgba(168,85,247,0.4); }
+  100% { background: #a855f7; border-color: #a855f7; box-shadow: 0 0 8px rgba(168,85,247,0.2); }
+}
+@keyframes pipelineStepExecuteBlue {
+  0%   { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.15); box-shadow: none; }
+  15%  { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.6); box-shadow: 0 0 12px rgba(59,130,246,0.3); }
+  70%  { background: rgba(59,130,246,0.25); border-color: #3b82f6; box-shadow: 0 0 18px rgba(59,130,246,0.4); }
+  100% { background: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.2); }
+}
+@keyframes pipelineSpinnerSpin {
+  0%   { opacity: 1; transform: rotate(0deg); }
+  90%  { opacity: 1; transform: rotate(1080deg); }
+  100% { opacity: 0; transform: rotate(1080deg); }
+}
+@keyframes pipelineCheckAppear {
+  0%   { opacity: 0; transform: scale(0); }
+  65%  { opacity: 0; transform: scale(0); }
+  80%  { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes pipelineConnectorGrow {
+  0%   { transform: scaleY(0); opacity: 0.3; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+@keyframes pipelineForkBranch {
+  0%   { transform: scaleX(0) scaleY(0); opacity: 0; }
+  100% { transform: scaleX(1) scaleY(1); opacity: 1; }
+}
+@keyframes pipelinePulseGlow {
+  0%   { opacity: 0.5; }
+  50%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* — Pipeline container — */
+.pipeline {
+  --pipeline-active: var(--cyan);
+  --pipeline-scout: #a855f7;
+  --pipeline-architect: #3b82f6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding: clamp(0.3rem, 0.8vh, 0.5rem) 0;
+}
+
+/* — Step row — */
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.4rem, 0.8vw, 0.6rem);
+  position: relative;
+}
+
+/* — Node circle — */
+.pipeline-node {
+  width: clamp(18px, 2vw, 24px);
+  height: clamp(18px, 2vw, 24px);
+  border-radius: 50%;
+  background: rgba(0,255,204,0.06);
+  border: 1.5px solid rgba(0,255,204,0.15);
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
+.slide.visible .pipeline-node {
+  animation-play-state: running;
+}
+
+/* Per-step timing */
+.slide.visible .pipeline-step[data-step="0"] .pipeline-node {
+  animation: pipelineStepExecute 1.4s 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.slide.visible .pipeline-step[data-step="1"] .pipeline-node {
+  animation: pipelineStepExecute 1.4s 1.5s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.slide.visible .pipeline-step[data-step="2s"] .pipeline-node {
+  animation: pipelineStepExecutePurple 1.2s 3.1s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.slide.visible .pipeline-step[data-step="2a"] .pipeline-node {
+  animation: pipelineStepExecuteBlue 1.2s 3.1s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.slide.visible .pipeline-step[data-step="3"] .pipeline-node {
+  animation: pipelineStepExecute 1.4s 4.7s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.slide.visible .pipeline-step[data-step="4"] .pipeline-node {
+  animation: pipelineStepExecute 1.4s 5.9s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* Parallel scout/architect nodes initial state */
+.pipeline-step[data-step="2s"] .pipeline-node {
+  background: rgba(168,85,247,0.06);
+  border-color: rgba(168,85,247,0.15);
+}
+.pipeline-step[data-step="2a"] .pipeline-node {
+  background: rgba(59,130,246,0.06);
+  border-color: rgba(59,130,246,0.15);
+}
+
+/* — Spinner — */
+.pipeline-spinner {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--cyan);
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+.slide.visible .pipeline-step[data-step="0"] .pipeline-spinner {
+  animation: pipelineSpinnerSpin 1.4s 0.3s linear forwards;
+}
+.slide.visible .pipeline-step[data-step="1"] .pipeline-spinner {
+  animation: pipelineSpinnerSpin 1.4s 1.5s linear forwards;
+}
+.slide.visible .pipeline-step[data-step="2s"] .pipeline-spinner {
+  border-top-color: #a855f7;
+  animation: pipelineSpinnerSpin 1.2s 3.1s linear forwards;
+}
+.slide.visible .pipeline-step[data-step="2a"] .pipeline-spinner {
+  border-top-color: #3b82f6;
+  animation: pipelineSpinnerSpin 1.2s 3.1s linear forwards;
+}
+.slide.visible .pipeline-step[data-step="3"] .pipeline-spinner {
+  animation: pipelineSpinnerSpin 1.4s 4.7s linear forwards;
+}
+.slide.visible .pipeline-step[data-step="4"] .pipeline-spinner {
+  animation: pipelineSpinnerSpin 1.4s 5.9s linear forwards;
+}
+
+/* — Checkmark — */
+.pipeline-check {
+  font-size: clamp(9px, 1vw, 12px);
+  color: var(--bg-primary);
+  font-weight: 700;
+  opacity: 0;
+  transform: scale(0);
+  animation-fill-mode: forwards;
+  line-height: 1;
+}
+.slide.visible .pipeline-step[data-step="0"] .pipeline-check {
+  animation: pipelineCheckAppear 1.4s 0.3s ease forwards;
+}
+.slide.visible .pipeline-step[data-step="1"] .pipeline-check {
+  animation: pipelineCheckAppear 1.4s 1.5s ease forwards;
+}
+.slide.visible .pipeline-step[data-step="2s"] .pipeline-check {
+  animation: pipelineCheckAppear 1.2s 3.1s ease forwards;
+}
+.slide.visible .pipeline-step[data-step="2a"] .pipeline-check {
+  animation: pipelineCheckAppear 1.2s 3.1s ease forwards;
+}
+.slide.visible .pipeline-step[data-step="3"] .pipeline-check {
+  animation: pipelineCheckAppear 1.4s 4.7s ease forwards;
+}
+.slide.visible .pipeline-step[data-step="4"] .pipeline-check {
+  animation: pipelineCheckAppear 1.4s 5.9s ease forwards;
+}
+
+/* — Labels — */
+.pipeline-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  opacity: 0.35;
+}
+.pipeline-name {
+  font-size: clamp(0.75rem, 1.05vw, 0.95rem);
+  color: rgba(240,242,248,0.85);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.pipeline-desc {
+  font-size: clamp(0.6rem, 0.8vw, 0.72rem);
+  color: rgba(240,242,248,0.5);
+  line-height: 1.3;
+}
+.pipeline-tag {
+  font-size: clamp(0.55rem, 0.72vw, 0.65rem);
+  color: var(--cyan);
+}
+.slide.visible .pipeline-step[data-step="0"] .pipeline-label,
+.slide.visible .pipeline-step[data-step="1"] .pipeline-label,
+.slide.visible .pipeline-step[data-step="2s"] .pipeline-label,
+.slide.visible .pipeline-step[data-step="2a"] .pipeline-label,
+.slide.visible .pipeline-step[data-step="3"] .pipeline-label,
+.slide.visible .pipeline-step[data-step="4"] .pipeline-label {
+  animation: pipelinePulseGlow 1s var(--pipeline-label-delay, 0.3s) ease-in-out 1 forwards;
+}
+.pipeline-step[data-step="0"] { --pipeline-label-delay: 0.3s; }
+.pipeline-step[data-step="1"] { --pipeline-label-delay: 1.5s; }
+.pipeline-step[data-step="2s"] { --pipeline-label-delay: 3.1s; }
+.pipeline-step[data-step="2a"] { --pipeline-label-delay: 3.1s; }
+.pipeline-step[data-step="3"] { --pipeline-label-delay: 4.7s; }
+.pipeline-step[data-step="4"] { --pipeline-label-delay: 5.9s; }
+
+/* — Connectors (vertical lines) — */
+.pipeline-connector {
+  width: 2px;
+  height: clamp(10px, 1.5vh, 16px);
+  background: rgba(0,255,204,0.2);
+  margin-left: calc(clamp(18px, 2vw, 24px) / 2 - 1px);
+  transform-origin: top;
+  transform: scaleY(0);
+  animation-fill-mode: forwards;
+}
+.slide.visible .pipeline-connector[data-after="0"] {
+  animation: pipelineConnectorGrow 0.3s 1.5s ease forwards;
+}
+.slide.visible .pipeline-connector[data-after="1"] {
+  animation: pipelineConnectorGrow 0.3s 2.7s ease forwards;
+}
+.slide.visible .pipeline-connector[data-after="2"] {
+  animation: pipelineConnectorGrow 0.3s 4.3s ease forwards;
+}
+.slide.visible .pipeline-connector[data-after="3"] {
+  animation: pipelineConnectorGrow 0.3s 5.9s ease forwards;
+}
+
+/* — Fork / Merge layout — */
+.pipeline-fork-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.pipeline-parallel {
+  display: flex;
+  gap: clamp(0.6rem, 2vw, 1.5rem);
+  margin-left: calc(clamp(18px, 2vw, 24px) / 2 - 1px);
+  border-left: 2px solid rgba(0,255,204,0.15);
+  padding: clamp(4px, 0.8vh, 8px) 0 clamp(4px, 0.8vh, 8px) clamp(8px, 1.2vw, 14px);
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+.slide.visible .pipeline-parallel {
+  animation: pipelineForkBranch 0.4s 2.7s ease forwards;
+}
+
+/* — Pipeline footnote — */
+.pipeline-footnote {
+  font-size: clamp(0.58rem, 0.78vw, 0.7rem);
+  color: rgba(240,242,248,0.3);
+  line-height: 1.4;
+  margin-top: clamp(0.2rem, 0.5vh, 0.4rem);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: clamp(0.2rem, 0.5vh, 0.3rem);
+}
+
+/* — Responsive — */
+@media (max-height: 700px) {
+  .pipeline-desc { display: none; }
+  .pipeline-node { width: 16px !important; height: 16px !important; }
+  .pipeline-connector { height: 8px; }
+}
+@media (max-height: 500px) {
+  .pipeline-header { display: none; }
+  .pipeline-connector { height: 4px; }
+}
+
+/* -----------------------------------------------------------------------
+   QA HANDOFF SLIDE — Neon Circuit
+   ----------------------------------------------------------------------- */
+
+@keyframes qaPhaseSlideIn {
+  0%   { opacity: 0; transform: translateX(-18px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes qaNumFill {
+  0%   { background: rgba(0,255,204,0.06); border-color: rgba(0,255,204,0.15); color: rgba(0,255,204,0.3); }
+  60%  { background: rgba(0,255,204,0.2); border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 12px rgba(0,255,204,0.3); }
+  100% { background: rgba(0,255,204,0.15); border-color: rgba(0,255,204,0.6); color: var(--cyan); box-shadow: 0 0 6px rgba(0,255,204,0.15); }
+}
+@keyframes qaConnectorGrow {
+  0%   { transform: scaleY(0); }
+  100% { transform: scaleY(1); }
+}
+@keyframes qaVideoFadeIn {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes qaInsightReveal {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes qaBorderGlow {
+  0%, 100% { border-color: rgba(0,255,204,0.12); box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
+  50%      { border-color: rgba(0,255,204,0.25); box-shadow: 0 15px 50px rgba(0,0,0,0.5), 0 0 30px rgba(0,255,204,0.06); }
+}
+
+/* Container */
+.qa-phases {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Phase card */
+.qa-phase {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1vw, 0.8rem);
+  padding: clamp(0.4rem, 0.8vh, 0.6rem) clamp(0.5rem, 1vw, 0.8rem);
+  border-radius: clamp(6px, 0.8vw, 10px);
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  opacity: 0;
+  transform: translateX(-18px);
+  animation-fill-mode: forwards;
+}
+.slide.visible .qa-phase[data-phase="0"] {
+  animation: qaPhaseSlideIn 0.6s 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.slide.visible .qa-phase[data-phase="1"] {
+  animation: qaPhaseSlideIn 0.6s 1.4s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.slide.visible .qa-phase[data-phase="2"] {
+  animation: qaPhaseSlideIn 0.6s 2.2s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.slide.visible .qa-phase[data-phase="3"] {
+  animation: qaPhaseSlideIn 0.6s 3.0s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* Phase number */
+.qa-phase-num {
+  width: clamp(22px, 2.2vw, 28px);
+  height: clamp(22px, 2.2vw, 28px);
+  border-radius: 50%;
+  background: rgba(0,255,204,0.06);
+  border: 1.5px solid rgba(0,255,204,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.55rem, 0.75vw, 0.65rem);
+  font-weight: 700;
+  color: rgba(0,255,204,0.3);
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  animation-fill-mode: forwards;
+}
+.slide.visible .qa-phase[data-phase="0"] .qa-phase-num {
+  animation: qaNumFill 0.8s 0.6s ease forwards;
+}
+.slide.visible .qa-phase[data-phase="1"] .qa-phase-num {
+  animation: qaNumFill 0.8s 1.4s ease forwards;
+}
+.slide.visible .qa-phase[data-phase="2"] .qa-phase-num {
+  animation: qaNumFill 0.8s 2.2s ease forwards;
+}
+.slide.visible .qa-phase[data-phase="3"] .qa-phase-num {
+  animation: qaNumFill 0.8s 3.0s ease forwards;
+}
+
+/* Phase info */
+.qa-phase-title {
+  font-size: clamp(0.7rem, 0.95vw, 0.88rem);
+  color: rgba(240,242,248,0.85);
+  font-weight: 600;
+  line-height: 1.2;
+  display: block;
+}
+.qa-phase-desc {
+  font-size: clamp(0.55rem, 0.75vw, 0.68rem);
+  color: rgba(240,242,248,0.4);
+  line-height: 1.3;
+  display: block;
+}
+
+/* Connector between phases */
+.qa-connector {
+  width: 2px;
+  height: clamp(6px, 1vh, 10px);
+  background: rgba(0,255,204,0.15);
+  margin-left: calc(clamp(0.5rem, 1vw, 0.8rem) + clamp(22px, 2.2vw, 28px) / 2 - 1px);
+  transform-origin: top;
+  transform: scaleY(0);
+  animation-fill-mode: forwards;
+}
+.slide.visible .qa-connector[data-after="0"] {
+  animation: qaConnectorGrow 0.3s 1.1s ease forwards;
+}
+.slide.visible .qa-connector[data-after="1"] {
+  animation: qaConnectorGrow 0.3s 1.9s ease forwards;
+}
+.slide.visible .qa-connector[data-after="2"] {
+  animation: qaConnectorGrow 0.3s 2.7s ease forwards;
+}
+
+/* Video container */
+.qa-video-wrap {
+  border-radius: clamp(8px, 1vw, 14px);
+  overflow: hidden;
+  border: 1px solid rgba(0,255,204,0.12);
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+.slide.visible .qa-video-wrap {
+  animation: qaVideoFadeIn 0.8s 0.3s cubic-bezier(0.22,1,0.36,1) forwards,
+             qaBorderGlow 4s 1.5s ease-in-out infinite;
+}
+.qa-video-wrap video {
+  display: block;
+  width: 100%;
+  object-fit: contain;
+  background: #0a0a0f;
+}
+
+/* Insight callout */
+.qa-insight {
+  margin-top: clamp(0.4rem, 1vh, 0.6rem);
+  padding: clamp(0.4rem, 0.8vh, 0.55rem) clamp(0.5rem, 1vw, 0.8rem);
+  border-left: 2px solid rgba(0,255,204,0.3);
+  background: rgba(0,255,204,0.03);
+  border-radius: 0 clamp(4px, 0.5vw, 6px) clamp(4px, 0.5vw, 6px) 0;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+.slide.visible .qa-insight {
+  animation: qaInsightReveal 0.6s 3.8s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.qa-insight-text {
+  font-size: clamp(0.55rem, 0.78vw, 0.7rem);
+  color: rgba(240,242,248,0.55);
+  line-height: 1.4;
+}
+.qa-insight-text strong {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-height: 700px) {
+  .qa-phase-desc { display: none; }
+  .qa-phase-num { width: 18px !important; height: 18px !important; }
+  .qa-connector { height: 4px; }
+  .qa-insight { display: none; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .qa-phase { opacity: 1 !important; transform: none !important; }
+  .qa-phase-num { background: rgba(0,255,204,0.15) !important; border-color: rgba(0,255,204,0.6) !important; color: var(--cyan) !important; }
+  .qa-connector { transform: scaleY(1) !important; }
+  .qa-video-wrap { opacity: 1 !important; transform: none !important; }
+  .qa-insight { opacity: 1 !important; transform: none !important; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================================
+     BACKGROUND EFFECTS
+     ======================================================================= -->
+<div class="grid-bg"></div>
+<div class="orb orb--cyan"></div>
+<div class="orb orb--purple"></div>
+<div class="orb orb--pink"></div>
+<div class="particles" id="particles"></div>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+
+<!-- Navigation dots -->
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+<!-- Slide counter -->
+<div class="slide-counter"><span class="current" id="counterCurrent">01</span> / <span id="counterTotal">19</span></div>
+
+
+<!-- =======================================================================
+     SLIDE 1 — TITLE
+     ======================================================================= -->
+<section class="slide" data-title="Title">
+  <div style="text-align:center; max-width: 900px; margin: 0 auto;">
+    <h1 class="slide-title slide-title--large reveal" style="margin-bottom: clamp(0.75rem, 2.5vh, 1.5rem);">My Story with AI</h1>
+    <p class="slide-subtitle reveal" style="margin: 0 auto; text-align: center;">
+      From ChatGPT copy-paste to building AI Skills&thinsp;&mdash;&thinsp;a developer's journey
+    </p>
+    <div class="reveal" style="margin-top: clamp(2rem, 5vh, 4rem); display:flex; justify-content:center; gap: 1rem;">
+      <span style="display:inline-block; width:40px; height:3px; border-radius:2px; background: var(--cyan); opacity:0.5;"></span>
+      <span style="display:inline-block; width:40px; height:3px; border-radius:2px; background: var(--purple); opacity:0.5;"></span>
+      <span style="display:inline-block; width:40px; height:3px; border-radius:2px; background: var(--pink); opacity:0.5;"></span>
+    </div>
+  </div>
+  <a class="speaker-byline reveal" href="https://theplant.slack.com/app_redirect?channel=U065G6SR3FE" target="_blank" rel="noopener">
+    <span class="speaker-byline__handle">@Eric Xu</span>
+    <span class="speaker-byline__slack">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zm10.122 2.521a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zm-1.268 0a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zm-2.523 10.122a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zm0-1.268a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>
+    </span>
+  </a>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 2 — THE STARTING POINT
+     ======================================================================= -->
+<section class="slide" data-title="Starting Point">
+  <p class="slide-label reveal">Where it all began</p>
+  <h2 class="slide-title reveal">The Starting Point</h2>
+
+  <!-- Two-column layout -->
+  <div class="reveal mobile-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; margin-top: clamp(0.75rem, 2vh, 1.25rem);">
+
+    <!-- Left: The workflow -->
+    <div>
+      <p class="slide-body" style="margin-bottom: clamp(0.75rem, 2vh, 1.25rem);">
+        The workflow was dead-simple. Open a browser, ask ChatGPT, grab the answer.
+      </p>
+      <div style="display: flex; flex-direction: column; gap: clamp(0.4rem, 0.8vh, 0.6rem);">
+        <div style="display: flex; align-items: center; gap: clamp(0.5rem, 1vw, 0.8rem);">
+          <span style="font-size: clamp(1rem, 1.6vw, 1.4rem);">&#127760;</span>
+          <span style="font-size: clamp(0.8rem, 1.2vw, 0.95rem); color: var(--white);">Open ChatGPT</span>
+          <span style="color: var(--cyan); opacity: 0.4; font-size: clamp(0.8rem, 1.2vw, 1rem);">&#10132;</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: clamp(0.5rem, 1vw, 0.8rem); padding-left: clamp(0.5rem, 1vw, 0.8rem);">
+          <span style="font-size: clamp(1rem, 1.6vw, 1.4rem);">&#9997;&#65039;</span>
+          <span style="font-size: clamp(0.8rem, 1.2vw, 0.95rem); color: var(--white);">Type question</span>
+          <span style="color: var(--cyan); opacity: 0.4; font-size: clamp(0.8rem, 1.2vw, 1rem);">&#10132;</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: clamp(0.5rem, 1vw, 0.8rem); padding-left: clamp(1rem, 2vw, 1.6rem);">
+          <span style="font-size: clamp(1rem, 1.6vw, 1.4rem);">&#128203;</span>
+          <span style="font-size: clamp(0.8rem, 1.2vw, 0.95rem); color: var(--white);">Copy answer</span>
+          <span style="color: var(--cyan); opacity: 0.4; font-size: clamp(0.8rem, 1.2vw, 1rem);">&#10132;</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: clamp(0.5rem, 1vw, 0.8rem); padding-left: clamp(1.5rem, 3vw, 2.4rem);">
+          <span style="font-size: clamp(1rem, 1.6vw, 1.4rem);">&#128187;</span>
+          <span style="font-size: clamp(0.8rem, 1.2vw, 0.95rem); color: var(--white);">Paste in editor</span>
+        </div>
+      </div>
+      <p style="margin-top: clamp(0.75rem, 2vh, 1.25rem); font-size: clamp(0.85rem, 1.3vw, 1.05rem); font-style: italic; color: var(--cyan); opacity: 0.8;">
+        Simple. But effective.
+      </p>
+    </div>
+
+    <!-- Right: Why it worked -->
+    <div>
+      <p style="font-family: var(--font-mono); font-size: clamp(0.65rem, 1vw, 0.82rem); text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: clamp(0.5rem, 1.5vh, 0.8rem);">Why it worked</p>
+      <ul class="bullet-list">
+        <li>MCD project tasks were <strong>straightforward</strong></li>
+        <li>Most issues resolved with a <strong>quick question</strong></li>
+        <li>Incremental improvements to a <strong>mature system</strong></li>
+        <li>Zero setup, zero configuration, zero friction</li>
+      </ul>
+      <div style="margin-top: clamp(1rem, 3vh, 2rem); padding: clamp(0.6rem, 1.5vw, 1rem); background: var(--bg-card); border-left: 3px solid var(--cyan); border-radius: 0 8px 8px 0;">
+        <p style="font-family: var(--font-mono); font-size: clamp(0.8rem, 1.2vw, 0.95rem); color: var(--cyan);">
+          "If it works, it works."
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 4 — MY AI JOURNEY (TIMELINE)
+     ======================================================================= -->
+<section class="slide" data-title="AI Journey">
+  <p class="slide-label reveal">Evolution</p>
+  <h2 class="slide-title reveal">My AI Journey</h2>
+  <div class="timeline-journey">
+    <div class="timeline-item reveal">
+      <div class="timeline-title">ChatGPT Web</div>
+      <div class="timeline-desc">"Ask, copy, paste"</div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-title">avante.vim</div>
+      <div class="timeline-desc">"AI meets Vim"</div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-title">Antigravity</div>
+      <div class="timeline-desc">"Stepping up"</div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-title">Windsurf</div>
+      <div class="timeline-desc">"Full IDE integration"</div>
+    </div>
+    <div class="timeline-item hero reveal">
+      <div class="timeline-title">Claude Code CLI</div>
+      <div class="timeline-desc">"The game changer"</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 5 — AVANTE.VIM
+     ======================================================================= -->
+<section class="slide" data-title="avante.vim">
+  <p class="slide-label reveal">Tool #2</p>
+  <h2 class="slide-title reveal">avante.vim</h2>
+  <p class="slide-subtitle reveal" style="margin-bottom: clamp(0.75rem, 2vh, 1.5rem);">Bringing AI Into Vim</p>
+  <p class="slide-body reveal">
+    A Vim plugin that integrates AI directly into the editor. No more context switching &mdash;
+    ask questions, get code suggestions, all without leaving your terminal.
+  </p>
+  <p class="slide-body reveal" style="margin-top: clamp(0.5rem, 1.5vh, 1rem);">
+    My <span class="accent">first taste</span> of integrated AI coding. The workflow shifted from
+    browser tabs to a single terminal window. Less friction, more flow.
+  </p>
+  <div class="reveal" style="margin-top: clamp(1rem, 3vh, 2rem);">
+    <div class="code-block" style="max-width: 500px;">
+      <span class="comment">-- nvim: AI inline with your code</span><br>
+      <span class="dir">:Avante</span> <span class="file">ask "refactor this function"</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 6 — ANTIGRAVITY
+     ======================================================================= -->
+<section class="slide" data-title="Antigravity & Windsurf">
+  <p class="slide-label reveal">Tools #3 &amp; #4</p>
+  <h2 class="slide-title reveal">Antigravity &amp; Windsurf</h2>
+  <p class="slide-subtitle reveal" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">AI-Powered IDEs</p>
+  <p class="slide-body reveal">
+    Both are full AI-powered IDEs with agentic workflows, inline edits, and multi-file context.
+    Our company provides <span class="accent">Windsurf</span> for free. <span class="accent">Antigravity</span> (by Google) is free in public preview.
+  </p>
+  <p class="slide-body reveal" style="margin-top: clamp(0.5rem, 1vh, 0.75rem);">
+    Honestly, they're quite similar. But Antigravity stands out for frontend work
+    with <strong>built-in browser debugging</strong> &mdash; agents can launch your app, interact with the UI,
+    and verify changes automatically. It also lets the AI <strong>create its own plan</strong> before executing.
+  </p>
+  <p class="slide-body reveal" style="margin-top: clamp(0.5rem, 1vh, 0.75rem); color: var(--muted); font-style: italic;">
+    But the journey wasn't over&hellip;
+  </p>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 8 — WHY CLAUDE CODE WORKS FOR ME
+     ======================================================================= -->
+<section class="slide" data-title="Why Claude Code (for me)">
+  <p class="slide-label reveal">A personal choice</p>
+  <h2 class="slide-title reveal">Why Claude Code Works <span style="color: var(--cyan); -webkit-text-fill-color: var(--cyan);">for Me</span></h2>
+  <p class="slide-body reveal" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem); max-width: 900px;">
+    Every developer's workflow is different. I'm a long-time Vim user &mdash; I live in the terminal.
+    Claude Code fits that workflow perfectly: AI runs alongside Vim, same window, zero friction.
+  </p>
+  <div class="card-grid card-grid--3 reveal" style="max-width: 900px; margin-top: clamp(0.5rem, 1vh, 0.75rem);">
+    <div class="card">
+      <div class="card-icon">&#62;&nbsp;_</div>
+      <div class="card-title">Terminal-native</div>
+      <div class="card-text">CLI-based &mdash; no IDE required. Vim + Claude side by side.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#129302;</div>
+      <div class="card-title">Agentic</div>
+      <div class="card-text">Multi-step autonomous actions &mdash; it doesn't just answer, it does.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#128295;</div>
+      <div class="card-title">Extensible</div>
+      <div class="card-text">Skills &amp; MCP let you teach it your domain.</div>
+    </div>
+  </div>
+  <!-- Ghost terminal text — absolute so it doesn't push content down -->
+  <div class="reveal" style="position: absolute; left: calc(var(--slide-pad-x) + 1000px); top: 54%; transform: translateY(-50%); pointer-events: none; font-family: var(--font-mono); font-size: clamp(0.6rem, 0.8vw, 0.72rem); line-height: 2; color: var(--cyan); opacity: 0.13; white-space: pre;">$ /rc
+  &#10003; session live &#8212; steer from phone
+
+$ /simplify
+  &#8594; minimal mode &#10003;
+
+$ /batch migrate src/ to React
+  &#9655; 12 agents &#10003; all complete
+
+$ claude --worktree feature-auth
+  &#8627; isolated branch ready
+
+&gt; spawn team: 4 agents
+  &#9655; architect  &#9655; developer
+  &#9655; tester     &#9655; reviewer
+
+$ /hooks
+  pre-commit &#8594; lint &#10003;</div>
+  <p class="reveal" style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.4); margin-top: clamp(0.75rem, 2vh, 1.25rem); max-width: 900px;">
+    Not a recommendation to switch tools &mdash; Windsurf, Cursor, and others are great too.
+    The best AI tool is whichever fits <em>your</em> workflow.
+  </p>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 9 — TYPELESS: SPEAK, DON'T TYPE
+     ======================================================================= -->
+<section class="slide" data-title="Typeless">
+  <p class="slide-label reveal">Productivity boost</p>
+  <h2 class="slide-title reveal">Typeless</h2>
+  <p class="slide-subtitle reveal">Speak, Don&rsquo;t Type</p>
+
+  <!-- Two-column: Video left, Tab cards right -->
+  <div class="reveal mobile-stack" style="display: grid; grid-template-columns: 3fr 2fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: start; margin-top: clamp(0.75rem, 2vh, 1.25rem); max-height: min(62vh, 550px);">
+
+    <!-- Left: Video container — all three preloaded, only one visible -->
+    <div class="typeless-video-container qa-video-wrap" style="border-radius: clamp(8px, 1vw, 14px); overflow: hidden; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; max-height: min(60vh, 520px);">
+      <video id="typeless-vid-natural" class="typeless-vid active" style="display:block" autoplay muted playsinline>
+        <source src="typeless-natural-speech.mp4" type="video/mp4">
+      </video>
+      <video id="typeless-vid-ask" class="typeless-vid" style="display:none" muted playsinline preload="auto">
+        <source src="typeless-ask-anything.mp4" type="video/mp4">
+      </video>
+      <video id="typeless-vid-translate" class="typeless-vid" style="display:none" muted playsinline preload="auto">
+        <source src="typeless-translation.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Right: Clickable feature cards (tabs) -->
+    <div style="display: flex; flex-direction: column; gap: clamp(0.6rem, 1.2vh, 0.9rem);">
+
+      <button type="button" class="typeless-tab active" data-typeless-tab="natural" style="animation-delay: 0.4s;">
+        <span class="typeless-tab-icon">&#127908;</span>
+        <div class="typeless-tab-body">
+          <p class="typeless-tab-title">Natural speech <span class="typeless-tab-key">fn</span></p>
+          <p class="typeless-tab-desc">Just talk &mdash; Typeless removes filler words, fixes self-corrections, and adapts to your tone.</p>
+        </div>
+      </button>
+
+      <button type="button" class="typeless-tab" data-typeless-tab="ask" style="animation-delay: 0.7s;">
+        <span class="typeless-tab-icon">&#9889;</span>
+        <div class="typeless-tab-body">
+          <p class="typeless-tab-title">Ask Anything <span class="typeless-tab-key">fn + space</span></p>
+          <p class="typeless-tab-desc">Select text and speak a command to transform, summarize, or rewrite it.</p>
+        </div>
+      </button>
+
+      <button type="button" class="typeless-tab" data-typeless-tab="translate" style="animation-delay: 1.0s;">
+        <span class="typeless-tab-icon">&#127760;</span>
+        <div class="typeless-tab-body">
+          <p class="typeless-tab-title">Translation <span class="typeless-tab-key">fn + shift</span></p>
+          <p class="typeless-tab-desc">Speak in any language, get polished text in your target language.</p>
+        </div>
+      </button>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 10 — WHAT ARE AI SKILLS?
+     ======================================================================= -->
+<section class="slide" data-title="AI Skills">
+  <p class="slide-label reveal">Core concept</p>
+  <h2 class="slide-title reveal">What Are AI Skills?</h2>
+  <p class="slide-body reveal" style="margin-bottom: clamp(0.75rem, 2vh, 1.5rem);">
+    Skills are <strong>specialized knowledge packs</strong> that extend AI capabilities.
+    They teach AI how to handle specific domains &mdash; like giving it a playbook.
+    Think of them as reusable expertise that <em>any</em> team member can leverage.
+  </p>
+  <div class="concept-eq reveal">
+    <div class="concept-box">
+      <div style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom:0.25rem;">&#129302;</div>
+      AI
+    </div>
+    <div class="concept-op">+</div>
+    <div class="concept-box">
+      <div style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom:0.25rem;">&#128218;</div>
+      Skill
+    </div>
+    <div class="concept-op">=</div>
+    <div class="concept-box concept-box--glow">
+      <div style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom:0.25rem;">&#129504;</div>
+      Domain Expert
+    </div>
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE — ANATOMY OF A SKILL
+     ======================================================================= -->
+<section class="slide" data-title="Skill Anatomy">
+  <p class="slide-label reveal">Under the hood</p>
+  <h2 class="slide-title reveal">Anatomy of a Skill</h2>
+
+  <!-- Two-column: Structure left, Ecosystem right -->
+  <div class="reveal mobile-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 4vw, 3rem); align-items: start; margin-top: clamp(0.75rem, 2vh, 1.5rem);">
+
+    <!-- Left: File structure + descriptions -->
+    <div>
+      <div class="code-block" style="margin-bottom: clamp(0.75rem, 1.5vh, 1rem);">
+        <span class="dir">.claude/skills/my-skill/</span><br>
+        <span class="file">&boxvr;&boxh;&boxh; SKILL.md</span>        <span class="comment">&larr; Instructions &amp; workflows</span><br>
+        <span class="file">&boxvr;&boxh;&boxh; references/</span>     <span class="comment">&larr; Domain knowledge</span><br>
+        <span class="file">&boxur;&boxh;&boxh; scripts/</span>        <span class="comment">&larr; Automation helpers</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.8vh, 0.5rem);">
+        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+          <span style="color: var(--cyan); font-family: var(--font-mono); font-size: clamp(0.7rem, 1vw, 0.85rem); font-weight: 600;">SKILL.md</span>
+          <span style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.6);">&mdash; The brain. Instructions the AI follows</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+          <span style="color: var(--purple); font-family: var(--font-mono); font-size: clamp(0.7rem, 1vw, 0.85rem); font-weight: 600;">references/</span>
+          <span style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.6);">&mdash; Domain docs, schemas, examples</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+          <span style="color: var(--pink); font-family: var(--font-mono); font-size: clamp(0.7rem, 1vw, 0.85rem); font-weight: 600;">scripts/</span>
+          <span style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.6);">&mdash; Shell scripts &amp; tooling to execute</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: skills.sh ecosystem -->
+    <div>
+      <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: clamp(8px, 1vw, 12px); padding: clamp(1rem, 2vw, 1.5rem); background: rgba(255,255,255,0.02);">
+        <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); margin-bottom: clamp(0.4rem, 1vh, 0.6rem); font-weight: 600;">Don't start from scratch</p>
+        <p style="font-size: clamp(0.8rem, 1.2vw, 1rem); color: rgba(240,242,248,0.9); margin-bottom: clamp(0.5rem, 1.2vh, 0.75rem);">
+          <a href="https://skills.sh" target="_blank" rel="noopener" style="color: var(--cyan); text-decoration: none; font-weight: 700;">skills.sh</a> &mdash; 78K+ community skills
+        </p>
+        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.5); margin-bottom: clamp(0.75rem, 1.5vh, 1rem);">
+          Works with Claude Code, Cursor, Copilot, Windsurf, and more.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vh, 0.5rem); font-family: var(--font-mono); font-size: clamp(0.65rem, 0.95vw, 0.8rem);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--cyan);">$</span>
+            <span style="color: rgba(240,242,248,0.7);">npx skills add <span style="color: var(--cyan);">find-skills</span></span>
+          </div>
+          <p style="font-size: clamp(0.6rem, 0.85vw, 0.72rem); color: rgba(240,242,248,0.35); padding-left: 20px;">Search &amp; install skills from the registry</p>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--cyan);">$</span>
+            <span style="color: rgba(240,242,248,0.7);">npx skills add <span style="color: var(--pink);">skill-creator</span></span>
+          </div>
+          <p style="font-size: clamp(0.6rem, 0.85vw, 0.72rem); color: rgba(240,242,248,0.35); padding-left: 20px;">AI helps you build your own skills</p>
+        </div>
+        <p style="font-family: var(--font-mono); font-size: clamp(0.7rem, 1vw, 0.85rem); color: var(--purple); margin-top: clamp(0.6rem, 1.2vh, 0.9rem); font-style: italic;">"Start simple, evolve over time."</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 11 — SKILLS vs MCP
+     ======================================================================= -->
+<section class="slide" data-title="Skills vs MCP">
+  <p class="slide-label reveal">How they complement each other</p>
+  <h2 class="slide-title reveal">Skills vs MCP</h2>
+  <div class="two-col reveal" style="max-width: 850px; margin-top: clamp(0.75rem, 2vh, 1.5rem);">
+    <div>
+      <div class="col-header"><span class="dot dot--cyan"></span> Skills</div>
+      <ul class="bullet-list">
+        <li>Knowledge &amp; workflows</li>
+        <li>Teach AI <em>what to do</em></li>
+        <li>Markdown-based</li>
+        <li>Easy to create &amp; share</li>
+      </ul>
+    </div>
+    <div>
+      <div class="col-header"><span class="dot dot--purple"></span> MCP</div>
+      <ul class="bullet-list">
+        <li>Tools &amp; integrations</li>
+        <li>Give AI <em>new abilities</em></li>
+        <li>Server-based</li>
+        <li>Connects to external services</li>
+      </ul>
+    </div>
+  </div>
+  <p class="slide-body reveal" style="margin-top: clamp(1rem, 2.5vh, 1.5rem); color: var(--muted); font-size: clamp(0.75rem, 1.1vw, 0.9rem);">
+    <a href="https://theplant.slack.com/archives/C024FA1MQ/p1757583818854389" target="_blank" rel="noopener" style="color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(0,255,204,0.3);">@Levin</a> already covered MCP in depth &mdash; here's how Skills complement it.
+  </p>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 12 — MCP TIP: FIGMA
+     ======================================================================= -->
+<section class="slide" data-title="Figma MCP Tip">
+  <p class="slide-label reveal">Practical tip</p>
+  <h2 class="slide-title reveal">MCP Tip: Figma Dev Mode</h2>
+
+  <!-- Two-column: Video left, Step cards right -->
+  <div class="reveal mobile-stack mobile-reverse" style="display: grid; grid-template-columns: 3fr 2fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: center; margin-top: clamp(0.75rem, 2vh, 1.25rem); max-height: min(62vh, 550px);">
+
+    <!-- Left: Video with glow border -->
+    <div class="qa-video-wrap" style="border-radius: clamp(8px, 1vw, 14px); overflow: hidden; border: 1.5px solid rgba(0,255,204,0.12); box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative;">
+      <video autoplay loop muted playsinline style="display: block; width: 100%;">
+        <source src="figma-dev-mode-demo.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Right: Step cards with connectors -->
+    <div style="display: flex; flex-direction: column; gap: 0;">
+
+      <!-- Step 1 -->
+      <div class="reveal" style="animation-delay: 0.6s; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: clamp(8px, 1vw, 12px); padding: clamp(0.6rem, 1.2vh, 0.9rem) clamp(0.8rem, 1.5vw, 1.2rem); display: flex; align-items: flex-start; gap: clamp(0.5rem, 1vw, 0.8rem);">
+        <span style="width: clamp(1.5rem, 2.2vw, 1.9rem); height: clamp(1.5rem, 2.2vw, 1.9rem); border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--purple)); display: inline-flex; align-items: center; justify-content: center; font-size: clamp(0.65rem, 0.95vw, 0.8rem); font-weight: 700; color: var(--bg-primary); font-family: var(--font-mono); flex-shrink: 0; margin-top: 0.1em;">1</span>
+        <div>
+          <p style="font-size: clamp(0.8rem, 1.15vw, 0.95rem); font-weight: 600; color: rgba(240,242,248,0.9); margin: 0 0 0.15em;">Duplicate the file</p>
+          <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); color: var(--muted); margin: 0; line-height: 1.4;">Right-click the third-party Figma file and choose <em>Duplicate</em> to create your own copy.</p>
+        </div>
+      </div>
+
+      <!-- Connector 1→2 -->
+      <div style="width: 2px; height: clamp(0.6rem, 1.2vh, 0.9rem); background: linear-gradient(180deg, rgba(0,255,204,0.25), rgba(0,255,204,0.08)); margin-left: clamp(1.2rem, 1.8vw, 1.5rem); transform-origin: top; animation: qaConnectorGrow 0.3s 1.1s ease forwards; transform: scaleY(0);"></div>
+
+      <!-- Step 2 -->
+      <div class="reveal" style="animation-delay: 0.9s; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: clamp(8px, 1vw, 12px); padding: clamp(0.6rem, 1.2vh, 0.9rem) clamp(0.8rem, 1.5vw, 1.2rem); display: flex; align-items: flex-start; gap: clamp(0.5rem, 1vw, 0.8rem);">
+        <span style="width: clamp(1.5rem, 2.2vw, 1.9rem); height: clamp(1.5rem, 2.2vw, 1.9rem); border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--purple)); display: inline-flex; align-items: center; justify-content: center; font-size: clamp(0.65rem, 0.95vw, 0.8rem); font-weight: 700; color: var(--bg-primary); font-family: var(--font-mono); flex-shrink: 0; margin-top: 0.1em;">2</span>
+        <div>
+          <p style="font-size: clamp(0.8rem, 1.15vw, 0.95rem); font-weight: 600; color: rgba(240,242,248,0.9); margin: 0 0 0.15em;">Open your copy</p>
+          <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); color: var(--muted); margin: 0; line-height: 1.4;">The duplicated file lives in your Drafts with full edit access &mdash; no restrictions.</p>
+        </div>
+      </div>
+
+      <!-- Connector 2→3 -->
+      <div style="width: 2px; height: clamp(0.6rem, 1.2vh, 0.9rem); background: linear-gradient(180deg, rgba(0,255,204,0.25), rgba(0,255,204,0.08)); margin-left: clamp(1.2rem, 1.8vw, 1.5rem); transform-origin: top; animation: qaConnectorGrow 0.3s 1.5s ease forwards; transform: scaleY(0);"></div>
+
+      <!-- Step 3 (active — cyan glow) -->
+      <div class="reveal" style="animation-delay: 1.2s; background: rgba(0,255,204,0.04); border: 1px solid rgba(0,255,204,0.18); border-radius: clamp(8px, 1vw, 12px); padding: clamp(0.6rem, 1.2vh, 0.9rem) clamp(0.8rem, 1.5vw, 1.2rem); display: flex; align-items: flex-start; gap: clamp(0.5rem, 1vw, 0.8rem); box-shadow: 0 0 18px rgba(0,255,204,0.06);">
+        <span style="width: clamp(1.5rem, 2.2vw, 1.9rem); height: clamp(1.5rem, 2.2vw, 1.9rem); border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--purple)); display: inline-flex; align-items: center; justify-content: center; font-size: clamp(0.65rem, 0.95vw, 0.8rem); font-weight: 700; color: var(--bg-primary); font-family: var(--font-mono); flex-shrink: 0; margin-top: 0.1em;">3</span>
+        <div>
+          <p style="font-size: clamp(0.8rem, 1.15vw, 0.95rem); font-weight: 600; color: var(--cyan); margin: 0 0 0.15em;">Enable Dev Mode ✓</p>
+          <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); color: var(--muted); margin: 0; line-height: 1.4;">Toggle Dev Mode on your copy &mdash; full MCP integration is now available.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 12b — FIGMA TO CODE DEMO
+     ======================================================================= -->
+<section class="slide" data-title="Design to Code">
+  <p class="slide-label reveal">The bigger picture</p>
+  <h2 class="slide-title reveal">Design → Code: <span style="color: var(--cyan); -webkit-text-fill-color: var(--cyan);">Seconds, Not Days</span></h2>
+  <p class="slide-body reveal" style="margin-bottom: clamp(0.75rem, 2vh, 1.25rem);">
+    Manually translating designs into code is one of the most repetitive tasks in frontend work. AI eliminates it entirely.
+  </p>
+
+  <!-- Two-column: Video left, Pros/Cons right -->
+  <div class="reveal mobile-stack" style="display: grid; grid-template-columns: 3fr 2fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: start;">
+
+    <!-- Left: Video -->
+    <div style="position: relative;">
+      <div style="border-radius: clamp(8px, 1vw, 14px); overflow: hidden; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,255,204,0.06);">
+        <video autoplay loop muted playsinline style="display: block; width: 100%; object-fit: contain; background: #0a0a0f;">
+          <source src="figma-to-code-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Right: Pros & Cons stacked -->
+    <div style="display: flex; flex-direction: column; gap: clamp(1.2rem, 3vh, 2rem); justify-content: center;">
+      <!-- Pros -->
+      <div>
+        <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); margin-bottom: clamp(0.4rem, 0.8vh, 0.6rem); font-weight: 600;">Pros</p>
+        <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vh, 0.5rem);">
+          <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+            <span style="color: var(--cyan); font-size: 0.5rem;">&#9679;</span>
+            <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">Skips repetitive layout translation</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+            <span style="color: var(--cyan); font-size: 0.5rem;">&#9679;</span>
+            <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">Reads design specs directly from Figma</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+            <span style="color: var(--cyan); font-size: 0.5rem;">&#9679;</span>
+            <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">Working code in minutes, not hours</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="width: 100%; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));"></div>
+
+      <!-- Cons -->
+      <div>
+        <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); text-transform: uppercase; letter-spacing: 0.12em; color: var(--pink); margin-bottom: clamp(0.4rem, 0.8vh, 0.6rem); font-weight: 600;">Cons</p>
+        <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vh, 0.5rem);">
+          <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+            <span style="color: var(--pink); font-size: 0.5rem;">&#9679;</span>
+            <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">Can't "see" the result &mdash; slower feedback than the human eye</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+            <span style="color: var(--pink); font-size: 0.5rem;">&#9679;</span>
+            <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">Obvious layout bugs may take several fix cycles</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+            <span style="color: var(--pink); font-size: 0.5rem;">&#9679;</span>
+            <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">Spatial reasoning errors can compound</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 14 — REAL EXAMPLE: MCD-I18N
+     ======================================================================= -->
+<section class="slide" data-title="mcd-i18n">
+  <p class="slide-label reveal">Real-world skill</p>
+  <h2 class="slide-title reveal">i18n Management: <span style="color: var(--cyan); -webkit-text-fill-color: var(--cyan);">mcd-i18n</span></h2>
+  <p class="slide-body reveal" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">
+    A skill that manages translation keys across 5 modules using CSV &mdash; no more manual Google Sheets round-trips.
+  </p>
+
+  <!-- Two-column: What it does left, Live workflow right -->
+  <div class="reveal mobile-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: start;">
+
+    <!-- Left: Capabilities -->
+    <div style="display: flex; flex-direction: column; gap: clamp(0.8rem, 2vh, 1.2rem);">
+      <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vh, 0.5rem);">
+        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+          <span style="color: var(--cyan); font-size: 0.5rem;">&#9679;</span>
+          <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">Manages keys across <strong>5 modules</strong></span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+          <span style="color: var(--cyan); font-size: 0.5rem;">&#9679;</span>
+          <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">CSV-based workflow &mdash; <strong>no Google Sheets needed</strong></span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+          <span style="color: var(--cyan); font-size: 0.5rem;">&#9679;</span>
+          <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);"><strong>Auto-generates</strong> key IDs and descriptions</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+          <span style="color: var(--cyan); font-size: 0.5rem;">&#9679;</span>
+          <span style="font-size: clamp(0.7rem, 1vw, 0.88rem); color: rgba(240,242,248,0.85);">One command to add or modify translations</span>
+        </div>
+      </div>
+      <div class="code-block" style="font-size: clamp(0.65rem, 0.9vw, 0.78rem);">
+        <span class="dir">.claude/skills/mcd-i18n/</span><br>
+        <span class="file">&boxvr;&boxh;&boxh; SKILL.md</span>        <span class="comment">&larr; i18n workflow</span><br>
+        <span class="file">&boxvr;&boxh;&boxh; references/</span>     <span class="comment">&larr; module configs</span><br>
+        <span class="file">&boxur;&boxh;&boxh; scripts/</span>        <span class="comment">&larr; csv compile tools</span>
+      </div>
+    </div>
+
+    <!-- Right: Live workflow -->
+    <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: clamp(8px, 1vw, 12px); padding: clamp(1rem, 2vw, 1.5rem); background: rgba(255,255,255,0.02);">
+      <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); margin-bottom: clamp(0.5rem, 1vh, 0.75rem); font-weight: 600;">Live workflow</p>
+      <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vh, 0.5rem);">
+        <div style="display: flex; align-items: center; gap: clamp(0.4rem, 0.8vw, 0.6rem);">
+          <span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--cyan); flex-shrink: 0;">1</span>
+          <span style="font-size: clamp(0.65rem, 0.95vw, 0.82rem); color: rgba(240,242,248,0.85);">"Add translation for '&#26149;&#12364;&#26469;&#12383;&#65281;'"</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: clamp(0.4rem, 0.8vw, 0.6rem);">
+          <span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--cyan); flex-shrink: 0;">2</span>
+          <span style="font-size: clamp(0.65rem, 0.95vw, 0.82rem); color: rgba(240,242,248,0.85);">You specify target module (mdssm / accui)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: clamp(0.4rem, 0.8vw, 0.6rem);">
+          <span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--cyan); flex-shrink: 0;">3</span>
+          <span style="font-size: clamp(0.65rem, 0.95vw, 0.82rem); color: rgba(240,242,248,0.85);">Generates key: <span style="color: var(--cyan);">Promotion.Seasonal.Teritama.Message</span></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: clamp(0.4rem, 0.8vw, 0.6rem);">
+          <span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--cyan); flex-shrink: 0;">4</span>
+          <span style="font-size: clamp(0.65rem, 0.95vw, 0.82rem); color: rgba(240,242,248,0.85);">Inserts CSV, compiles, updates source</span>
+        </div>
+      </div>
+      <p style="font-size: clamp(0.6rem, 0.85vw, 0.72rem); color: rgba(240,242,248,0.4); margin-top: clamp(0.5rem, 1vh, 0.75rem);">
+        15 minutes across 3 tools &rarr; one sentence
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 15b — TASK BREAKDOWN SKILL
+     ======================================================================= -->
+<section class="slide" data-title="Task Breakdown">
+  <p class="slide-label reveal">Another real-world skill</p>
+  <h2 class="slide-title reveal">Jira Ticket <span style="color: var(--cyan); -webkit-text-fill-color: var(--cyan);">Task Breakdown</span></h2>
+  <p class="slide-body reveal" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">
+    A multi-agent pipeline that breaks down Jira tickets into concrete frontend tasks with calibrated estimates.
+  </p>
+
+  <!-- Two-column: Video left, Pipeline right -->
+  <div class="reveal mobile-stack" style="display: grid; grid-template-columns: 7fr 3fr; gap: clamp(1rem, 2vw, 2rem); align-items: start;">
+
+    <!-- Left: Video (70%) -->
+    <div style="position: relative;">
+      <div style="border-radius: clamp(8px, 1vw, 14px); overflow: hidden; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,255,204,0.06);">
+        <video autoplay loop muted playsinline style="display: block; width: 100%; object-fit: contain; background: #0a0a0f;">
+          <source src="task-breakdown-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Right: Animated Pipeline (30%) -->
+    <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.8vh, 0.5rem);">
+      <p class="pipeline-header" style="font-size: clamp(0.6rem, 0.85vw, 0.72rem); text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); font-weight: 600;">Multi-Agent Pipeline</p>
+
+      <div class="pipeline">
+        <!-- Step 0: Gather -->
+        <div class="pipeline-step" data-step="0">
+          <div class="pipeline-node">
+            <div class="pipeline-spinner"></div>
+            <div class="pipeline-check">&#10003;</div>
+          </div>
+          <div class="pipeline-label">
+            <span class="pipeline-name">Gather</span>
+            <span class="pipeline-desc">Jira ticket via Atlassian MCP</span>
+          </div>
+        </div>
+        <div class="pipeline-connector" data-after="0"></div>
+
+        <!-- Step 1: Requirements Analyst -->
+        <div class="pipeline-step" data-step="1">
+          <div class="pipeline-node">
+            <div class="pipeline-spinner"></div>
+            <div class="pipeline-check">&#10003;</div>
+          </div>
+          <div class="pipeline-label">
+            <span class="pipeline-name">Requirements Analyst</span>
+            <span class="pipeline-desc">Scope table + task breakdown</span>
+          </div>
+        </div>
+        <div class="pipeline-connector" data-after="1"></div>
+
+        <!-- Step 2: Fork — Scout + Architect (parallel) -->
+        <div class="pipeline-fork-section">
+          <div class="pipeline-parallel">
+            <div class="pipeline-step" data-step="2s">
+              <div class="pipeline-node">
+                <div class="pipeline-spinner"></div>
+                <div class="pipeline-check">&#10003;</div>
+              </div>
+              <div class="pipeline-label">
+                <span class="pipeline-name">Scout</span>
+                <span class="pipeline-desc">Reusable code</span>
+                <span class="pipeline-tag">subagent</span>
+              </div>
+            </div>
+            <div class="pipeline-step" data-step="2a">
+              <div class="pipeline-node">
+                <div class="pipeline-spinner"></div>
+                <div class="pipeline-check">&#10003;</div>
+              </div>
+              <div class="pipeline-label">
+                <span class="pipeline-name">Architect</span>
+                <span class="pipeline-desc">Blast radius</span>
+                <span class="pipeline-tag">subagent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pipeline-connector" data-after="2"></div>
+
+        <!-- Step 3: Senior Estimator -->
+        <div class="pipeline-step" data-step="3">
+          <div class="pipeline-node">
+            <div class="pipeline-spinner"></div>
+            <div class="pipeline-check">&#10003;</div>
+          </div>
+          <div class="pipeline-label">
+            <span class="pipeline-name">Senior Estimator</span>
+            <span class="pipeline-desc">Calibrates using findings</span>
+          </div>
+        </div>
+        <div class="pipeline-connector" data-after="3"></div>
+
+        <!-- Step 4: OpenSpec Output -->
+        <div class="pipeline-step" data-step="4">
+          <div class="pipeline-node">
+            <div class="pipeline-spinner"></div>
+            <div class="pipeline-check">&#10003;</div>
+          </div>
+          <div class="pipeline-label">
+            <span class="pipeline-name">OpenSpec Output</span>
+            <span class="pipeline-desc">Proposal, design &amp; specs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-footnote">
+        Only 2 of 4 roles use subagents (Scout &amp; Architect need 40-50 tool calls each). Analyst &amp; Estimator run on main agent &mdash; saves ~70s.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 15c — QA HANDOFF
+     ======================================================================= -->
+<section class="slide" data-title="QA Handoff">
+  <p class="slide-label reveal">Real-world skill</p>
+  <h2 class="slide-title reveal">Automated <span style="color: var(--cyan); -webkit-text-fill-color: var(--cyan);">QA Handoff</span></h2>
+  <p class="slide-body reveal" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">
+    Deploy to staging, run <code style="color: var(--cyan); background: rgba(0,255,204,0.08); padding: 0.1em 0.4em; border-radius: 4px; font-family: var(--font-mono); font-size: 0.9em;">/mcd-qa-handoff MDX-11961</code> &mdash; AI gathers context from Jira and git,
+    writes testing instructions in plain language, then a reviewer sub-agent quality-checks before you paste it into Jira.
+  </p>
+
+  <!-- Two-column: Phases left, Video right -->
+  <div class="reveal mobile-stack" style="display: grid; grid-template-columns: 2fr 3fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: start;">
+
+    <!-- Left: Phase pipeline (40%) -->
+    <div>
+      <div class="qa-phases">
+        <div class="qa-phase" data-phase="0">
+          <div class="qa-phase-num">1</div>
+          <div class="qa-phase-info">
+            <span class="qa-phase-title">Gather Context</span>
+            <span class="qa-phase-desc">Jira ticket + git log + code diff</span>
+          </div>
+        </div>
+        <div class="qa-connector" data-after="0"></div>
+
+        <div class="qa-phase" data-phase="1">
+          <div class="qa-phase-num">2</div>
+          <div class="qa-phase-info">
+            <span class="qa-phase-title">Build Comment</span>
+            <span class="qa-phase-desc">QA-friendly, non-technical language</span>
+          </div>
+        </div>
+        <div class="qa-connector" data-after="1"></div>
+
+        <div class="qa-phase" data-phase="2">
+          <div class="qa-phase-num">3</div>
+          <div class="qa-phase-info">
+            <span class="qa-phase-title">Review</span>
+            <span class="qa-phase-desc">Sub-agent catches jargon &amp; validates</span>
+          </div>
+        </div>
+        <div class="qa-connector" data-after="2"></div>
+
+        <div class="qa-phase" data-phase="3">
+          <div class="qa-phase-num">4</div>
+          <div class="qa-phase-info">
+            <span class="qa-phase-title">Present Output</span>
+            <span class="qa-phase-desc">Copy-paste markdown for Jira</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-insight">
+        <span class="qa-insight-text">
+          <strong>Reviewer sub-agent</strong> scans for leaked variable names, file paths, and technical jargon &mdash; QA always gets human-readable instructions.
+        </span>
+      </div>
+    </div>
+
+    <!-- Right: Video (60%) -->
+    <div style="position: relative;">
+      <div class="qa-video-wrap">
+        <video autoplay loop muted playsinline>
+          <source src="qa-handoff-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+<!-- =======================================================================
+     SLIDE 18 — BEFORE vs AFTER
+     ======================================================================= -->
+<section class="slide" data-title="Before vs After">
+  <p class="slide-label reveal">The transformation</p>
+  <h2 class="slide-title reveal">My Workflow: Before vs After</h2>
+
+  <div class="timeline reveal">
+    <!-- Column headers -->
+    <div class="timeline-header">
+      <span class="timeline-header-label timeline-header-label--before">Before</span>
+      <span class="timeline-header-dot"></span>
+      <span class="timeline-header-label timeline-header-label--after">After</span>
+    </div>
+
+    <!-- 1. Receive Task -->
+    <div class="timeline-row">
+      <div class="timeline-before">Skim ticket, guess the scope</div>
+      <div class="timeline-node">
+        <span class="timeline-num">1</span>
+        <span class="timeline-stage-label">Receive</span>
+      </div>
+      <div class="timeline-after">Jira MCP &mdash; full context, zero guessing</div>
+    </div>
+
+    <!-- 2. Estimate -->
+    <div class="timeline-row">
+      <div class="timeline-before">Gut feel, pad 2&times;, hope for the best</div>
+      <div class="timeline-node">
+        <span class="timeline-num">2</span>
+        <span class="timeline-stage-label">Estimate</span>
+      </div>
+      <div class="timeline-after">AI scans codebase, calibrated hours</div>
+    </div>
+
+    <!-- 3. Breakdown -->
+    <div class="timeline-row">
+      <div class="timeline-before">Draft subtasks one by one</div>
+      <div class="timeline-node">
+        <span class="timeline-num">3</span>
+        <span class="timeline-stage-label">Breakdown</span>
+      </div>
+      <div class="timeline-after"><code class="timeline-skill">mcd-task-breakdown</code> &mdash; 4-agent pipeline</div>
+    </div>
+
+    <!-- 4. Develop -->
+    <div class="timeline-row">
+      <div class="timeline-before">Code from scratch, fix as you go</div>
+      <div class="timeline-node">
+        <span class="timeline-num">4</span>
+        <span class="timeline-stage-label">Develop</span>
+      </div>
+      <div class="timeline-after"><code class="timeline-skill">OpenSpec</code> &rarr; Claude Code builds &amp; tests</div>
+    </div>
+
+    <!-- 5. QA Handoff -->
+    <div class="timeline-row">
+      <div class="timeline-before">Write test instructions by hand</div>
+      <div class="timeline-node">
+        <span class="timeline-num">5</span>
+        <span class="timeline-stage-label">QA Handoff</span>
+      </div>
+      <div class="timeline-after"><code class="timeline-skill">mcd-qa-handoff</code> &mdash; reviewer-verified steps</div>
+    </div>
+
+    <!-- 6. Input -->
+    <div class="timeline-row">
+      <div class="timeline-before">Type everything by hand</div>
+      <div class="timeline-node">
+        <span class="timeline-num">6</span>
+        <span class="timeline-stage-label">Input</span>
+      </div>
+      <div class="timeline-after"><code class="timeline-skill">Typeless</code> &mdash; speak, don&rsquo;t type</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE — TAKEAWAYS
+     ======================================================================= -->
+<section class="slide" data-title="Takeaways">
+  <p class="slide-label reveal">What I'd tell myself on day one</p>
+  <h2 class="slide-title reveal">Takeaways</h2>
+
+  <div class="mobile-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2.5vw, 2rem); max-width: 900px; margin-top: clamp(0.75rem, 2vh, 1.5rem);">
+
+    <div class="reveal" style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
+      <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--cyan); line-height: 1; flex-shrink: 0; opacity: 0.4;">1</span>
+      <div>
+        <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Start simple, start now</p>
+        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">ChatGPT copy-paste counts. The best AI tool is the one you actually use.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
+      <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--purple); line-height: 1; flex-shrink: 0; opacity: 0.4;">2</span>
+      <div>
+        <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Find your own path</p>
+        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">Every developer's workflow is different. Match the tool to how <em>you</em> work.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
+      <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--pink); line-height: 1; flex-shrink: 0; opacity: 0.4;">3</span>
+      <div>
+        <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Skills compound</p>
+        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">Small investments in reusable AI knowledge pay massive dividends over time.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
+      <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--cyan); line-height: 1; flex-shrink: 0; opacity: 0.4;">4</span>
+      <div>
+        <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Collaborate, don't automate</p>
+        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">AI is a partner, not a replacement. Share what you build with the team.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE — META MOMENT (closing remarks)
+     ======================================================================= -->
+<section class="slide" data-title="Meta Moment">
+  <div style="text-align:center; max-width:900px; margin:0 auto;">
+    <p class="slide-label reveal">Inception</p>
+    <h2 class="slide-title reveal">Meta Moment</h2>
+    <div class="meta-border reveal" style="margin-top: clamp(1rem, 3vh, 2rem);">
+      <p style="font-size: clamp(1rem, 2vw, 1.6rem); font-weight: 700; margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">
+        <span class="highlight">Everything you just saw was made by AI.</span>
+      </p>
+      <p class="slide-body" style="margin: 0 auto; text-align: center; max-width: none;">
+        This presentation was generated entirely through Claude Code &mdash;
+        the <span class="accent">frontend-slides</span> skill built the deck,
+        and <span class="accent">Remotion</span> produced the demo videos.
+        No designer. No manual coding. Just a conversation.
+      </p>
+      <p class="slide-body" style="margin: clamp(0.5rem, 1vh, 0.75rem) auto 0; text-align: center; max-width: none; color: var(--muted); font-style: italic;">
+        You've been looking at the proof.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE — Q&A
+     ======================================================================= -->
+<section class="slide" data-title="Q&A">
+  <div style="text-align:center; max-width: 700px; margin: 0 auto;">
+    <div class="qa-glyph reveal">Q&amp;A</div>
+    <p class="slide-subtitle reveal" style="margin: clamp(1rem, 3vh, 2rem) auto 0; text-align: center;">
+      Let's discuss
+    </p>
+    <p class="reveal" style="margin: clamp(1.5rem, 3vh, 2.5rem) auto 0; font-size: clamp(0.8rem, 1.2vw, 1rem); color: var(--muted); font-style: italic; text-align: center;">
+      "The best way to prepare for what's next is to start building with what's here."
+    </p>
+    <div class="reveal" style="margin-top: clamp(2rem, 5vh, 4rem); display:flex; justify-content:center; gap: 1rem;">
+      <span style="display:inline-block; width:40px; height:3px; border-radius:2px; background: var(--cyan); opacity:0.5;"></span>
+      <span style="display:inline-block; width:40px; height:3px; border-radius:2px; background: var(--purple); opacity:0.5;"></span>
+      <span style="display:inline-block; width:40px; height:3px; border-radius:2px; background: var(--pink); opacity:0.5;"></span>
+    </div>
+  </div>
+  <a class="speaker-byline reveal" href="https://theplant.slack.com/app_redirect?channel=U065G6SR3FE" target="_blank" rel="noopener">
+    <span class="speaker-byline__handle">@Eric Xu</span>
+    <span class="speaker-byline__slack">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zm10.122 2.521a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zm-1.268 0a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zm-2.523 10.122a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zm0-1.268a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>
+    </span>
+  </a>
+</section>
+
+
+<!-- =======================================================================
+     JAVASCRIPT — SlidePresentation Class
+     ======================================================================= -->
+<script>
+/**
+ * SlidePresentation
+ * -----------------
+ * Handles keyboard navigation, scroll-snap observation, touch/swipe,
+ * progress bar, navigation dots, and Intersection Observer for
+ * scroll-triggered .visible class on slides.
+ */
+class SlidePresentation {
+  constructor() {
+    /** @type {HTMLElement[]} */
+    this.slides = [...document.querySelectorAll('.slide')];
+    this.total = this.slides.length;
+    this.currentIndex = 0;
+    this.isScrolling = false;
+    this.scrollTimeout = null;
+
+    // Touch tracking
+    this.touchStartY = 0;
+    this.touchStartX = 0;
+    this.touchEndY = 0;
+    this.touchEndX = 0;
+
+    // DOM refs
+    this.progressBar = document.getElementById('progressBar');
+    this.navDotsContainer = document.getElementById('navDots');
+    this.counterCurrent = document.getElementById('counterCurrent');
+    this.counterTotal = document.getElementById('counterTotal');
+
+    // Init
+    this.counterTotal.textContent = String(this.total).padStart(2, '0');
+    this._buildNavDots();
+    this._buildParticles();
+    this._initIntersectionObserver();
+    this._bindKeyboard();
+    this._bindScroll();
+    this._bindTouch();
+
+    // Initial state
+    this._updateUI(0);
+  }
+
+  /* -------------------------------------------------------------------
+     NAVIGATION DOTS
+     ------------------------------------------------------------------- */
+  _buildNavDots() {
+    this.slides.forEach((slide, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'nav-dot';
+      dot.setAttribute('aria-label', `Go to slide ${i + 1}: ${slide.dataset.title || ''}`);
+      // Tooltip
+      const tip = document.createElement('span');
+      tip.className = 'tooltip';
+      tip.textContent = slide.dataset.title || `Slide ${i + 1}`;
+      dot.appendChild(tip);
+      dot.addEventListener('click', () => this.goTo(i));
+      this.navDotsContainer.appendChild(dot);
+    });
+    this.navDots = [...this.navDotsContainer.querySelectorAll('.nav-dot')];
+  }
+
+  /* -------------------------------------------------------------------
+     FLOATING PARTICLES (CSS-driven, JS-placed)
+     ------------------------------------------------------------------- */
+  _buildParticles() {
+    const container = document.getElementById('particles');
+    const count = 30;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = `${Math.random() * 100}%`;
+      p.style.animationDuration = `${8 + Math.random() * 15}s`;
+      p.style.animationDelay = `${Math.random() * 12}s`;
+      p.style.width = `${2 + Math.random() * 3}px`;
+      p.style.height = p.style.width;
+      container.appendChild(p);
+    }
+  }
+
+  /* -------------------------------------------------------------------
+     INTERSECTION OBSERVER — triggers .visible
+     ------------------------------------------------------------------- */
+  _initIntersectionObserver() {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Determine current slide index from the visible entry
+            const idx = this.slides.indexOf(entry.target);
+            if (idx !== -1) this._updateUI(idx);
+          } else {
+            // Remove .visible so animations retrigger on re-entry
+            entry.target.classList.remove('visible');
+          }
+        });
+      },
+      { threshold: 0.45 }
+    );
+    this.slides.forEach((s) => observer.observe(s));
+  }
+
+  /* -------------------------------------------------------------------
+     KEYBOARD NAVIGATION
+     ------------------------------------------------------------------- */
+  _bindKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      // Don't hijack Space when a button or interactive element is focused
+      if (e.key === ' ' && (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'A')) return;
+      switch (e.key) {
+        case 'ArrowDown':
+        case 'ArrowRight':
+        case ' ':
+          e.preventDefault();
+          this.next();
+          break;
+        case 'ArrowUp':
+        case 'ArrowLeft':
+          e.preventDefault();
+          this.prev();
+          break;
+        case 'Home':
+          e.preventDefault();
+          this.goTo(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          this.goTo(this.total - 1);
+          break;
+      }
+    });
+  }
+
+  /* -------------------------------------------------------------------
+     SCROLL TRACKING (passive, updates current index from scroll position)
+     ------------------------------------------------------------------- */
+  _bindScroll() {
+    window.addEventListener('scroll', () => {
+      clearTimeout(this.scrollTimeout);
+      this.scrollTimeout = setTimeout(() => {
+        const scrollPos = window.scrollY;
+        const winH = window.innerHeight;
+        const idx = Math.round(scrollPos / winH);
+        if (idx >= 0 && idx < this.total) {
+          this._updateUI(idx);
+        }
+      }, 80);
+    }, { passive: true });
+  }
+
+  /* -------------------------------------------------------------------
+     TOUCH / SWIPE
+     ------------------------------------------------------------------- */
+  _bindTouch() {
+    document.addEventListener('touchstart', (e) => {
+      this.touchStartY = e.changedTouches[0].screenY;
+      this.touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      this.touchEndY = e.changedTouches[0].screenY;
+      this.touchEndX = e.changedTouches[0].screenX;
+
+      const dy = this.touchStartY - this.touchEndY;
+      const dx = this.touchStartX - this.touchEndX;
+
+      // Only register vertical swipes (not horizontal)
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 50) {
+        if (dy > 0) this.next();
+        else this.prev();
+      }
+    }, { passive: true });
+  }
+
+  /* -------------------------------------------------------------------
+     NAVIGATION METHODS
+     ------------------------------------------------------------------- */
+  next() {
+    if (this.currentIndex < this.total - 1) {
+      this.goTo(this.currentIndex + 1);
+    }
+  }
+
+  prev() {
+    if (this.currentIndex > 0) {
+      this.goTo(this.currentIndex - 1);
+    }
+  }
+
+  goTo(index) {
+    if (index < 0 || index >= this.total) return;
+    this.currentIndex = index;
+    this.slides[index].scrollIntoView({ behavior: 'smooth' });
+    this._updateUI(index);
+  }
+
+  /* -------------------------------------------------------------------
+     UI UPDATES (progress bar, dots, counter)
+     ------------------------------------------------------------------- */
+  _updateUI(index) {
+    this.currentIndex = index;
+
+    // Progress bar
+    const progress = ((index + 1) / this.total) * 100;
+    this.progressBar.style.width = `${progress}%`;
+
+    // Counter
+    this.counterCurrent.textContent = String(index + 1).padStart(2, '0');
+
+    // Nav dots
+    this.navDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  }
+}
+
+/* -----------------------------------------------------------------------
+   BOOT
+   ----------------------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+  new SlidePresentation();
+
+  // Bind Typeless tab buttons
+  document.querySelectorAll('.typeless-tab').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const mode = btn.dataset.typelessTab;
+      if (mode) switchTypelessVideo(mode);
+    });
+  });
+});
+
+/* -----------------------------------------------------------------------
+   TYPELESS VIDEO TAB SWITCHER
+   ----------------------------------------------------------------------- */
+function switchTypelessVideo(mode) {
+  const map = { natural: 'typeless-vid-natural', ask: 'typeless-vid-ask', translate: 'typeless-vid-translate' };
+  // Pause all, hide all (use inline style for max specificity)
+  document.querySelectorAll('.typeless-vid').forEach(v => {
+    v.style.display = 'none';
+    v.classList.remove('active');
+    v.pause();
+  });
+  // Show + restart selected
+  const vid = document.getElementById(map[mode]);
+  if (vid) {
+    vid.style.display = 'block';
+    vid.classList.add('active');
+    vid.currentTime = 0;
+    vid.play().catch(() => {});
+  }
+  // Update tab buttons
+  document.querySelectorAll('.typeless-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.typelessTab === mode);
+  });
+}
+
+</script>
+
+</body>
+</html>
