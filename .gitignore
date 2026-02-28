@@ -3,5 +3,5 @@ node_modules/
 .playwright-mcp/
 figma-demo-video/out/
 
-# Debug screenshots
-*.png
+# Debug screenshots (root-level only)
+/*.png
