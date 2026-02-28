@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="xMidYMid meet" width="20" height="20" overflow="visible" style="display: block;" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group">
+<rect id="Rectangle" x="15" y="11" width="10" height="2" transform="rotate(-180 15 11)" fill="var(--fill-0, #C7C7C7)"/>
+<circle id="Oval" cx="10" cy="10" r="9.5" stroke="var(--stroke-0, #C7C7C7)"/>
+</g>
+</svg>

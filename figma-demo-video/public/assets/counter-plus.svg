@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="xMidYMid meet" width="20" height="20" overflow="visible" style="display: block;" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group">
+<circle id="Oval" cx="10" cy="10" r="10" fill="var(--fill-0, #292929)"/>
+<path id="Combined Shape" fill-rule="evenodd" clip-rule="evenodd" d="M11 9V5H9V9H5V11H9V15H11V11H15V9H11Z" fill="var(--fill-0, white)"/>
+</g>
+</svg>

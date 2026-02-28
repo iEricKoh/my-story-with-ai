@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>McDelivery - ご注文内容の確認</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      background: white;
+    }
+    .font-w4 { font-family: 'Hiragino Sans', sans-serif; font-weight: 400; }
+    .font-w7 { font-family: 'Hiragino Sans', sans-serif; font-weight: 700; }
+    .font-speedee { font-family: 'Speedee', 'Hiragino Sans', sans-serif; font-weight: 700; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            mcd: {
+              red: '#db0007',
+              yellow: '#ffbc0d',
+              text: '#292929',
+              muted: '#6f6f6f',
+              border: '#e0e0e0',
+              light: '#959595',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="flex flex-col items-center pt-8 gap-8 min-h-screen bg-white">
+
+    <!-- McDelivery Logo (actual golden arches) -->
+    <div class="w-[51px] h-[51px] overflow-hidden shrink-0">
+      <img src="assets/delivery-logo.svg" alt="McDelivery" class="w-full h-full" />
+    </div>
+
+    <!-- Title -->
+    <p class="font-w7 text-[28px] leading-[36px] text-[#292929] text-center w-[688px]">
+      ご注文内容の確認
+    </p>
+
+    <!-- Main content area -->
+    <div class="flex gap-5 items-start w-[1024px]">
+
+      <!-- Left column (checkout form) -->
+      <div class="flex-1 flex flex-col gap-6 min-w-0">
+
+        <!-- Divider -->
+        <div class="h-px bg-[#e0e0e0] w-full"></div>
+
+        <!-- お届け先 -->
+        <div class="flex gap-2 items-start w-full">
+          <div class="w-[200px] shrink-0">
+            <p class="font-w7 text-[13px] leading-[18px] text-[#292929]">お届け先</p>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-w4 text-[13px] leading-[18px] text-[#292929]">東京都港区虎ノ門4-3-13 虎ノ門ビル101 日本マクドナルド株式会社 営業部</p>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-[#e0e0e0] w-full"></div>
+
+        <!-- 予定配達日時 -->
+        <div class="flex gap-2 items-start w-full">
+          <div class="w-[200px] shrink-0">
+            <p class="font-w7 text-[13px] leading-[18px] text-[#292929]">予定配達日時</p>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-w4 text-[13px] leading-[18px] text-[#292929]">202X年12月31日　12:00-12:20</p>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-[#e0e0e0] w-full"></div>
+
+        <!-- お支払い方法 -->
+        <div class="flex gap-2 items-start w-full">
+          <div class="w-[200px] shrink-0">
+            <p class="font-w7 text-[13px] leading-[18px] text-[#292929]">お支払い方法</p>
+          </div>
+          <div class="flex-1 flex flex-col gap-6 min-w-0">
+            <!-- Online payment section -->
+            <div class="flex flex-col gap-3">
+              <div class="flex gap-3 text-[13px] leading-[18px] font-w4">
+                <p class="text-[#292929] whitespace-nowrap shrink-0">オンライン決済</p>
+                <p class="text-[#6f6f6f]">メールでレシートをお送りします</p>
+              </div>
+
+              <!-- Payment tiles - Row 1 -->
+              <div class="flex gap-3 w-full">
+                <!-- PayPay -->
+                <div class="flex-1 bg-white border border-[#e0e0e0] rounded-[9px] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.2)] p-2 flex flex-col gap-[10px] items-center">
+                  <div class="h-[80px] w-full flex items-center justify-center relative">
+                    <!-- PayPay P logo + text -->
+                    <div class="flex items-center gap-1">
+                      <img src="assets/paypay-p.svg" alt="" class="h-[27px] w-auto" />
+                      <img src="assets/paypay-text.svg" alt="" class="h-[20px] w-auto" />
+                    </div>
+                  </div>
+                  <p class="font-w7 text-[13px] leading-[18px] text-[#2d2d2d] text-center whitespace-nowrap">PayPay（残高払い）</p>
+                </div>
+
+                <!-- d払い -->
+                <div class="flex-1 bg-white border border-[#e0e0e0] rounded-[9px] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.2)] p-2 flex flex-col gap-[10px] items-center">
+                  <div class="h-[80px] w-full flex items-center justify-center">
+                    <div class="flex items-center gap-1">
+                      <img src="assets/dpay-logo1.svg" alt="" class="h-[27px] w-auto" />
+                      <img src="assets/dpay-logo2.svg" alt="" class="h-[24px] w-auto" />
+                    </div>
+                  </div>
+                  <p class="font-w7 text-[13px] leading-[18px] text-[#2d2d2d] text-center">d払い</p>
+                </div>
+
+                <!-- 楽天ペイ -->
+                <div class="flex-1 bg-white border border-[#e0e0e0] rounded-[9px] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.2)] p-2 flex flex-col gap-[10px] items-center">
+                  <div class="h-[80px] w-full flex items-center justify-center">
+                    <!-- Rakuten Pay composed logo -->
+                    <div class="relative" style="width: 94px; height: 43px;">
+                      <img src="assets/rpay-logo1.svg" alt="" class="absolute inset-0 w-full h-full" />
+                      <img src="assets/rpay-logo2.svg" alt="" class="absolute" style="width: 44px; height: 25px; top: 9px; left: 43px;" />
+                      <img src="assets/rpay-logo3.svg" alt="" class="absolute" style="width: 25px; height: 27px; top: 8px; left: 7px;" />
+                    </div>
+                  </div>
+                  <p class="font-w7 text-[13px] leading-[18px] text-[#2d2d2d] text-center">楽天ペイ</p>
+                </div>
+              </div>
+
+              <!-- Payment tiles - Row 2 -->
+              <div class="flex gap-3 w-full">
+                <!-- LINE Pay -->
+                <div class="flex-1 bg-white border border-[#e0e0e0] rounded-[9px] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.2)] p-2 flex flex-col gap-[10px] items-center">
+                  <div class="h-[80px] w-full flex items-center justify-center">
+                    <img src="assets/linepay-real.svg" alt="LINE Pay" class="h-[29px] w-auto" />
+                  </div>
+                  <p class="font-w7 text-[13px] leading-[18px] text-[#2d2d2d] text-center">LINE Pay</p>
+                </div>
+
+                <!-- クレジットカード -->
+                <div class="flex-1 bg-white border border-[#e0e0e0] rounded-[9px] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.2)] p-2 flex flex-col gap-[10px] items-center">
+                  <div class="h-[80px] w-full flex items-center justify-center">
+                    <!-- Credit card icon matching Figma design -->
+                    <div class="relative" style="width: 64px; height: 41px;">
+                      <div class="absolute inset-0 border-[1.6px] border-black rounded" style="background: linear-gradient(90deg, rgba(255,188,13,0.2), rgba(255,188,13,0.2)), white;"></div>
+                      <div class="absolute left-0 top-[6.4px] w-full" style="height: 6.5px; background: #292929;"></div>
+                      <div class="absolute rounded-[1px]" style="left: 46.8px; top: 28.2px; width: 12.9px; height: 8.1px; background: #ffbc0d;"></div>
+                    </div>
+                  </div>
+                  <p class="font-w7 text-[13px] leading-[18px] text-[#2d2d2d] text-center">クレジットカード</p>
+                </div>
+
+                <!-- Empty spacer -->
+                <div class="flex-1"></div>
+              </div>
+            </div>
+
+            <!-- その他 section -->
+            <div class="flex flex-col gap-3">
+              <div class="flex gap-3 text-[13px] leading-[18px] font-w4">
+                <p class="text-[#292929] whitespace-nowrap shrink-0">その他</p>
+                <p class="text-[#6f6f6f]">紙のレシートをお渡しします</p>
+              </div>
+
+              <!-- Cash payment tile (selected) -->
+              <div class="flex gap-3">
+                <div class="flex-1 bg-white border-2 border-[#ffbc0d] rounded-[9px] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.2)] p-2 flex items-center justify-center relative h-[64px]">
+                  <p class="font-w7 text-[13px] leading-[18px] text-[#2d2d2d] text-center">現金支払い</p>
+                  <!-- Gold checkmark (top-right) -->
+                  <div class="absolute right-0 top-0 w-6 h-6">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="11.5" fill="#FFBC0D" stroke="#FFBC0D"/>
+                    </svg>
+                    <svg width="13" height="10" viewBox="0 0 12.958 9.707" fill="none" class="absolute" style="top: 7px; left: 5.5px;">
+                      <path d="M12.958 1.475L4.977 8.945L4.163 9.707L3.495 8.798L0 4.041L1.598 2.86L4.425 6.706L11.591 0L12.958 1.475Z" fill="#292929"/>
+                    </svg>
+                  </div>
+                </div>
+                <!-- Empty spacers -->
+                <div class="flex-1"></div>
+                <div class="flex-1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-[#e0e0e0] w-full"></div>
+
+        <!-- クーポンコード -->
+        <div class="flex gap-2 items-start w-full">
+          <div class="w-[200px] shrink-0">
+            <p class="font-w7 text-[13px] leading-[18px] text-[#292929]">クーポンコード</p>
+          </div>
+          <div class="flex-1 flex gap-3 items-center min-w-0">
+            <input type="text" placeholder="例: ED234"
+              class="flex-1 h-9 px-3 border border-[#d6d6d6] rounded text-[13px] font-w4 text-[#292929] placeholder:text-[#959595] outline-none" />
+            <button class="h-9 px-4 bg-white border border-[#292929] rounded text-[13px] font-w7 text-[#292929] whitespace-nowrap">
+              クーポンを使う
+            </button>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-[#e0e0e0] w-full"></div>
+
+        <!-- ご注文内容 -->
+        <div class="flex gap-2 items-start w-full">
+          <div class="w-[200px] shrink-0">
+            <p class="font-w7 text-[13px] leading-[18px] text-[#292929]">ご注文内容</p>
+          </div>
+          <div class="flex-1 flex flex-col min-w-0">
+
+            <!-- Order Item 1 -->
+            <div class="flex items-start gap-4 py-5 border-b border-[#e0e0e0]">
+              <div class="w-[54px] h-[54px] shrink-0 relative bg-white overflow-visible">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <img src="assets/product-1.png" alt="ビッグマック" class="w-[62px] h-auto object-contain" />
+                </div>
+              </div>
+              <div class="flex-1 min-w-0 flex flex-col">
+                <p class="font-w7 text-[13px] leading-[18px] text-[#292929]">ビッグマック® セット</p>
+                <p class="font-w4 text-[11px] leading-[16px] text-[#6f6f6f] mt-0.5">マックフライポテト（M）</p>
+                <p class="font-w4 text-[11px] leading-[16px] text-[#6f6f6f]">アールグレイ アイスティー(ストレート)(M)</p>
+                <div class="flex items-center gap-0.5 mt-1">
+                  <span class="font-w7 text-[11px] leading-[18px] text-[#2d2d2d]">￥</span>
+                  <span class="font-speedee text-[18px] leading-[24px] text-[#2d2d2d]">600</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-end gap-2 shrink-0">
+                <div class="w-[72px] h-[36px] bg-white border border-[#292929] rounded-[4px] flex items-center justify-center">
+                  <span class="font-w4 text-[13px] leading-[18px] text-[#292929]">変更</span>
+                </div>
+                <div class="w-[93px] h-[22px] flex items-center justify-between relative">
+                  <img src="assets/counter-minus.svg" alt="−" class="w-5 h-5" />
+                  <span class="font-speedee text-[18px] leading-[22px] text-black text-center">1</span>
+                  <img src="assets/counter-plus.svg" alt="+" class="w-5 h-5" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Item 2 -->
+            <div class="flex items-start gap-4 py-5 border-b border-[#e0e0e0]">
+              <div class="w-[54px] h-[54px] shrink-0 relative bg-white overflow-visible">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <img src="assets/product-1.png" alt="ビッグマック" class="w-[62px] h-auto object-contain" />
+                </div>
+              </div>
+              <div class="flex-1 min-w-0 flex flex-col">
+                <p class="font-w7 text-[13px] leading-[18px] text-[#292929]">ビッグマック® セット</p>
+                <p class="font-w4 text-[11px] leading-[16px] text-[#6f6f6f] mt-0.5">マックフライポテト（M）</p>
+                <p class="font-w4 text-[11px] leading-[16px] text-[#6f6f6f]">アールグレイ アイスティー(ストレート)(M)</p>
+                <div class="flex items-center gap-0.5 mt-1">
+                  <span class="font-w7 text-[11px] leading-[18px] text-[#2d2d2d]">￥</span>
+                  <span class="font-speedee text-[18px] leading-[24px] text-[#2d2d2d]">600</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-end gap-2 shrink-0">
+                <div class="w-[72px] h-[36px] bg-white border border-[#292929] rounded-[4px] flex items-center justify-center">
+                  <span class="font-w4 text-[13px] leading-[18px] text-[#292929]">変更</span>
+                </div>
+                <div class="w-[93px] h-[22px] flex items-center justify-between relative">
+                  <img src="assets/counter-minus.svg" alt="−" class="w-5 h-5" />
+                  <span class="font-speedee text-[18px] leading-[22px] text-black text-center">1</span>
+                  <img src="assets/counter-plus.svg" alt="+" class="w-5 h-5" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Item 3 -->
+            <div class="flex items-start gap-4 py-5">
+              <div class="w-[54px] h-[54px] shrink-0 relative bg-white overflow-visible">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <img src="assets/product-1.png" alt="ビッグマック" class="w-[62px] h-auto object-contain" />
+                </div>
+              </div>
+              <div class="flex-1 min-w-0 flex flex-col">
+                <p class="font-w7 text-[13px] leading-[18px] text-[#292929]">ビッグマック® セット</p>
+                <p class="font-w4 text-[11px] leading-[16px] text-[#6f6f6f] mt-0.5">マックフライポテト（M）</p>
+                <p class="font-w4 text-[11px] leading-[16px] text-[#6f6f6f]">アールグレイ アイスティー(ストレート)(M)</p>
+                <div class="flex items-center gap-0.5 mt-1">
+                  <span class="font-w7 text-[11px] leading-[18px] text-[#2d2d2d]">￥</span>
+                  <span class="font-speedee text-[18px] leading-[24px] text-[#2d2d2d]">600</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-end gap-2 shrink-0">
+                <div class="w-[72px] h-[36px] bg-white border border-[#292929] rounded-[4px] flex items-center justify-center">
+                  <span class="font-w4 text-[13px] leading-[18px] text-[#292929]">変更</span>
+                </div>
+                <div class="w-[93px] h-[22px] flex items-center justify-between relative">
+                  <img src="assets/counter-minus.svg" alt="−" class="w-5 h-5" />
+                  <span class="font-speedee text-[18px] leading-[22px] text-black text-center">1</span>
+                  <img src="assets/counter-plus.svg" alt="+" class="w-5 h-5" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right column (price sidebar) -->
+      <div class="w-[220px] shrink-0 sticky top-8">
+        <div class="bg-white border border-[#e0e0e0] rounded flex flex-col gap-4 p-5">
+          <!-- 小計 -->
+          <div class="flex justify-between items-baseline">
+            <span class="font-w4 text-[13px] text-[#6f6f6f]">小計</span>
+            <span class="font-w4 text-[13px] text-[#292929]">¥ 1,800</span>
+          </div>
+
+          <!-- デリバリー料 -->
+          <div class="flex justify-between items-baseline pb-4 border-b border-[#e0e0e0]">
+            <span class="font-w4 text-[13px] text-[#6f6f6f]">デリバリー料</span>
+            <span class="font-w4 text-[13px] text-[#292929]">¥ 300</span>
+          </div>
+
+          <!-- 合計 -->
+          <div class="flex justify-between items-baseline">
+            <span class="font-w7 text-[13px] text-[#292929]">合計</span>
+            <span class="font-w7 text-[28px] leading-[36px] text-[#292929]">¥ 2,100</span>
+          </div>
+
+          <!-- Privacy notice -->
+          <p class="font-w4 text-[11px] leading-[16px] text-[#292929] mt-2">
+            配達のため、個人情報を委託先の企業に提供する場合がございます。詳細はマックデリバリーサービス利用規約をご確認ください。
+          </p>
+
+          <!-- Terms checkbox -->
+          <label class="flex items-start gap-2 cursor-pointer mt-2">
+            <div class="w-6 h-6 shrink-0 relative mt-0.5">
+              <div class="absolute left-[3px] top-[3px] w-[18px] h-[18px] border border-[#959595] rounded-[3px] bg-white"></div>
+            </div>
+            <span class="font-w4 text-[11px] leading-[16px] text-[#292929]">マックデリバリー利用規約に同意します</span>
+          </label>
+
+          <!-- Next Button (disabled state) -->
+          <button class="w-full py-3 bg-[#e0e0e0] rounded text-[13px] font-w7 text-[#6f6f6f] text-center mt-2">
+            次へ
+          </button>
+
+          <!-- Back button -->
+          <button class="w-full py-3 bg-white border border-[#292929] rounded text-[13px] font-w7 text-[#292929] text-center">
+            メニューに戻る
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="w-full mt-8">
+      <div class="h-px bg-[#e0e0e0] w-full"></div>
+      <div class="flex items-center justify-center py-12 px-[88px]">
+        <div class="flex items-center gap-8 text-[11px] font-w4 text-[#6f6f6f]">
+          <span>©2021 McDonald's. All Rights Reserved.</span>
+          <span>利用規約</span>
+          <span>個人情報保護方針</span>
+          <span>法律に基づく情報</span>
+          <span>日本マクドナルドホールディングス</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
