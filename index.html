@@ -1168,6 +1168,37 @@ body {
   .two-col      { grid-template-columns: 1fr; gap: clamp(1rem, 3vw, 1.5rem); }
   .nav-dots     { display: none; }
 
+  /* Fade-only reveals on mobile — no vertical/horizontal movement
+     to prevent content appearing to jump during scroll-snap */
+  .reveal,
+  .reveal-left,
+  .reveal-right {
+    transform: none !important;
+    transition: opacity 0.4s ease !important;
+  }
+  .slide.visible .reveal,
+  .slide.visible .reveal-left,
+  .slide.visible .reveal-right {
+    transform: none !important;
+  }
+  .reveal-scale {
+    transform: scale(0.95) !important;
+    transition: opacity 0.4s ease, transform 0.4s ease !important;
+  }
+  .slide.visible .reveal-scale { transform: scale(1) !important; }
+
+  /* Tighter stagger delays on mobile */
+  .slide.visible .reveal:nth-child(1)  { transition-delay: 0s !important; }
+  .slide.visible .reveal:nth-child(2)  { transition-delay: 0.05s !important; }
+  .slide.visible .reveal:nth-child(3)  { transition-delay: 0.1s !important; }
+  .slide.visible .reveal:nth-child(4)  { transition-delay: 0.15s !important; }
+  .slide.visible .reveal:nth-child(5)  { transition-delay: 0.2s !important; }
+  .slide.visible .reveal:nth-child(6)  { transition-delay: 0.25s !important; }
+  .slide.visible .reveal:nth-child(7)  { transition-delay: 0.3s !important; }
+  .slide.visible .reveal:nth-child(8)  { transition-delay: 0.35s !important; }
+  .slide.visible .reveal:nth-child(9)  { transition-delay: 0.4s !important; }
+  .slide.visible .reveal:nth-child(10) { transition-delay: 0.45s !important; }
+
   /* Scale down background orbs to avoid overflow */
   .orb--cyan   { width: 250px !important; height: 250px !important; }
   .orb--purple { width: 300px !important; height: 300px !important; }
