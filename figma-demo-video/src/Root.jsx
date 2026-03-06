@@ -4,6 +4,7 @@ import { FigmaToCodeDemo } from "./FigmaToCodeDemo";
 import { TaskBreakdownDemo } from "./TaskBreakdownDemo";
 import { QAHandoffDemo } from "./QAHandoffDemo";
 import { TypelessDemo, TypelessNaturalSpeech, TypelessAskAnything, TypelessTranslation } from "./TypelessDemo";
+import { PRGeneratorDemo } from "./PRGeneratorDemo";
 
 export const RemotionRoot = () => {
   return (
@@ -36,6 +37,14 @@ export const RemotionRoot = () => {
         id="QAHandoffDemo"
         component={QAHandoffDemo}
         durationInFrames={990}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="PRGeneratorDemo"
+        component={PRGeneratorDemo}
+        durationInFrames={900}
         fps={30}
         width={1920}
         height={1080}

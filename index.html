@@ -1642,8 +1642,14 @@ body {
   opacity: 0;
   animation-fill-mode: forwards;
 }
-.slide.visible .pipeline-parallel {
+[data-title="QA Handoff"].visible .pipeline-parallel {
   animation: pipelineForkBranch 0.4s 2.7s ease forwards;
+}
+/* PR Generator: parallel section always visible, no animation */
+[data-title="PR Generator"] .pipeline-parallel {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 /* — Pipeline footnote — */
@@ -1654,6 +1660,45 @@ body {
   margin-top: clamp(0.2rem, 0.5vh, 0.4rem);
   border-top: 1px solid rgba(255,255,255,0.06);
   padding-top: clamp(0.2rem, 0.5vh, 0.3rem);
+}
+
+/* — PR Generator: video-synced pipeline (via .step-running / .step-active) — */
+
+/* Running state: spinner spins continuously, label brightens */
+.pipeline-step.step-running .pipeline-node {
+  background: rgba(0,255,204,0.15);
+  border-color: rgba(0,255,204,0.6);
+  box-shadow: 0 0 12px rgba(0,255,204,0.3);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.pipeline-step.step-running .pipeline-spinner {
+  opacity: 1;
+  animation: prSpinnerLoop 0.8s linear infinite;
+}
+.pipeline-step.step-running .pipeline-label {
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+@keyframes prSpinnerLoop {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Done state: full activation with checkmark */
+.pipeline-step.step-active .pipeline-node {
+  animation: pipelineStepExecute 1.4s 0s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.pipeline-step.step-active .pipeline-spinner {
+  animation: pipelineSpinnerSpin 1.4s 0s linear forwards;
+}
+.pipeline-step.step-active .pipeline-check {
+  animation: pipelineCheckAppear 1.4s 0s ease forwards;
+}
+.pipeline-step.step-active .pipeline-label {
+  animation: pipelinePulseGlow 1s 0s ease-in-out 1 forwards;
+}
+.pipeline-connector.step-active {
+  animation: pipelineConnectorGrow 0.3s 0s ease forwards;
 }
 
 /* — Responsive — */
@@ -2587,7 +2632,122 @@ $ /hooks
 
 
 <!-- =======================================================================
-     SLIDE 15c — QA HANDOFF
+     SLIDE 15c — PR GENERATOR
+     ======================================================================= -->
+<section class="slide" data-title="PR Generator">
+  <p class="slide-label reveal">From context to PR</p>
+  <h2 class="slide-title reveal">PR Generator: <a href="#" style="color: var(--cyan); -webkit-text-fill-color: var(--cyan); text-decoration: none;">mcd-pr <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 0.6em; height: 0.6em; display: inline; vertical-align: middle;"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" /></svg></a></h2>
+  <p class="slide-body reveal" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">
+    Run <code style="color: var(--cyan); background: rgba(0,255,204,0.08); padding: 0.1em 0.4em; border-radius: 4px; font-family: var(--font-mono); font-size: 0.9em;">/mcd-pr MDX-12272</code> &mdash; three parallel agents grab context from Jira, Git, and Slack, then generate a complete PR title and description in your team's format.
+  </p>
+
+  <!-- Two-column: Video left, Pipeline right -->
+  <div class="reveal mobile-stack" style="display: grid; grid-template-columns: 7fr 3fr; gap: clamp(1rem, 2vw, 2rem); align-items: start;">
+
+    <!-- Left: Video (70%) -->
+    <div style="position: relative;">
+      <div style="border-radius: clamp(8px, 1vw, 14px); overflow: hidden; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,255,204,0.06);">
+        <video autoplay loop muted playsinline style="display: block; width: 100%; object-fit: contain; background: #0a0a0f;">
+          <source src="pr-generator-demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Right: Parallel agents pipeline (30%) -->
+    <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.8vh, 0.5rem);">
+      <p class="pipeline-header" style="font-size: clamp(0.6rem, 0.85vw, 0.72rem); text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); font-weight: 600;">Parallel Agent Pipeline</p>
+
+      <div class="pipeline">
+        <!-- Step 0: Input -->
+        <div class="pipeline-step" data-step="pr-input">
+          <div class="pipeline-node">
+            <div class="pipeline-spinner"></div>
+            <div class="pipeline-check">&#10003;</div>
+          </div>
+          <div class="pipeline-label">
+            <span class="pipeline-name">Input</span>
+            <span class="pipeline-desc">Ticket ID + branch detection</span>
+          </div>
+        </div>
+        <div class="pipeline-connector" data-after="pr-input" style="transform: scaleY(1);"></div>
+
+        <!-- Step 1: Fork — Jira + Git + Slack (parallel) -->
+        <div class="pipeline-fork-section">
+          <div class="pipeline-parallel" style="gap: clamp(0.2rem, 0.5vh, 0.4rem); opacity: 1;">
+            <div class="pipeline-step" data-step="pr-jira">
+              <div class="pipeline-node">
+                <div class="pipeline-spinner"></div>
+                <div class="pipeline-check">&#10003;</div>
+              </div>
+              <div class="pipeline-label">
+                <span class="pipeline-name">Jira</span>
+                <span class="pipeline-desc">Ticket + parent</span>
+                <span class="pipeline-tag">subagent</span>
+              </div>
+            </div>
+            <div class="pipeline-step" data-step="pr-git">
+              <div class="pipeline-node">
+                <div class="pipeline-spinner"></div>
+                <div class="pipeline-check">&#10003;</div>
+              </div>
+              <div class="pipeline-label">
+                <span class="pipeline-name">Git</span>
+                <span class="pipeline-desc">PR diff + commits</span>
+                <span class="pipeline-tag">subagent</span>
+              </div>
+            </div>
+            <div class="pipeline-step" data-step="pr-slack">
+              <div class="pipeline-node">
+                <div class="pipeline-spinner"></div>
+                <div class="pipeline-check">&#10003;</div>
+              </div>
+              <div class="pipeline-label">
+                <span class="pipeline-name">Slack</span>
+                <span class="pipeline-desc">Discussions + links</span>
+                <span class="pipeline-tag">subagent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pipeline-connector" data-after="pr-fork"></div>
+
+        <!-- Step 2: Generate -->
+        <div class="pipeline-step" data-step="pr-gen">
+          <div class="pipeline-node">
+            <div class="pipeline-spinner"></div>
+            <div class="pipeline-check">&#10003;</div>
+          </div>
+          <div class="pipeline-label">
+            <span class="pipeline-name">Generate</span>
+            <span class="pipeline-desc">PR title + markdown body</span>
+          </div>
+        </div>
+        <div class="pipeline-connector" data-after="pr-gen"></div>
+
+        <!-- Step 3: Output -->
+        <div class="pipeline-step" data-step="pr-output">
+          <div class="pipeline-node">
+            <div class="pipeline-spinner"></div>
+            <div class="pipeline-check">&#10003;</div>
+          </div>
+          <div class="pipeline-label">
+            <span class="pipeline-name">Output</span>
+            <span class="pipeline-desc">Copy-paste or push via GitHub MCP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-footnote">
+        Jira, Git &amp; Slack run as subagents in parallel. Context gathered in ~77s wall time.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =======================================================================
+     SLIDE 15d — QA HANDOFF
      ======================================================================= -->
 <section class="slide" data-title="QA Handoff">
   <p class="slide-label reveal">From code to QA</p>
@@ -3080,6 +3240,60 @@ document.addEventListener('DOMContentLoaded', () => {
 /* -----------------------------------------------------------------------
    TYPELESS VIDEO TAB SWITCHER
    ----------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   PR GENERATOR — VIDEO-SYNCED PIPELINE
+   ----------------------------------------------------------------------- */
+(function initPRPipeline() {
+  const slide = document.querySelector('[data-title="PR Generator"]');
+  if (!slide) return;
+  const video = slide.querySelector('video');
+  if (!video) return;
+
+  // Video time thresholds (seconds) mapped from Remotion frames (30fps)
+  // Frame 0-40: Input | 60-260: subagents | 270: generate | 330: output
+  // Synced to video timeline (30fps):
+  // Frame 40 = 1.3s: Input done
+  // Frame 60 = 2.0s: agents start running (spinners)
+  // Frame 170 = 5.7s: Git done | Frame 210 = 7.0s: Jira done | Frame 260 = 8.7s: Slack done
+  // Frame 270 = 9.0s: "All gathered" | Frame 290 = 9.7s: Generating | Frame 330 = 11.0s: PR preview
+  const steps = [
+    { sel: '[data-step="pr-input"]',  start: 0.5,  done: 1.3 },
+    { sel: '[data-step="pr-jira"]',   start: 2.0,  done: 7.0 },
+    { sel: '[data-step="pr-git"]',    start: 2.0,  done: 5.7 },
+    { sel: '[data-step="pr-slack"]',  start: 2.0,  done: 8.7 },
+    { sel: '[data-step="pr-gen"]',    start: 9.0,  done: 9.7 },
+    { sel: '[data-step="pr-output"]', start: 10.5, done: 11.0 },
+  ];
+  const connectors = [
+    { sel: '[data-after="pr-input"]', t: 2.0 },
+    { sel: '[data-after="pr-fork"]',  t: 9.0 },
+    { sel: '[data-after="pr-gen"]',   t: 11.0 },
+  ];
+
+  const pipeline = slide.querySelector('.pipeline');
+  if (!pipeline) return;
+
+  function syncPipeline() {
+    const t = video.currentTime;
+    steps.forEach(s => {
+      const el = pipeline.querySelector(s.sel);
+      if (!el) return;
+      const running = t >= s.start && t < s.done;
+      const done = t >= s.done;
+      el.classList.toggle('step-running', running);
+      el.classList.toggle('step-active', done);
+    });
+    connectors.forEach(c => {
+      const el = pipeline.querySelector(c.sel);
+      if (el) el.classList.toggle('step-active', t >= c.t);
+    });
+  }
+
+  video.addEventListener('timeupdate', syncPipeline);
+  // Reset when video loops
+  video.addEventListener('seeked', syncPipeline);
+})();
+
 function switchTypelessVideo(mode) {
   const map = { natural: 'typeless-vid-natural', ask: 'typeless-vid-ask', translate: 'typeless-vid-translate' };
   // Pause all, hide all (use inline style for max specificity)
