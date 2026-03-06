@@ -452,6 +452,189 @@ body {
   line-height: 1.5;
 }
 
+/* Flip cards — Why Claude Code */
+.flip-card {
+  perspective: 800px;
+  cursor: pointer;
+}
+.flip-card-inner {
+  position: relative;
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front,
+.flip-card-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid rgba(0,255,204,0.2);
+  border-radius: clamp(8px, 1vw, 14px);
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  overflow: hidden;
+}
+.flip-card-back p {
+  font-size: clamp(0.65rem, 0.95vw, 0.82rem);
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+.flip-card-back .flip-example {
+  margin-top: clamp(0.3rem, 0.8vh, 0.5rem);
+  font-family: var(--font-mono);
+  font-size: clamp(0.58rem, 0.82vw, 0.72rem);
+  color: var(--cyan);
+  background: rgba(0,255,204,0.06);
+  border-radius: 6px;
+  padding: clamp(0.3rem, 0.6vw, 0.5rem) clamp(0.4rem, 0.8vw, 0.6rem);
+  line-height: 1.5;
+}
+.flip-card-back .flip-hint {
+  font-size: clamp(0.55rem, 0.75vw, 0.65rem);
+  color: rgba(240,242,248,0.3);
+  margin-top: clamp(0.3rem, 0.6vh, 0.4rem);
+}
+
+/* Takeaways — spotlight focus */
+.takeaway-item {
+  cursor: pointer;
+  transition: opacity 0.3s, transform 0.3s;
+  position: relative;
+}
+.takeaway-item .takeaway-extra {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  font-size: clamp(0.65rem, 0.9vw, 0.78rem);
+  color: var(--cyan);
+  font-style: italic;
+  line-height: 1.5;
+}
+.takeaway-dimmed .takeaway-item:not(.takeaway-focus) {
+  opacity: 0.25;
+  transform: scale(0.97);
+}
+.takeaway-item.takeaway-focus .takeaway-extra {
+  max-height: 80px;
+  opacity: 1;
+}
+.takeaway-item.takeaway-focus > span:first-child {
+  opacity: 1 !important;
+  text-shadow: 0 0 20px currentColor;
+}
+
+/* Starting Point — typewriter reveal */
+.sp-bullet {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.sp-bullet:hover {
+  color: var(--white) !important;
+}
+.sp-response {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.85vw, 0.72rem);
+  color: var(--cyan);
+  padding-left: clamp(0.5rem, 1vw, 0.8rem);
+  border-left: 1px solid rgba(0,255,204,0.3);
+  margin-top: clamp(0.15rem, 0.3vh, 0.25rem);
+  line-height: 1.6;
+}
+.sp-bullet.sp-active .sp-response {
+  max-height: 50px;
+  opacity: 1;
+}
+
+/* avante.vim — command cycling */
+.cmd-cycle {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.cmd-cycle-item {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.cmd-cycle-item.cmd-hidden {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+.cmd-cycle-hint {
+  font-size: clamp(0.55rem, 0.75vw, 0.65rem);
+  color: rgba(240,242,248,0.25);
+  margin-top: clamp(0.3rem, 0.6vh, 0.4rem);
+}
+
+/* i18n workflow — terminal-expand steps */
+.i18n-step {
+  cursor: pointer;
+  border-left: 2px solid rgba(0,255,204,0.15);
+  padding: clamp(0.25rem, 0.5vh, 0.4rem) 0 clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.6rem, 1vw, 0.8rem);
+  transition: border-color 0.2s, background 0.2s;
+}
+.i18n-step:hover {
+  border-color: rgba(0,255,204,0.4);
+  background: rgba(0,255,204,0.03);
+}
+.i18n-step.i18n-active {
+  border-color: var(--cyan);
+  background: rgba(0,255,204,0.05);
+}
+.i18n-step-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.4rem, 0.8vw, 0.6rem);
+}
+.i18n-num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(0,255,204,0.1);
+  border: 1px solid rgba(0,255,204,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--cyan); flex-shrink: 0;
+}
+.i18n-cmd {
+  font-size: clamp(0.65rem, 0.95vw, 0.82rem);
+  color: rgba(240,242,248,0.85);
+}
+.i18n-output {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
+  font-family: var(--font-mono);
+  font-size: clamp(0.55rem, 0.8vw, 0.68rem);
+  color: rgba(240,242,248,0.5);
+  line-height: 1.5;
+  margin-top: 0;
+  padding-left: calc(18px + clamp(0.4rem, 0.8vw, 0.6rem));
+}
+.i18n-step.i18n-active .i18n-output {
+  max-height: 60px;
+  opacity: 1;
+  margin-top: clamp(0.2rem, 0.4vh, 0.3rem);
+}
+.i18n-prompt {
+  color: var(--cyan);
+}
+
 /* -----------------------------------------------------------------------
    TWO-COLUMN LAYOUT
    ----------------------------------------------------------------------- */
@@ -1010,6 +1193,247 @@ body {
   font-size: clamp(1.2rem, 2.5vw, 2rem);
   color: var(--cyan);
   font-weight: 300;
+}
+.concept-clickable {
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+}
+.concept-clickable:hover {
+  border-color: rgba(0,255,204,0.3);
+  box-shadow: 0 0 20px rgba(0,255,204,0.1);
+  transform: translateY(-2px);
+}
+.concept-clickable.concept-selected {
+  border-color: rgba(0,255,204,0.5);
+  box-shadow: 0 0 25px rgba(0,255,204,0.15);
+}
+.concept-detail-stack {
+  position: relative;
+  min-height: clamp(140px, 20vh, 220px);
+}
+.concept-detail-stack .concept-detail-card {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  animation: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.concept-detail-stack .concept-detail-card.concept-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.concept-detail-card {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: clamp(8px, 1vw, 12px);
+  background: var(--bg-card);
+  padding: clamp(0.75rem, 1.5vw, 1.25rem) clamp(1rem, 2vw, 1.5rem);
+  animation: conceptDetailIn 0.3s ease forwards;
+  max-width: 720px;
+  margin: 0 auto;
+}
+@keyframes conceptDetailIn {
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* Skills vs MCP — clickable columns */
+.svm-col {
+  padding: clamp(0.75rem, 1.5vw, 1.25rem);
+  border-radius: clamp(8px, 1vw, 12px);
+  border: 1px solid transparent;
+}
+/* Skills vs MCP — side drawer */
+.svm-row {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
+}
+.svm-cols-left {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+.svm-cols-left > p {
+  grid-column: 1 / -1;
+}
+.svm-drawer-right {
+  position: relative;
+  min-height: clamp(180px, 25vh, 280px);
+}
+.svm-drawer-card {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: clamp(8px, 1vw, 12px);
+  background: var(--bg-card);
+  padding: clamp(0.75rem, 1.5vw, 1.25rem) clamp(1rem, 2vw, 1.5rem);
+  opacity: 0;
+  transform: translateX(16px);
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.svm-drawer-card.svm-card-visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.svm-col:hover {
+  border-color: rgba(0,255,204,0.3);
+  box-shadow: 0 0 20px rgba(0,255,204,0.1);
+  transform: translateY(-2px);
+  transition: all 0.25s ease;
+}
+.concept-detail-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.4rem, 0.8vw, 0.6rem);
+  margin-bottom: clamp(0.4rem, 1vh, 0.6rem);
+}
+.concept-detail-icon {
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+}
+.concept-detail-title {
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  font-weight: 700;
+  color: var(--cyan);
+}
+.concept-detail-body {
+  font-size: clamp(0.7rem, 0.95vw, 0.85rem);
+  color: rgba(240,242,248,0.75);
+  line-height: 1.6;
+}
+.concept-detail-body ul {
+  padding-left: 18px;
+  margin: clamp(0.3rem, 0.6vh, 0.4rem) 0;
+}
+.concept-detail-body li {
+  margin-bottom: clamp(0.15rem, 0.3vh, 0.25rem);
+}
+.concept-detail-body p {
+  margin: clamp(0.2rem, 0.4vh, 0.3rem) 0;
+}
+.concept-detail-body em {
+  color: var(--cyan);
+  font-style: italic;
+}
+
+/* Anatomy of a Skill — clickable notes */
+/* Anatomy — clickable rows */
+.anatomy-item-row {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.3rem, 0.6vw, 0.5rem);
+  cursor: pointer;
+  padding: clamp(0.25rem, 0.5vh, 0.4rem) clamp(0.4rem, 0.8vw, 0.6rem);
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.anatomy-item-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+.anatomy-file-link:hover {
+  color: var(--cyan) !important;
+  text-decoration: underline;
+}
+/* Anatomy modal */
+.anatomy-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  justify-content: center;
+  align-items: center;
+}
+.anatomy-modal.active {
+  display: flex;
+}
+.anatomy-modal-content {
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: clamp(10px, 1.5vw, 16px);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: auto;
+  position: relative;
+  animation: anatomyModalIn 0.25s ease forwards;
+}
+@keyframes anatomyModalIn {
+  0%   { opacity: 0; transform: scale(0.95) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.anatomy-modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: rgba(240,242,248,0.4);
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1;
+  line-height: 1;
+}
+.anatomy-modal-close:hover {
+  color: var(--white);
+}
+.anatomy-preview-tab {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.85vw, 0.72rem);
+  color: rgba(240,242,248,0.7);
+  padding: clamp(0.35rem, 0.7vh, 0.5rem) clamp(0.6rem, 1.2vw, 0.9rem);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.anatomy-preview-content {
+  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.6rem, 1.2vw, 0.9rem);
+  font-family: var(--font-mono);
+  font-size: clamp(0.58rem, 0.82vw, 0.7rem);
+  line-height: 1.7;
+  color: rgba(240,242,248,0.6);
+}
+.anatomy-preview-line {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+}
+.anatomy-ln {
+  color: rgba(240,242,248,0.2);
+  min-width: 1.5em;
+  text-align: right;
+  user-select: none;
+  flex-shrink: 0;
+}
+.anatomy-preview-desc {
+  margin-top: clamp(0.5rem, 1vh, 0.75rem);
+  padding-top: clamp(0.4rem, 0.8vh, 0.6rem);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: clamp(0.6rem, 0.85vw, 0.72rem);
+  color: rgba(240,242,248,0.5);
+  line-height: 1.6;
+  font-family: var(--font-sans);
+}
+.anatomy-preview-desc em {
+  color: var(--cyan);
+  font-style: italic;
+}
+.anatomy-preview-desc strong {
+  color: rgba(240,242,248,0.8);
+}
+
+@keyframes _unused_anatomyNoteIn {
+  0%   { opacity: 0; max-height: 0; }
+  100% { opacity: 1; max-height: 200px; }
 }
 
 /* -----------------------------------------------------------------------
@@ -1642,6 +2066,7 @@ body {
   opacity: 0;
   animation-fill-mode: forwards;
 }
+[data-title="Task Breakdown"].visible .pipeline-parallel,
 [data-title="QA Handoff"].visible .pipeline-parallel {
   animation: pipelineForkBranch 0.4s 2.7s ease forwards;
 }
@@ -1707,13 +2132,14 @@ body {
 .pr-output-step.step-active:hover .pipeline-label { opacity: 1; filter: brightness(1.2); }
 
 /* — PR Output Overlay — */
-#pr-output-overlay { display: none !important; }
-#pr-output-overlay.active { display: flex !important; animation: prOverlayIn 0.25s ease forwards; }
+html.overlay-open, body.overlay-open { overflow: hidden !important; }
+#pr-output-overlay, #qa-output-overlay { display: none !important; }
+#pr-output-overlay.active, #qa-output-overlay.active { display: flex !important; animation: prOverlayIn 0.25s ease forwards; }
 @keyframes prOverlayIn {
   0%   { opacity: 0; }
   100% { opacity: 1; }
 }
-#pr-output-overlay.active > div {
+#pr-output-overlay.active > div, #qa-output-overlay.active > div {
   animation: prOverlaySlideUp 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
 }
 @keyframes prOverlaySlideUp {
@@ -1902,6 +2328,13 @@ body {
   font-weight: 600;
 }
 
+/* QA Output step: clickable */
+.qa-output-icon { opacity: 0; transition: opacity 0.3s; font-size: 0.8em; }
+.slide.visible .qa-output-phase { cursor: pointer; }
+.slide.visible .qa-output-phase .qa-output-icon { animation: qaOutputIconIn 0.4s 3.8s ease forwards; }
+@keyframes qaOutputIconIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+.qa-output-phase:hover .qa-phase-info { filter: brightness(1.3); }
+
 /* Responsive */
 @media (max-height: 700px) {
   .qa-phase-desc { display: none; }
@@ -2007,12 +2440,24 @@ body {
     <!-- Right: Why it worked -->
     <div>
       <p style="font-family: var(--font-mono); font-size: clamp(0.65rem, 1vw, 0.82rem); text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: clamp(0.5rem, 1.5vh, 0.8rem);">Why it worked</p>
-      <ul class="bullet-list">
-        <li>Tasks were <strong>straightforward</strong> enough</li>
-        <li>Most issues solved with a <strong>single question</strong></li>
-        <li>Small fixes on a <strong>mature codebase</strong></li>
-        <li>Zero setup, zero config, zero friction</li>
-      </ul>
+      <div style="display: flex; flex-direction: column; gap: clamp(0.2rem, 0.5vh, 0.35rem);">
+        <div class="sp-bullet" onclick="toggleSpBullet(this)">
+          <p class="bullet-list-item" style="font-size: clamp(0.75rem, 1.1vw, 0.9rem); color: rgba(240,242,248,0.75);">&#8226; Tasks were <strong>straightforward</strong> enough</p>
+          <div class="sp-response">&gt; "Why is this CSS not working?" &mdash; one answer, fixed.</div>
+        </div>
+        <div class="sp-bullet" onclick="toggleSpBullet(this)">
+          <p class="bullet-list-item" style="font-size: clamp(0.75rem, 1.1vw, 0.9rem); color: rgba(240,242,248,0.75);">&#8226; Most issues solved with a <strong>single question</strong></p>
+          <div class="sp-response">&gt; No follow-ups, no context needed. Ask once, get answer.</div>
+        </div>
+        <div class="sp-bullet" onclick="toggleSpBullet(this)">
+          <p class="bullet-list-item" style="font-size: clamp(0.75rem, 1.1vw, 0.9rem); color: rgba(240,242,248,0.75);">&#8226; Small fixes on a <strong>mature codebase</strong></p>
+          <div class="sp-response">&gt; Patterns already existed. AI just pointed me to the right one.</div>
+        </div>
+        <div class="sp-bullet" onclick="toggleSpBullet(this)">
+          <p class="bullet-list-item" style="font-size: clamp(0.75rem, 1.1vw, 0.9rem); color: rgba(240,242,248,0.75);">&#8226; Zero setup, zero config, zero friction</p>
+          <div class="sp-response">&gt; Browser tab. That's it. No API keys, no extensions.</div>
+        </div>
+      </div>
       <div style="margin-top: clamp(1rem, 3vh, 2rem); padding: clamp(0.6rem, 1.5vw, 1rem); background: var(--bg-card); border-left: 3px solid var(--cyan); border-radius: 0 8px 8px 0;">
         <p style="font-family: var(--font-mono); font-size: clamp(0.8rem, 1.2vw, 0.95rem); color: var(--cyan);">
           "I was the entire pipeline."
@@ -2071,10 +2516,25 @@ body {
     AI felt like part of my editor, not a separate tool.
   </p>
   <div class="reveal" style="margin-top: clamp(1rem, 3vh, 2rem);">
-    <div class="code-block" style="max-width: 500px;">
-      <span class="comment">-- nvim: AI inline with your code</span><br>
-      <span class="dir">:Avante</span> <span class="file">ask "add error handling to this API call"</span>
+    <div id="avante-cmd" class="code-block cmd-cycle" style="max-width: 560px;" onclick="cycleAvanteCmd()">
+      <div class="cmd-cycle-item">
+        <span class="comment">-- nvim: AI inline with your code</span><br>
+        <span class="dir">:Avante</span> <span class="file">ask "add error handling to this API call"</span>
+      </div>
+      <div class="cmd-cycle-item cmd-hidden">
+        <span class="comment">-- select a block, ask AI to refactor it</span><br>
+        <span class="dir">:'&lt;,'&gt;Avante</span> <span class="file">ask "simplify this to use early returns"</span>
+      </div>
+      <div class="cmd-cycle-item cmd-hidden">
+        <span class="comment">-- generate tests for current file</span><br>
+        <span class="dir">:Avante</span> <span class="file">ask "write unit tests for the exported functions"</span>
+      </div>
+      <div class="cmd-cycle-item cmd-hidden">
+        <span class="comment">-- explain unfamiliar code</span><br>
+        <span class="dir">:Avante</span> <span class="file">ask "what does this useEffect do?"</span>
+      </div>
     </div>
+    <p class="cmd-cycle-hint">click to cycle examples</p>
   </div>
 </section>
 
@@ -2111,20 +2571,44 @@ body {
     same window, zero friction.
   </p>
   <div class="card-grid card-grid--3 reveal" style="max-width: 900px; margin-top: clamp(0.5rem, 1vh, 0.75rem);">
-    <div class="card">
-      <div class="card-icon">&#62;&nbsp;_</div>
-      <div class="card-title">Terminal-native</div>
-      <div class="card-text">No IDE needed. Just Vim + Claude, same terminal.</div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="card flip-card-front">
+          <div class="card-icon">&#62;&nbsp;_</div>
+          <div class="card-title">Terminal-native</div>
+          <div class="card-text">No IDE needed. Just Vim + Claude, same terminal.</div>
+        </div>
+        <div class="flip-card-back">
+          <p>Vim left, Claude right. One glance, zero switching.</p>
+          <div class="flip-example">$ claude "refactor this"<br>&#8627; edits in-place, live in Vim</div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-icon">&#129302;</div>
-      <div class="card-title">Agentic</div>
-      <div class="card-text">Tell it what, not how. It acts like you would.</div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="card flip-card-front">
+          <div class="card-icon">&#129302;</div>
+          <div class="card-title">Agentic</div>
+          <div class="card-text">Tell it what, not how. It acts like you would.</div>
+        </div>
+        <div class="flip-card-back">
+          <p>Give it a goal, not steps. It figures out the rest.</p>
+          <div class="flip-example">&gt; fix the failing test<br>&#8627; read &#8594; find bug &#8594; patch &#8594; re-run &#10003;</div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-icon">&#128295;</div>
-      <div class="card-title">Extensible</div>
-      <div class="card-text">Skills &amp; MCP let you teach it your domain.</div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="card flip-card-front">
+          <div class="card-icon">&#128295;</div>
+          <div class="card-title">Extensible</div>
+          <div class="card-text">Skills &amp; MCP let you teach it your domain.</div>
+        </div>
+        <div class="flip-card-back">
+          <p>Teach it <em>your</em> rules. Connect <em>your</em> tools.</p>
+          <div class="flip-example">Skill: your PR format<br>MCP: Jira + Slack + GitHub</div>
+        </div>
+      </div>
     </div>
   </div>
   <!-- Ghost terminal text — absolute so it doesn't push content down -->
@@ -2220,20 +2704,75 @@ $ /hooks
     your rules, your workflow. Build once, anyone on the team can use them.
   </p>
   <div class="concept-eq reveal">
-    <div class="concept-box">
+    <div class="concept-box concept-clickable" onclick="showConceptDetail('ai')">
       <div style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom:0.25rem;">&#129302;</div>
       AI
     </div>
     <div class="concept-op">+</div>
-    <div class="concept-box">
+    <div class="concept-box concept-clickable" onclick="showConceptDetail('skill')">
       <div style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom:0.25rem;">&#128218;</div>
       Skill
     </div>
     <div class="concept-op">=</div>
-    <div class="concept-box concept-box--glow">
+    <div class="concept-box concept-box--glow concept-clickable" onclick="showConceptDetail('expert')">
       <div style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom:0.25rem;">&#129504;</div>
       Domain Expert
     </div>
+  </div>
+
+  <!-- Detail panel — cooking analogy -->
+  <div id="concept-detail" class="reveal concept-detail-stack" style="margin-top: clamp(0.75rem, 2vh, 1.25rem);">
+
+    <div id="concept-detail-ai" class="concept-detail-card">
+      <div class="concept-detail-header">
+        <span class="concept-detail-icon">&#129302;</span>
+        <span class="concept-detail-title">AI = A capable person who's never been in your kitchen</span>
+      </div>
+      <div class="concept-detail-body">
+        <p>Smart, can follow instructions, learns fast. But without guidance:</p>
+        <ul>
+          <li><strong>"What should I cook?"</strong> — Doesn't know your menu</li>
+          <li><strong>"How much salt?"</strong> — Doesn't know your house taste</li>
+          <li><strong>"Where's the soy sauce?"</strong> — Doesn't know your kitchen layout</li>
+        </ul>
+        <p style="color: var(--cyan); font-weight: 600; margin-top: 8px;">Capable of anything, but needs to be told <em>your</em> way of doing things.</p>
+      </div>
+    </div>
+
+    <div id="concept-detail-skill" class="concept-detail-card">
+      <div class="concept-detail-header">
+        <span class="concept-detail-icon">&#128218;</span>
+        <span class="concept-detail-title">Skill = The recipe</span>
+      </div>
+      <div class="concept-detail-body">
+        <p>A recipe turns "make tonkotsu ramen" from vague into precise:</p>
+        <ul>
+          <li><strong>Ingredients</strong> — pork bones from Yamada-san, not the generic brand</li>
+          <li><strong>Steps</strong> — simmer 12 hours, not 8. Skim every 30 min</li>
+          <li><strong>Plating</strong> — black bowl, noodles first, broth second, chashu at 2 o'clock</li>
+          <li><strong>House rules</strong> — always ask about spice level, never substitute the egg</li>
+        </ul>
+        <p style="color: var(--cyan); font-weight: 600; margin-top: 8px;">Written once by someone who knows the dish. Anyone can follow it.</p>
+      </div>
+    </div>
+
+    <div id="concept-detail-expert" class="concept-detail-card">
+      <div class="concept-detail-header">
+        <span class="concept-detail-icon">&#129504;</span>
+        <span class="concept-detail-title">Domain Expert = Cooks your signature dishes perfectly</span>
+      </div>
+      <div class="concept-detail-body">
+        <p>Give that person all your recipes, and now they:</p>
+        <ul>
+          <li><strong>Hear "lunch set"</strong> → knows exactly which dishes, which portions, which plating</li>
+          <li><strong>Handle a rush</strong> → preps the broth and cuts the chashu at the same time</li>
+          <li><strong>Stay consistent</strong> → every bowl tastes the same, whether it's you or a new hire following the recipe</li>
+          <li><strong>Flag problems</strong> → "We're almost out of Yamada pork bones — should I sub or wait?"</li>
+        </ul>
+        <p style="color: var(--cyan); font-weight: 600; margin-top: 8px;">Not just capable — produces <em>your</em> results, every time.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -2251,28 +2790,28 @@ $ /hooks
     <!-- Left: File structure + descriptions -->
     <div>
       <div class="code-block" style="margin-bottom: clamp(0.75rem, 1.5vh, 1rem);">
-        <span class="dir">.claude/skills/my-skill/</span><br>
-        <span class="file">&boxvr;&boxh;&boxh; SKILL.md</span>        <span class="comment">&larr; Instructions &amp; workflows</span><br>
-        <span class="file">&boxvr;&boxh;&boxh; references/</span>     <span class="comment">&larr; Domain knowledge</span><br>
-        <span class="file">&boxur;&boxh;&boxh; scripts/</span>        <span class="comment">&larr; Automation helpers</span>
+        <span class="dir">.claude/skills/mcd-qa-handoff/</span><br>
+        <span class="file anatomy-file-link" onclick="openAnatomyModal('skill')" style="cursor:pointer;">&boxvr;&boxh;&boxh; SKILL.md</span>        <span class="comment">&larr; Instructions &amp; workflows</span><br>
+        <span class="file anatomy-file-link" onclick="openAnatomyModal('refs')" style="cursor:pointer;">&boxvr;&boxh;&boxh; references/</span>     <span class="comment">&larr; Domain knowledge</span><br>
+        <span class="file anatomy-file-link" onclick="openAnatomyModal('scripts')" style="cursor:pointer;">&boxur;&boxh;&boxh; scripts/</span>        <span class="comment">&larr; Automation helpers</span>
       </div>
-      <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.8vh, 0.5rem);">
-        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+      <div style="display: flex; flex-direction: column; gap: clamp(0.2rem, 0.5vh, 0.3rem);">
+        <div class="anatomy-item-row" onclick="openAnatomyModal('skill')">
           <span style="color: var(--cyan); font-family: var(--font-mono); font-size: clamp(0.7rem, 1vw, 0.85rem); font-weight: 600;">SKILL.md</span>
           <span style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.6);">&mdash; The brain. What AI should do and how</span>
         </div>
-        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+        <div class="anatomy-item-row" onclick="openAnatomyModal('refs')">
           <span style="color: var(--purple); font-family: var(--font-mono); font-size: clamp(0.7rem, 1vw, 0.85rem); font-weight: 600;">references/</span>
           <span style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.6);">&mdash; Domain docs, schemas, examples</span>
         </div>
-        <div style="display: flex; align-items: baseline; gap: clamp(0.3rem, 0.6vw, 0.5rem);">
+        <div class="anatomy-item-row" onclick="openAnatomyModal('scripts')">
           <span style="color: var(--pink); font-family: var(--font-mono); font-size: clamp(0.7rem, 1vw, 0.85rem); font-weight: 600;">scripts/</span>
           <span style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.6);">&mdash; Shell scripts &amp; tooling to execute</span>
         </div>
       </div>
     </div>
 
-    <!-- Right: skills.sh ecosystem -->
+    <!-- Right: skills.sh ecosystem (restored) -->
     <div>
       <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: clamp(8px, 1vw, 12px); padding: clamp(1rem, 2vw, 1.5rem); background: rgba(255,255,255,0.02);">
         <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); margin-bottom: clamp(0.4rem, 1vh, 0.6rem); font-weight: 600;">Don't start from scratch</p>
@@ -2282,7 +2821,6 @@ $ /hooks
         <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.5); margin-bottom: clamp(0.75rem, 1.5vh, 1rem);">
           Works with Claude Code, Cursor, Copilot, Windsurf, and more.
         </p>
-
         <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vh, 0.5rem); font-family: var(--font-mono); font-size: clamp(0.65rem, 0.95vw, 0.8rem);">
           <div style="display: flex; align-items: center; gap: 8px;">
             <span style="color: var(--cyan);">$</span>
@@ -2300,6 +2838,75 @@ $ /hooks
     </div>
 
   </div>
+
+  <!-- Anatomy modal overlay -->
+  <div id="anatomy-modal" class="anatomy-modal" onclick="if(event.target===this)closeAnatomyModal()">
+    <div class="anatomy-modal-content">
+      <button class="anatomy-modal-close" onclick="closeAnatomyModal()">&times;</button>
+
+      <!-- SKILL.md -->
+      <div id="anatomy-modal-skill" class="anatomy-modal-pane" style="display:none;">
+        <div class="anatomy-preview-tab"><span style="color: var(--cyan);">&#128196;</span> SKILL.md &mdash; <span style="color: rgba(240,242,248,0.4); font-weight: 400;">The recipe card</span></div>
+        <div class="anatomy-preview-content">
+          <div class="anatomy-preview-line"><span class="anatomy-ln">1</span><span style="color: var(--purple);">---</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">2</span><span style="color: var(--cyan);">name:</span> mcd-qa-handoff</div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">3</span><span style="color: var(--cyan);">description:</span> Generate a QA handoff comment...</div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">4</span><span style="color: var(--purple);">---</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">5</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">6</span><span style="color: var(--white); font-weight: 600;"># Workflow</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">7</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">8</span><span style="color: var(--white);">## Phase 1: Gather Context</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">9</span>Fetch ticket via Atlassian MCP...</div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">10</span>Search Slack for discussions...</div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">11</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">12</span><span style="color: var(--white);">## Phase 2: Build QA Comment</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">13</span>Read <span style="color: var(--cyan);">references/comment-template.md</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">14</span>Write for non-technical readers...</div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">15</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">16</span><span style="color: var(--white);">## Phase 3: Review (Subagent)</span></div>
+          <div class="anatomy-preview-line"><span class="anatomy-ln">17</span>Spawn reviewer agent to check...</div>
+          <div class="anatomy-preview-desc">
+            "Step 1: read the Jira ticket. Step 2: search Slack. Step 3: write the output in <em>this</em> format." It defines the workflow, the tone, and the guardrails. <strong>The only required file.</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- references/ -->
+      <div id="anatomy-modal-refs" class="anatomy-modal-pane" style="display:none;">
+        <div class="anatomy-preview-tab"><span style="color: var(--purple);">&#128193;</span> references/ &mdash; <span style="color: rgba(240,242,248,0.4); font-weight: 400;">The ingredient list &amp; flavor guide</span></div>
+        <div class="anatomy-preview-content">
+          <div class="anatomy-preview-line"><span class="anatomy-ln" style="color: var(--purple);">&#128196;</span> comment-template.md</div>
+          <div class="anatomy-preview-line" style="padding-left: 2.5em; opacity: 0.5;">Testing checklist format, tone rules, reset scripts, reference links...</div>
+          <div class="anatomy-preview-line" style="margin-top: 4px;"><span class="anatomy-ln" style="color: var(--purple);">&#128196;</span> reviewer-prompt.md</div>
+          <div class="anatomy-preview-line" style="padding-left: 2.5em; opacity: 0.5;">Instructions for the review agent</div>
+          <div class="anatomy-preview-line" style="margin-top: 4px;"><span class="anatomy-ln" style="color: var(--purple);">&#128196;</span> estimate-calibration.md</div>
+          <div class="anatomy-preview-line" style="padding-left: 2.5em; opacity: 0.5;">Hours-per-task calibration rules</div>
+          <div class="anatomy-preview-line" style="margin-top: 4px;"><span class="anatomy-ln" style="color: var(--purple);">&#128196;</span> project-architecture.md</div>
+          <div class="anatomy-preview-line" style="padding-left: 2.5em; opacity: 0.5;">Codebase layout, module boundaries</div>
+          <div class="anatomy-preview-desc">
+            Things the AI looks up when it needs them &mdash; project architecture, calibration tables, output templates. Loaded on demand so they don't bloat the context window.
+          </div>
+        </div>
+      </div>
+
+      <!-- scripts/ -->
+      <div id="anatomy-modal-scripts" class="anatomy-modal-pane" style="display:none;">
+        <div class="anatomy-preview-tab"><span style="color: var(--pink);">&#128193;</span> scripts/ &mdash; <span style="color: rgba(240,242,248,0.4); font-weight: 400;">The kitchen tools</span></div>
+        <div class="anatomy-preview-content">
+          <div class="anatomy-preview-line"><span class="anatomy-ln" style="color: var(--pink);">&#9881;</span> compile-csv.sh</div>
+          <div class="anatomy-preview-line" style="padding-left: 2.5em; opacity: 0.5;">Compiles i18n CSV &rarr; JSON bundles</div>
+          <div class="anatomy-preview-line" style="margin-top: 4px;"><span class="anatomy-ln" style="color: var(--pink);">&#9881;</span> validate-keys.py</div>
+          <div class="anatomy-preview-line" style="padding-left: 2.5em; opacity: 0.5;">Checks for duplicate/missing keys</div>
+          <div class="anatomy-preview-line" style="margin-top: 4px;"><span class="anatomy-ln" style="color: var(--pink);">&#9881;</span> add-translation.sh</div>
+          <div class="anatomy-preview-line" style="padding-left: 2.5em; opacity: 0.5;">Adds a row across 5 module CSVs</div>
+          <div class="anatomy-preview-desc">
+            A blender, a thermometer &mdash; pre-written tools that do one thing reliably. The AI runs them directly instead of rewriting them every time. Our i18n skill has scripts that manage translation keys across 5 CSV files in one shot.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
 
@@ -2308,30 +2915,86 @@ $ /hooks
      ======================================================================= -->
 <section class="slide" data-title="Skills vs MCP">
   <p class="slide-label reveal">How they complement each other</p>
-  <h2 class="slide-title reveal">Skills vs MCP</h2>
-  <div class="two-col reveal" style="max-width: 850px; margin-top: clamp(0.75rem, 2vh, 1.5rem);">
-    <div>
-      <div class="col-header"><span class="dot dot--cyan"></span> Skills</div>
-      <ul class="bullet-list">
-        <li>Knowledge &amp; workflows</li>
-        <li>Teach AI <em>what to do</em></li>
-        <li>Markdown-based</li>
-        <li>Easy to create &amp; share</li>
-      </ul>
+  <h2 class="slide-title reveal" style="cursor: pointer;" onclick="showSvmDrawer('together')">Skills vs MCP</h2>
+  <div class="svm-row reveal">
+    <!-- Left: two columns stacked -->
+    <div class="svm-cols-left">
+      <div class="svm-col" onclick="showSvmDrawer('skill')" style="cursor:pointer;">
+        <div class="col-header"><span class="dot dot--cyan"></span> Skills</div>
+        <ul class="bullet-list">
+          <li>Knowledge &amp; workflows</li>
+          <li>Teach AI <em>what to do</em></li>
+          <li>Markdown-based</li>
+          <li>Easy to create &amp; share</li>
+        </ul>
+      </div>
+      <div class="svm-col" onclick="showSvmDrawer('mcp')" style="cursor:pointer;">
+        <div class="col-header"><span class="dot dot--purple"></span> MCP</div>
+        <ul class="bullet-list">
+          <li>Tools &amp; integrations</li>
+          <li>Give AI <em>new abilities</em></li>
+          <li>Server-based</li>
+          <li>Connects to external services</li>
+        </ul>
+      </div>
+      <p style="color: var(--muted); font-size: clamp(0.65rem, 0.9vw, 0.78rem); cursor: pointer; margin-top: clamp(0.25rem, 0.5vh, 0.4rem);" onclick="showSvmDrawer('together')">
+        @Levin already covered MCP &mdash; <span style="text-decoration: underline;">see how they work together</span>
+      </p>
     </div>
-    <div>
-      <div class="col-header"><span class="dot dot--purple"></span> MCP</div>
-      <ul class="bullet-list">
-        <li>Tools &amp; integrations</li>
-        <li>Give AI <em>new abilities</em></li>
-        <li>Server-based</li>
-        <li>Connects to external services</li>
-      </ul>
+
+    <!-- Right: detail panel -->
+    <div id="svm-drawer" class="svm-drawer-right">
+
+      <div id="svm-drawer-skill" class="svm-drawer-card">
+        <div class="concept-detail-header">
+          <span class="concept-detail-icon">&#128218;</span>
+          <span class="concept-detail-title">Skills = Your recipes, your tools, your knowledge</span>
+        </div>
+        <div class="concept-detail-body">
+          <p>Everything you write and maintain yourself &mdash; the knowledge <em>and</em> the DIY tools:</p>
+          <ul>
+            <li><strong>Recipes on the wall</strong> &mdash; step-by-step workflows, your house rules, your plating standards</li>
+            <li><strong>Your own blender</strong> &mdash; scripts you wrote that can do anything, including calling outside suppliers &mdash; but you maintain the code</li>
+            <li><strong>Your spice rack</strong> &mdash; reference docs, templates, domain knowledge you've accumulated</li>
+          </ul>
+          <p style="color: var(--cyan); font-weight: 600; margin-top: 8px;">You own it, you maintain it, you share it. Can reach outside, but it's DIY.</p>
+        </div>
+      </div>
+
+      <div id="svm-drawer-mcp" class="svm-drawer-card">
+        <div class="concept-detail-header">
+          <span class="concept-detail-icon">&#128222;</span>
+          <span class="concept-detail-title">MCP = A delivery service on speed dial</span>
+        </div>
+        <div class="concept-detail-body">
+          <p>A <em>standardized</em> way to connect to external services &mdash; someone else maintains the integration:</p>
+          <ul>
+            <li><strong>Uber Eats for fish</strong> &mdash; just say "tuna, 2kg" &mdash; they handle the logistics (Atlassian MCP for Jira)</li>
+            <li><strong>A messaging service</strong> &mdash; "ask my colleague what the customer said" &mdash; Slack MCP handles auth, search, pagination</li>
+            <li><strong>A courier</strong> &mdash; "deliver this package" &mdash; GitHub MCP pushes your code, manages tokens</li>
+          </ul>
+          <p style="color: var(--purple); font-weight: 600; margin-top: 8px;">You <em>could</em> drive there yourself (scripts), but why? MCP is reusable, maintained, and standardized.</p>
+        </div>
+      </div>
+
+      <div id="svm-drawer-together" class="svm-drawer-card">
+        <div class="concept-detail-header">
+          <span class="concept-detail-icon">&#10024;</span>
+          <span class="concept-detail-title">Together = You know what to cook, and delivery handles the rest</span>
+        </div>
+        <div class="concept-detail-body">
+          <p>Your recipe says <em>"use Yamada pork bones"</em> &mdash; instead of driving there yourself, you call the delivery service.</p>
+          <ul>
+            <li><strong>Skill says "fetch the Jira ticket"</strong> &mdash; MCP's Atlassian server handles auth, fetches it, returns clean data</li>
+            <li><strong>Skill says "search Slack for context"</strong> &mdash; MCP's Slack server searches, paginates, filters channels</li>
+            <li><strong>Skill says "create a PR"</strong> &mdash; MCP's GitHub server pushes code, creates the PR, adds labels</li>
+          </ul>
+          <p style="color: var(--cyan); font-weight: 600; margin-top: 8px;">Skills define <em>what to do</em>. MCP provides a <em>maintained delivery service</em> to do it.</p>
+        </div>
+      </div>
+
     </div>
   </div>
-  <p class="slide-body reveal" style="margin-top: clamp(1rem, 2.5vh, 1.5rem); color: var(--muted); font-size: clamp(0.75rem, 1.1vw, 0.9rem);">
-    @Levin already covered MCP in depth &mdash; here's how Skills complement it.
-  </p>
 </section>
 
 
@@ -2507,22 +3170,42 @@ $ /hooks
     <!-- Right: Live workflow -->
     <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: clamp(8px, 1vw, 12px); padding: clamp(1rem, 2vw, 1.5rem); background: rgba(255,255,255,0.02);">
       <p style="font-size: clamp(0.65rem, 0.9vw, 0.78rem); text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); margin-bottom: clamp(0.5rem, 1vh, 0.75rem); font-weight: 600;">Live workflow</p>
-      <div style="display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vh, 0.5rem);">
-        <div style="display: flex; align-items: center; gap: clamp(0.4rem, 0.8vw, 0.6rem);">
-          <span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--cyan); flex-shrink: 0;">1</span>
-          <span style="font-size: clamp(0.65rem, 0.95vw, 0.82rem); color: rgba(240,242,248,0.85);">Add "&#12372;&#27880;&#25991;&#12399;&#12371;&#12385;&#12425;&#12363;&#12425;/Start Your Order" for all modules</span>
+      <div style="display: flex; flex-direction: column; gap: 0;">
+        <div class="i18n-step" onclick="toggleI18nStep(this)">
+          <div class="i18n-step-row">
+            <span class="i18n-num">1</span>
+            <span class="i18n-cmd">"Add &#12372;&#27880;&#25991;&#12399;&#12371;&#12385;&#12425;&#12363;&#12425; / Start Your Order"</span>
+          </div>
+          <div class="i18n-output">
+            <span class="i18n-prompt">&#9655;</span> You give it natural language &mdash; JA + EN text, plain description. No key names, no file paths.
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: clamp(0.4rem, 0.8vw, 0.6rem);">
-          <span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--cyan); flex-shrink: 0;">2</span>
-          <span style="font-size: clamp(0.65rem, 0.95vw, 0.82rem); color: rgba(240,242,248,0.85);">You specify the target module</span>
+        <div class="i18n-step" onclick="toggleI18nStep(this)">
+          <div class="i18n-step-row">
+            <span class="i18n-num">2</span>
+            <span class="i18n-cmd">Skill reads references/ &rarr; picks target module</span>
+          </div>
+          <div class="i18n-output">
+            <span class="i18n-prompt">&#9655;</span> The skill knows all 5 module configs &mdash; which CSV files, which key format, which compile script. You just say the feature area.
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: clamp(0.4rem, 0.8vw, 0.6rem);">
-          <span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--cyan); flex-shrink: 0;">3</span>
-          <span style="font-size: clamp(0.65rem, 0.95vw, 0.82rem); color: rgba(240,242,248,0.85);">Generates key: <span style="color: var(--cyan);">Common.StartOrder.Label</span></span>
+        <div class="i18n-step" onclick="toggleI18nStep(this)">
+          <div class="i18n-step-row">
+            <span class="i18n-num">3</span>
+            <span class="i18n-cmd">Generates key: <span style="color: var(--cyan);">Common.StartOrder.Label</span></span>
+          </div>
+          <div class="i18n-output">
+            <span class="i18n-prompt">&#9655;</span> Follows naming conventions from SKILL.md &mdash; module prefix, camelCase, category. Consistent across the whole team.
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: clamp(0.4rem, 0.8vw, 0.6rem);">
-          <span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--cyan); flex-shrink: 0;">4</span>
-          <span style="font-size: clamp(0.65rem, 0.95vw, 0.82rem); color: rgba(240,242,248,0.85);">Inserts CSV, compiles, updates source</span>
+        <div class="i18n-step" onclick="toggleI18nStep(this)">
+          <div class="i18n-step-row">
+            <span class="i18n-num">4</span>
+            <span class="i18n-cmd">Insert CSV &rarr; compile &rarr; update source</span>
+          </div>
+          <div class="i18n-output">
+            <span class="i18n-prompt">&#9655;</span> Runs scripts/ to add the row, compile to JSON, and update the import &mdash; three manual steps become one.
+          </div>
         </div>
       </div>
       <p style="font-size: clamp(0.6rem, 0.85vw, 0.72rem); color: rgba(240,242,248,0.4); margin-top: clamp(0.5rem, 1vh, 0.75rem);">
@@ -2745,7 +3428,7 @@ $ /hooks
         <div class="pipeline-connector" data-after="pr-gen"></div>
 
         <!-- Step 3: Output (clickable when active) -->
-        <div class="pipeline-step pr-output-step" data-step="pr-output" onclick="if(this.classList.contains('step-active'))document.getElementById('pr-output-overlay').classList.add('active')">
+        <div class="pipeline-step pr-output-step" data-step="pr-output" onclick="if(this.classList.contains('step-active'))openOverlay('pr-output-overlay')">
           <div class="pipeline-node">
             <div class="pipeline-spinner"></div>
             <div class="pipeline-check">&#10003;</div>
@@ -2766,7 +3449,7 @@ $ /hooks
   </div>
 
   <!-- PR Output Overlay -->
-  <div id="pr-output-overlay" onclick="if(event.target===this)this.classList.remove('active')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
+  <div id="pr-output-overlay" onclick="if(event.target===this)closeOverlay('pr-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
     <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.7); position:relative;">
 
       <!-- Header: Title + toggle + close -->
@@ -2779,7 +3462,7 @@ $ /hooks
           <button class="pr-toggle-btn active" data-mode="raw" onclick="togglePRView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#161b22; color:#e6edf3;">Raw</button>
           <button class="pr-toggle-btn" data-mode="preview" onclick="togglePRView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #30363d; cursor:pointer; background:transparent; color:#8b949e;">Preview</button>
         </div>
-        <button onclick="document.getElementById('pr-output-overlay').classList.remove('active')" style="width:28px; height:28px; border-radius:6px; border:1px solid #30363d; background:#161b22; color:#8b949e; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
+        <button onclick="closeOverlay('pr-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #30363d; background:#161b22; color:#8b949e; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
       </div>
 
       <!-- Content area -->
@@ -2860,21 +3543,21 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
           <p>When the user taps cancel, we re-check with MDAS first — if the driver picked up the order in the last 30s, we show a "sorry, too late" popup instead of cancelling.</p>
 
           <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Ticket</h2>
-          <p><a href="https://theplanttokyo.atlassian.net/browse/MDX-12272" style="color:#58a6ff; text-decoration:none;">MDX-12272</a></p>
+          <p><a href="https://theplanttokyo.atlassian.net/browse/MDX-12272" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDX-12272</a></p>
 
           <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Design</h2>
           <ul style="padding-left:20px; margin:0;">
-            <li>JMA cancel button / cancel flow: <a href="#" style="color:#58a6ff; text-decoration:none;">Figma</a></li>
+            <li>JMA cancel button / cancel flow: Figma</li>
           </ul>
 
           <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Notes</h2>
           <ul style="padding-left:20px; margin:0;">
-            <li><strong>Backend not ready</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">is_cancel_allowed</code> from MBE doesn't exist yet (<a href="https://theplanttokyo.atlassian.net/browse/MDX-12274" style="color:#58a6ff; text-decoration:none;">MDX-12274</a>). Stubbed with TODOs for now.</li>
+            <li><strong>Backend not ready</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">is_cancel_allowed</code> from MBE doesn't exist yet (<a href="https://theplanttokyo.atlassian.net/browse/MDX-12274" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDX-12274</a>). Stubbed with TODOs for now.</li>
             <li><strong>anyCarry API was 404</strong>: as of 2/24 it wasn't live. Use <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">force_redisplay=true</code> in dev to test.</li>
             <li><strong>Scope got bigger</strong>: originally just batched orders, but the batching flag turned out to be unreliable, so it now covers all UberEats 3PR orders.</li>
             <li><strong>Refactor commits</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">fetchWithAuth</code> extraction, <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">useCancelOrderWithConfirmation</code> extraction, <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">isCancelledStatus</code> helper, and cancel error message improvement — all pure refactors, just prep work.</li>
-            <li><strong>Requirements</strong>: <a href="https://theplanttokyo.atlassian.net/browse/MDI-547" style="color:#58a6ff; text-decoration:none;">MDI-547</a> · System design</li>
-            <li><strong>Slack threads</strong>: <a href="#" style="color:#58a6ff; text-decoration:none;">#mcd-delivery-cn technical discussion</a> · <a href="#" style="color:#58a6ff; text-decoration:none;">#mcd-delivery coordination</a></li>
+            <li><strong>Requirements</strong>: <a href="https://theplanttokyo.atlassian.net/browse/MDI-547" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDI-547</a> · System design</li>
+            <li><strong>Slack threads</strong>: #mcd-delivery-cn technical discussion · #mcd-delivery coordination</li>
           </ul>
         </div>
 
@@ -2928,11 +3611,11 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
         </div>
         <div class="qa-connector" data-after="2"></div>
 
-        <div class="qa-phase" data-phase="3">
+        <div class="qa-phase qa-output-phase" data-phase="3" onclick="openOverlay('qa-output-overlay')">
           <div class="qa-phase-num">4</div>
           <div class="qa-phase-info">
-            <span class="qa-phase-title">Present Output</span>
-            <span class="qa-phase-desc">Copy-paste markdown for Jira</span>
+            <span class="qa-phase-title">Present Output <span class="qa-output-icon">&#x1F517;</span></span>
+            <span class="qa-phase-desc">Click to view generated comment</span>
           </div>
         </div>
       </div>
@@ -2953,6 +3636,89 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
       </div>
     </div>
 
+  </div>
+
+  <!-- QA Output Overlay -->
+  <div id="qa-output-overlay" onclick="if(event.target===this)closeOverlay('qa-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
+    <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.7); position:relative;">
+
+      <!-- Header: Title + toggle + close -->
+      <div style="padding:16px 24px; border-bottom:1px solid #30363d; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+        <div style="flex:1; min-width:0;">
+          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#e6edf3;">QA Handoff Comment — MDX-11961 Okihai Delivery</div>
+        </div>
+        <div style="display:flex; border:1px solid #30363d; border-radius:6px; overflow:hidden; flex-shrink:0;">
+          <button class="qa-toggle-btn active" data-mode="raw" onclick="toggleQAView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#161b22; color:#e6edf3;">Raw</button>
+          <button class="qa-toggle-btn" data-mode="preview" onclick="toggleQAView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #30363d; cursor:pointer; background:transparent; color:#8b949e;">Preview</button>
+        </div>
+        <button onclick="closeOverlay('qa-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #30363d; background:#161b22; color:#8b949e; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
+      </div>
+
+      <!-- Content area -->
+      <div style="flex:1; overflow-y:auto; min-height:0;">
+
+        <!-- Raw markdown view -->
+        <div id="qa-view-raw" style="padding:20px 24px;">
+          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#e6edf3; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#161b22; border:1px solid #30363d; border-radius:8px; padding:18px 22px;">@Susan Wu
+
+Thanks so much for always making time to help us catch the tricky stuff! Fresh off the oven — Okihai Default Delivery just landed on STG, ready for your team to take it for a spin whenever you have a slot!
+
+## What to Test
+
+- [ ] **Okihai popup on first visit** — Go to the payment confirmation screen as a delivery user → a popup should appear explaining that "Drop-off Delivery" (置き配) is now pre-selected. This popup should only appear once.
+- [ ] **Popup dismissal** — Click OK or click outside the popup → Okihai should remain selected as the delivery method
+- [ ] **Payment method reset** — When the popup appears for the first time, the payment method should be blank (not pre-filled) → user must manually select a payment method
+- [ ] **Okihai persists across orders** — Place an order with Okihai → start a new order → Okihai should still be the selected delivery method
+- [ ] **Hand delivery switch** — Select "Hand delivery at the door" → complete the order → next order should default to Hand delivery
+- [ ] **Cash payment restriction** — Select "Cash" as payment → Okihai should be greyed out and unavailable
+- [ ] **Order completion screen** — Complete a delivery order with Okihai → should show "お届け完了（置き配）" and the Okihai image
+
+## How to Reset
+
+To re-trigger the Okihai popup (test it as a "first time" visit), open DevTools Console (F12) and run:
+
+```
+localStorage.removeItem('mcd_delivery_pref_okihai')
+```
+
+Or use an Incognito/Private window for a fresh session.
+
+## References
+
+- Requirements: [MDI-432](https://theplanttokyo.atlassian.net/browse/MDI-432)
+- Epic: [MDX-11961](https://theplanttokyo.atlassian.net/browse/MDX-11961)</pre>
+        </div>
+
+        <!-- Preview (rendered) view -->
+        <div id="qa-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#e6edf3; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
+          <p><span style="color:#58a6ff; font-weight:600;">@Susan Wu</span></p>
+          <p>Thanks so much for always making time to help us catch the tricky stuff! Fresh off the oven — Okihai Default Delivery just landed on STG, ready for your team to take it for a spin whenever you have a slot!</p>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">What to Test</h2>
+          <ul style="padding-left:6px; margin:0; list-style:none;">
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Okihai popup on first visit</strong> — Go to the payment confirmation screen as a delivery user → a popup should appear explaining that "Drop-off Delivery" (置き配) is now pre-selected. This popup should only appear once.</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Popup dismissal</strong> — Click OK or click outside the popup → Okihai should remain selected as the delivery method</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Payment method reset</strong> — When the popup appears for the first time, the payment method should be blank (not pre-filled) → user must manually select a payment method</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Okihai persists across orders</strong> — Place an order with Okihai → start a new order → Okihai should still be the selected delivery method</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Hand delivery switch</strong> — Select "Hand delivery at the door" → complete the order → next order should default to Hand delivery</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Cash payment restriction</strong> — Select "Cash" as payment → Okihai should be greyed out and unavailable</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Order completion screen</strong> — Complete a delivery order with Okihai → should show "お届け完了（置き配）" and the Okihai image</span></li>
+          </ul>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">How to Reset</h2>
+          <p>To re-trigger the Okihai popup (test it as a "first time" visit), open DevTools Console (F12) and run:</p>
+          <pre style="background:#161b22; border:1px solid #30363d; border-radius:6px; padding:10px 14px; font-family:var(--font-mono); font-size:0.9em; color:#e6edf3; margin:8px 0;">localStorage.removeItem('mcd_delivery_pref_okihai')</pre>
+          <p style="color:#8b949e;">Or use an Incognito/Private window for a fresh session.</p>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">References</h2>
+          <ul style="padding-left:20px; margin:0;">
+            <li>Requirements: <a href="https://theplanttokyo.atlassian.net/browse/MDI-432" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDI-432</a></li>
+            <li>Epic: <a href="https://theplanttokyo.atlassian.net/browse/MDX-11961" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDX-11961</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
   </div>
 </section>
 
@@ -3013,21 +3779,31 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
       <div class="timeline-after"><code class="timeline-skill">OpenSpec</code> &rarr; Claude Code builds &amp; tests</div>
     </div>
 
-    <!-- 5. QA Handoff -->
+    <!-- 5. PR -->
+    <div class="timeline-row">
+      <div class="timeline-before">Write PR title &amp; description manually</div>
+      <div class="timeline-node">
+        <span class="timeline-num">5</span>
+        <span class="timeline-stage-label">PR</span>
+      </div>
+      <div class="timeline-after"><code class="timeline-skill">mcd-pr</code> &mdash; Jira + Git + Slack &rarr; structured PR</div>
+    </div>
+
+    <!-- 6. QA Handoff -->
     <div class="timeline-row">
       <div class="timeline-before">Write test instructions by hand</div>
       <div class="timeline-node">
-        <span class="timeline-num">5</span>
+        <span class="timeline-num">6</span>
         <span class="timeline-stage-label">QA Handoff</span>
       </div>
       <div class="timeline-after"><code class="timeline-skill">mcd-qa-handoff</code> &mdash; reviewer-verified steps</div>
     </div>
 
-    <!-- 6. Input -->
+    <!-- 7. Input -->
     <div class="timeline-row">
       <div class="timeline-before">Type everything by hand</div>
       <div class="timeline-node">
-        <span class="timeline-num">6</span>
+        <span class="timeline-num">7</span>
         <span class="timeline-stage-label">Input</span>
       </div>
       <div class="timeline-after"><code class="timeline-skill">Typeless</code> &mdash; speak, don&rsquo;t type</div>
@@ -3043,37 +3819,49 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
   <p class="slide-label reveal">What I'd tell myself on day one</p>
   <h2 class="slide-title reveal">Takeaways</h2>
 
-  <div class="mobile-stack" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2.5vw, 2rem); max-width: 900px; margin-top: clamp(0.75rem, 2vh, 1.5rem);">
+  <div id="takeaway-grid" class="mobile-stack" onclick="resetTakeaway(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2.5vw, 2rem); max-width: 900px; margin-top: clamp(0.75rem, 2vh, 1.5rem);">
 
-    <div class="reveal" style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
-      <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--cyan); line-height: 1; flex-shrink: 0; opacity: 0.4;">1</span>
-      <div>
-        <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Start simple, start now</p>
-        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">ChatGPT copy-paste counts. The best AI tool is the one you actually use.</p>
+    <div class="reveal takeaway-item" onclick="focusTakeaway(this, event)">
+      <div style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
+        <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--cyan); line-height: 1; flex-shrink: 0; opacity: 0.4;">1</span>
+        <div>
+          <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Start simple, start now</p>
+          <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">ChatGPT copy-paste counts. The best AI tool is the one you actually use.</p>
+          <p class="takeaway-extra">My first month was just browser + ChatGPT. That habit alone changed how I approached every problem.</p>
+        </div>
       </div>
     </div>
 
-    <div class="reveal" style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
-      <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--purple); line-height: 1; flex-shrink: 0; opacity: 0.4;">2</span>
-      <div>
-        <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Find your own path</p>
-        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">I chose the terminal because that's where I live. Match the tool to how <em>you</em> work.</p>
+    <div class="reveal takeaway-item" onclick="focusTakeaway(this, event)">
+      <div style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
+        <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--purple); line-height: 1; flex-shrink: 0; opacity: 0.4;">2</span>
+        <div>
+          <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Find your own path</p>
+          <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">I chose the terminal because that's where I live. Match the tool to how <em>you</em> work.</p>
+          <p class="takeaway-extra">Cursor, Windsurf, Claude Code &mdash; all great. The wrong choice is forcing a tool that fights your workflow.</p>
+        </div>
       </div>
     </div>
 
-    <div class="reveal" style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
-      <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--pink); line-height: 1; flex-shrink: 0; opacity: 0.4;">3</span>
-      <div>
-        <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Skills compound</p>
-        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">One skill saves you hours. Ten skills change how you work.</p>
+    <div class="reveal takeaway-item" onclick="focusTakeaway(this, event)">
+      <div style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
+        <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--pink); line-height: 1; flex-shrink: 0; opacity: 0.4;">3</span>
+        <div>
+          <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Skills compound</p>
+          <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">One skill saves you hours. Ten skills change how you work.</p>
+          <p class="takeaway-extra">mcd-task-breakdown led to mcd-qa-handoff, which led to mcd-pr. Each one built on the last.</p>
+        </div>
       </div>
     </div>
 
-    <div class="reveal" style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
-      <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--cyan); line-height: 1; flex-shrink: 0; opacity: 0.4;">4</span>
-      <div>
-        <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Collaborate, don't automate</p>
-        <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">AI is a partner, not a replacement. Share what you build with the team.</p>
+    <div class="reveal takeaway-item" onclick="focusTakeaway(this, event)">
+      <div style="display: flex; gap: clamp(0.6rem, 1.2vw, 1rem); align-items: flex-start;">
+        <span style="font-family: var(--font-mono); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; color: var(--cyan); line-height: 1; flex-shrink: 0; opacity: 0.4;">4</span>
+        <div>
+          <p style="font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.05rem); color: var(--text); margin-bottom: clamp(0.15rem, 0.4vh, 0.25rem);">Collaborate, don't automate</p>
+          <p style="font-size: clamp(0.7rem, 1vw, 0.85rem); color: rgba(240,242,248,0.55); line-height: 1.5;">AI is a partner, not a replacement. Share what you build with the team.</p>
+          <p class="takeaway-extra">The skills I built aren't just for me &mdash; anyone on the team can use them from day one.</p>
+        </div>
       </div>
     </div>
 
@@ -3435,10 +4223,137 @@ document.addEventListener('DOMContentLoaded', () => {
 /* -----------------------------------------------------------------------
    PR OUTPUT — RAW / PREVIEW TOGGLE
    ----------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   OVERLAY OPEN / CLOSE HELPERS
+   ----------------------------------------------------------------------- */
+function openOverlay(id) {
+  document.getElementById(id).classList.add('active');
+  document.documentElement.classList.add('overlay-open');
+  document.body.classList.add('overlay-open');
+}
+function closeOverlay(id) {
+  document.getElementById(id).classList.remove('active');
+  document.documentElement.classList.remove('overlay-open');
+  document.body.classList.remove('overlay-open');
+}
+
+/* -----------------------------------------------------------------------
+   AI SKILLS — CONCEPT DETAIL TOGGLE
+   ----------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+   ANATOMY OF A SKILL — EXPANDABLE NOTES
+   ----------------------------------------------------------------------- */
+function openAnatomyModal(which) {
+  const modal = document.getElementById('anatomy-modal');
+  ['skill', 'refs', 'scripts'].forEach(id => {
+    const pane = document.getElementById('anatomy-modal-' + id);
+    if (pane) pane.style.display = id === which ? '' : 'none';
+  });
+  modal.classList.add('active');
+  document.documentElement.classList.add('overlay-open');
+  document.body.classList.add('overlay-open');
+}
+function closeAnatomyModal() {
+  const modal = document.getElementById('anatomy-modal');
+  modal.classList.remove('active');
+  document.documentElement.classList.remove('overlay-open');
+  document.body.classList.remove('overlay-open');
+}
+
+/* Takeaways — spotlight */
+function focusTakeaway(el, e) {
+  e.stopPropagation();
+  const grid = document.getElementById('takeaway-grid');
+  const wasFocused = el.classList.contains('takeaway-focus');
+  grid.querySelectorAll('.takeaway-item').forEach(i => i.classList.remove('takeaway-focus'));
+  if (wasFocused) {
+    grid.classList.remove('takeaway-dimmed');
+  } else {
+    el.classList.add('takeaway-focus');
+    grid.classList.add('takeaway-dimmed');
+  }
+}
+function resetTakeaway(e) {
+  const grid = document.getElementById('takeaway-grid');
+  grid.classList.remove('takeaway-dimmed');
+  grid.querySelectorAll('.takeaway-item').forEach(i => i.classList.remove('takeaway-focus'));
+}
+
+/* Starting Point — expand response */
+function toggleSpBullet(el) {
+  const wasActive = el.classList.contains('sp-active');
+  el.parentElement.querySelectorAll('.sp-bullet').forEach(b => b.classList.remove('sp-active'));
+  if (!wasActive) el.classList.add('sp-active');
+}
+
+/* avante.vim — cycle commands */
+function cycleAvanteCmd() {
+  const container = document.getElementById('avante-cmd');
+  const items = container.querySelectorAll('.cmd-cycle-item');
+  let current = -1;
+  items.forEach((item, i) => { if (!item.classList.contains('cmd-hidden')) current = i; });
+  const next = (current + 1) % items.length;
+  items[current].classList.add('cmd-hidden');
+  items[next].classList.remove('cmd-hidden');
+}
+
+function toggleI18nStep(el) {
+  const wasActive = el.classList.contains('i18n-active');
+  el.closest('.i18n-step').parentElement.querySelectorAll('.i18n-step').forEach(s => s.classList.remove('i18n-active'));
+  if (!wasActive) el.classList.add('i18n-active');
+}
+
+var _svmCurrent = null;
+function showSvmDrawer(which) {
+  if (_svmCurrent === which) {
+    ['skill', 'mcp', 'together'].forEach(function(id) {
+      var el = document.getElementById('svm-drawer-' + id);
+      if (el) el.classList.remove('svm-card-visible');
+    });
+    _svmCurrent = null;
+    document.querySelectorAll('.svm-col').forEach(function(c) { c.classList.remove('concept-selected'); });
+    return;
+  }
+  ['skill', 'mcp', 'together'].forEach(function(id) {
+    var el = document.getElementById('svm-drawer-' + id);
+    if (el) el.classList.toggle('svm-card-visible', id === which);
+  });
+  _svmCurrent = which;
+  document.querySelectorAll('.svm-col').forEach(function(c) { c.classList.remove('concept-selected'); });
+  if (event && event.currentTarget && event.currentTarget.classList) {
+    event.currentTarget.classList.add('concept-selected');
+  }
+}
+
+function showConceptDetail(which) {
+  ['ai', 'skill', 'expert'].forEach(id => {
+    const el = document.getElementById('concept-detail-' + id);
+    if (el) el.classList.toggle('concept-visible', id === which);
+  });
+  document.querySelectorAll('[data-title="AI Skills"] .concept-clickable').forEach(box => {
+    box.classList.remove('concept-selected');
+  });
+  event.currentTarget.classList.add('concept-selected');
+}
+
 function togglePRView(mode) {
   document.getElementById('pr-view-raw').style.display = mode === 'raw' ? '' : 'none';
   document.getElementById('pr-view-preview').style.display = mode === 'preview' ? '' : 'none';
   document.querySelectorAll('.pr-toggle-btn').forEach(btn => {
+    const active = btn.dataset.mode === mode;
+    btn.classList.toggle('active', active);
+    btn.style.background = active ? '#161b22' : 'transparent';
+    btn.style.color = active ? '#e6edf3' : '#8b949e';
+  });
+}
+
+/* -----------------------------------------------------------------------
+   QA OUTPUT — RAW / PREVIEW TOGGLE
+   ----------------------------------------------------------------------- */
+function toggleQAView(mode) {
+  document.getElementById('qa-view-raw').style.display = mode === 'raw' ? '' : 'none';
+  document.getElementById('qa-view-preview').style.display = mode === 'preview' ? '' : 'none';
+  document.querySelectorAll('.qa-toggle-btn').forEach(btn => {
     const active = btn.dataset.mode === mode;
     btn.classList.toggle('active', active);
     btn.style.background = active ? '#161b22' : 'transparent';
