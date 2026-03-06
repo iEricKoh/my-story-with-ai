@@ -1701,6 +1701,26 @@ body {
   animation: pipelineConnectorGrow 0.3s 0s ease forwards;
 }
 
+/* — PR Output step: clickable when active — */
+.pr-output-step.step-active { cursor: pointer; }
+.pr-output-step.step-active .pr-output-icon { opacity: 1 !important; }
+.pr-output-step.step-active:hover .pipeline-label { opacity: 1; filter: brightness(1.2); }
+
+/* — PR Output Overlay — */
+#pr-output-overlay { display: none !important; }
+#pr-output-overlay.active { display: flex !important; animation: prOverlayIn 0.25s ease forwards; }
+@keyframes prOverlayIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+#pr-output-overlay.active > div {
+  animation: prOverlaySlideUp 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes prOverlaySlideUp {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* — Responsive — */
 @media (max-height: 700px) {
   .pipeline-desc { display: none; }
@@ -2636,7 +2656,7 @@ $ /hooks
      ======================================================================= -->
 <section class="slide" data-title="PR Generator">
   <p class="slide-label reveal">From context to PR</p>
-  <h2 class="slide-title reveal">PR Generator: <a href="#" style="color: var(--cyan); -webkit-text-fill-color: var(--cyan); text-decoration: none;">mcd-pr <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 0.6em; height: 0.6em; display: inline; vertical-align: middle;"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" /></svg></a></h2>
+  <h2 class="slide-title reveal">PR Generator: <a href="https://github.com/theplant/ecjs/tree/mcd-skill/.claude/skills/mcd-pr" target="_blank" rel="noopener" style="color: var(--cyan); -webkit-text-fill-color: var(--cyan); text-decoration: none;">mcd-pr <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 0.6em; height: 0.6em; display: inline; vertical-align: middle;"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" /></svg></a></h2>
   <p class="slide-body reveal" style="margin-bottom: clamp(0.5rem, 1.5vh, 1rem);">
     Run <code style="color: var(--cyan); background: rgba(0,255,204,0.08); padding: 0.1em 0.4em; border-radius: 4px; font-family: var(--font-mono); font-size: 0.9em;">/mcd-pr MDX-12272</code> &mdash; three parallel agents grab context from Jira, Git, and Slack, then generate a complete PR title and description in your team's format.
   </p>
@@ -2724,15 +2744,15 @@ $ /hooks
         </div>
         <div class="pipeline-connector" data-after="pr-gen"></div>
 
-        <!-- Step 3: Output -->
-        <div class="pipeline-step" data-step="pr-output">
+        <!-- Step 3: Output (clickable when active) -->
+        <div class="pipeline-step pr-output-step" data-step="pr-output" onclick="if(this.classList.contains('step-active'))document.getElementById('pr-output-overlay').classList.add('active')">
           <div class="pipeline-node">
             <div class="pipeline-spinner"></div>
             <div class="pipeline-check">&#10003;</div>
           </div>
           <div class="pipeline-label">
-            <span class="pipeline-name">Output</span>
-            <span class="pipeline-desc">Copy-paste or push via GitHub MCP</span>
+            <span class="pipeline-name">Output <span class="pr-output-icon" style="opacity:0; transition:opacity 0.3s; font-size:0.8em;">&#x1F517;</span></span>
+            <span class="pipeline-desc">Click to view generated markdown</span>
           </div>
         </div>
       </div>
@@ -2740,8 +2760,126 @@ $ /hooks
       <div class="pipeline-footnote">
         Jira, Git &amp; Slack run as subagents in parallel. Context gathered in ~77s wall time.
       </div>
+
     </div>
 
+  </div>
+
+  <!-- PR Output Overlay -->
+  <div id="pr-output-overlay" onclick="if(event.target===this)this.classList.remove('active')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
+    <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.7); position:relative;">
+
+      <!-- Header: Title + toggle + close -->
+      <div style="padding:16px 24px; border-bottom:1px solid #30363d; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+        <div style="flex:1; min-width:0;">
+          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#e6edf3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">[MDX-12272] feat(mcd/mop): add delay cancellation cancel button</div>
+        </div>
+        <!-- Toggle -->
+        <div style="display:flex; border:1px solid #30363d; border-radius:6px; overflow:hidden; flex-shrink:0;">
+          <button class="pr-toggle-btn active" data-mode="raw" onclick="togglePRView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#161b22; color:#e6edf3;">Raw</button>
+          <button class="pr-toggle-btn" data-mode="preview" onclick="togglePRView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #30363d; cursor:pointer; background:transparent; color:#8b949e;">Preview</button>
+        </div>
+        <button onclick="document.getElementById('pr-output-overlay').classList.remove('active')" style="width:28px; height:28px; border-radius:6px; border:1px solid #30363d; background:#161b22; color:#8b949e; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
+      </div>
+
+      <!-- Content area -->
+      <div style="flex:1; overflow-y:auto; min-height:0;">
+
+        <!-- Raw markdown view -->
+        <div id="pr-view-raw" style="padding:20px 24px;">
+          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#e6edf3; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#161b22; border:1px solid #30363d; border-radius:8px; padding:18px 22px;">## Type of change
+Feature
+
+## Description
+
+When a delivery is running 20+ min late, we show the cancel button again so the user can bail out. We poll anyCarry every 30s to check if the order qualifies, and after the user cancels, we double-check with `GetDeliveryCancelledOrder` to make sure it actually went through.
+
+### What's new
+
+- **`AdmsService.isEligibleForDelayCancellation`**: hits anyCarry's API — returns false on error
+- **`useIsEligibleForDelayCancellation` hook**: polls every 30s, gated by `DS_APPROACHING_STORE`
+- **`useCancelOrderWithConfirmation` hook**: pulled out of Progress.tsx so both cancel flows share the same confirm → cancel → redirect logic
+- **`DelayCancellationNote` component**: owns the whole thing — checks eligibility and renders the cancel button
+- **`CancelFailed` error prompt**: shows a specific cancel failure message instead of the generic "Unexpected Error"
+- **Cancel verification**: after cancelling, polls `GetDeliveryCancelledOrder` to confirm it actually worked
+
+### Implementation Details
+
+The cancel button shows up when three things are all true:
+
+1. Delivery status is `DS_APPROACHING_STORE`
+2. Backend says `is_cancel_allowed` (not wired up yet — waiting on MDX-12274)
+3. anyCarry says `redisplay_cancel_button: true`
+
+Right now only 1 and 3 are wired up. Condition 2 has TODOs in the code.
+
+When the user taps cancel, we re-check with MDAS first — if the driver picked up the order in the last 30s, we show a "sorry, too late" popup instead of cancelling.
+
+## Ticket
+[MDX-12272](https://theplanttokyo.atlassian.net/browse/MDX-12272)
+
+## Design
+- JMA cancel button / cancel flow: [Figma](https://www.figma.com/design/...)
+
+## Notes
+
+- **Backend not ready**: `is_cancel_allowed` from MBE doesn't exist yet ([MDX-12274](https://theplanttokyo.atlassian.net/browse/MDX-12274)). Stubbed with TODOs for now.
+- **anyCarry API was 404**: as of 2/24 it wasn't live. Use `force_redisplay=true` in dev to test.
+- **Scope got bigger**: originally just batched orders, but the batching flag turned out to be unreliable, so it now covers all UberEats 3PR orders.
+- **Refactor commits**: `fetchWithAuth` extraction, `useCancelOrderWithConfirmation` extraction, `isCancelledStatus` helper, and cancel error message improvement — all pure refactors, just prep work.
+- **Requirements**: [MDI-547](https://theplanttokyo.atlassian.net/browse/MDI-547) · System design
+- **Slack threads**: [#mcd-delivery-cn technical discussion](https://theplant.slack.com/archives/...) · [#mcd-delivery coordination](https://theplant.slack.com/archives/...)</pre>
+        </div>
+
+        <!-- Preview (rendered) view -->
+        <div id="pr-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#e6edf3; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:0 0 12px;">Type of change</h2>
+          <p>Feature</p>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Description</h2>
+          <p>When a delivery is running 20+ min late, we show the cancel button again so the user can bail out. We poll anyCarry every 30s to check if the order qualifies, and after the user cancels, we double-check with <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">GetDeliveryCancelledOrder</code> to make sure it actually went through.</p>
+
+          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; margin:18px 0 10px;">What's new</h3>
+          <ul style="padding-left:20px; margin:0;">
+            <li><strong><code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">AdmsService.isEligibleForDelayCancellation</code></strong>: hits anyCarry's API — returns false on error</li>
+            <li><strong><code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">useIsEligibleForDelayCancellation</code> hook</strong>: polls every 30s, gated by <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">DS_APPROACHING_STORE</code></li>
+            <li><strong><code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">useCancelOrderWithConfirmation</code> hook</strong>: pulled out of Progress.tsx so both cancel flows share the same confirm → cancel → redirect logic</li>
+            <li><strong><code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">DelayCancellationNote</code> component</strong>: owns the whole thing — checks eligibility and renders the cancel button</li>
+            <li><strong><code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">CancelFailed</code> error prompt</strong>: shows a specific cancel failure message instead of the generic "Unexpected Error"</li>
+            <li><strong>Cancel verification</strong>: after cancelling, polls <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">GetDeliveryCancelledOrder</code> to confirm it actually worked</li>
+          </ul>
+
+          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; margin:18px 0 10px;">Implementation Details</h3>
+          <p>The cancel button shows up when three things are all true:</p>
+          <ol style="padding-left:20px; margin:6px 0;">
+            <li>Delivery status is <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">DS_APPROACHING_STORE</code></li>
+            <li>Backend says <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">is_cancel_allowed</code> (not wired up yet — waiting on MDX-12274)</li>
+            <li>anyCarry says <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">redisplay_cancel_button: true</code></li>
+          </ol>
+          <p>Right now only 1 and 3 are wired up. Condition 2 has TODOs in the code.</p>
+          <p>When the user taps cancel, we re-check with MDAS first — if the driver picked up the order in the last 30s, we show a "sorry, too late" popup instead of cancelling.</p>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Ticket</h2>
+          <p><a href="https://theplanttokyo.atlassian.net/browse/MDX-12272" style="color:#58a6ff; text-decoration:none;">MDX-12272</a></p>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Design</h2>
+          <ul style="padding-left:20px; margin:0;">
+            <li>JMA cancel button / cancel flow: <a href="#" style="color:#58a6ff; text-decoration:none;">Figma</a></li>
+          </ul>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Notes</h2>
+          <ul style="padding-left:20px; margin:0;">
+            <li><strong>Backend not ready</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">is_cancel_allowed</code> from MBE doesn't exist yet (<a href="https://theplanttokyo.atlassian.net/browse/MDX-12274" style="color:#58a6ff; text-decoration:none;">MDX-12274</a>). Stubbed with TODOs for now.</li>
+            <li><strong>anyCarry API was 404</strong>: as of 2/24 it wasn't live. Use <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">force_redisplay=true</code> in dev to test.</li>
+            <li><strong>Scope got bigger</strong>: originally just batched orders, but the batching flag turned out to be unreliable, so it now covers all UberEats 3PR orders.</li>
+            <li><strong>Refactor commits</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">fetchWithAuth</code> extraction, <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">useCancelOrderWithConfirmation</code> extraction, <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">isCancelledStatus</code> helper, and cancel error message improvement — all pure refactors, just prep work.</li>
+            <li><strong>Requirements</strong>: <a href="https://theplanttokyo.atlassian.net/browse/MDI-547" style="color:#58a6ff; text-decoration:none;">MDI-547</a> · System design</li>
+            <li><strong>Slack threads</strong>: <a href="#" style="color:#58a6ff; text-decoration:none;">#mcd-delivery-cn technical discussion</a> · <a href="#" style="color:#58a6ff; text-decoration:none;">#mcd-delivery coordination</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
   </div>
 </section>
 
@@ -3293,6 +3431,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reset when video loops
   video.addEventListener('seeked', syncPipeline);
 })();
+
+/* -----------------------------------------------------------------------
+   PR OUTPUT — RAW / PREVIEW TOGGLE
+   ----------------------------------------------------------------------- */
+function togglePRView(mode) {
+  document.getElementById('pr-view-raw').style.display = mode === 'raw' ? '' : 'none';
+  document.getElementById('pr-view-preview').style.display = mode === 'preview' ? '' : 'none';
+  document.querySelectorAll('.pr-toggle-btn').forEach(btn => {
+    const active = btn.dataset.mode === mode;
+    btn.classList.toggle('active', active);
+    btn.style.background = active ? '#161b22' : 'transparent';
+    btn.style.color = active ? '#e6edf3' : '#8b949e';
+  });
+}
 
 function switchTypelessVideo(mode) {
   const map = { natural: 'typeless-vid-natural', ask: 'typeless-vid-ask', translate: 'typeless-vid-translate' };
