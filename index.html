@@ -3580,19 +3580,19 @@ $ /loop 5m /babysit-prs
   </div>
 
   <!-- Task Breakdown Output Overlay -->
-  <div id="tb-output-overlay" onclick="if(event.target===this)closeOverlay('tb-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
-    <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.7); position:relative;">
+  <div id="tb-output-overlay" onclick="if(event.target===this)closeOverlay('tb-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
+    <div style="background:#ffffff; border:1px solid #d1d9e0; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.15); position:relative;">
 
       <!-- Header -->
-      <div style="padding:16px 24px; border-bottom:1px solid #30363d; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+      <div style="padding:16px 24px; border-bottom:1px solid #d1d9e0; display:flex; align-items:center; gap:16px; flex-shrink:0;">
         <div style="flex:1; min-width:0;">
-          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#e6edf3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">[MDX-12272] OpenSpec — Delay Cancellation Cancel Button</div>
+          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#1f2328; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">[MDX-12272] OpenSpec — Delay Cancellation Cancel Button</div>
         </div>
-        <div style="display:flex; border:1px solid #30363d; border-radius:6px; overflow:hidden; flex-shrink:0;">
-          <button class="tb-toggle-btn active" data-mode="raw" onclick="toggleTBView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#161b22; color:#e6edf3;">Raw</button>
-          <button class="tb-toggle-btn" data-mode="preview" onclick="toggleTBView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #30363d; cursor:pointer; background:transparent; color:#8b949e;">Preview</button>
+        <div style="display:flex; border:1px solid #d1d9e0; border-radius:6px; overflow:hidden; flex-shrink:0;">
+          <button class="tb-toggle-btn active" data-mode="raw" onclick="toggleTBView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#f6f8fa; color:#1f2328;">Raw</button>
+          <button class="tb-toggle-btn" data-mode="preview" onclick="toggleTBView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #d1d9e0; cursor:pointer; background:transparent; color:#656d76;">Preview</button>
         </div>
-        <button onclick="closeOverlay('tb-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #30363d; background:#161b22; color:#8b949e; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
+        <button onclick="closeOverlay('tb-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #d1d9e0; background:#f6f8fa; color:#656d76; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
       </div>
 
       <!-- Content area -->
@@ -3600,7 +3600,7 @@ $ /loop 5m /babysit-prs
 
         <!-- Raw markdown view -->
         <div id="tb-view-raw" style="padding:20px 24px;">
-          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#e6edf3; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#161b22; border:1px solid #30363d; border-radius:8px; padding:18px 22px;">## Task Breakdown: MDX-12272 Delay Cancellation Cancel Button
+          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#1f2328; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:18px 22px;">## Task Breakdown: MDX-12272 Delay Cancellation Cancel Button
 
 _Reviewed by: Requirements Analyst → Codebase Scout + Project Architect → Senior Estimator_
 
@@ -3639,99 +3639,99 @@ Merged analyst's original 6 tasks into 4. Scout confirmed `AdmsService` pattern 
         </div>
 
         <!-- Preview (rendered) view -->
-        <div id="tb-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#e6edf3; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:0 0 12px;">Task Breakdown: MDX-12272 Delay Cancellation Cancel Button</h2>
-          <p style="color:#8b949e; font-style:italic; margin-bottom:16px;">Reviewed by: Requirements Analyst → Codebase Scout + Project Architect → Senior Estimator</p>
+        <div id="tb-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#1f2328; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:0 0 12px;">Task Breakdown: MDX-12272 Delay Cancellation Cancel Button</h2>
+          <p style="color:#656d76; font-style:italic; margin-bottom:16px;">Reviewed by: Requirements Analyst → Codebase Scout + Project Architect → Senior Estimator</p>
 
-          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Scope</h3>
+          <h3 style="font-size:1.1em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Scope</h3>
           <table style="width:100%; border-collapse:collapse; font-size:0.9em; margin-bottom:16px;">
-            <thead><tr style="border-bottom:2px solid #30363d;">
-              <th style="text-align:left; padding:8px 12px; color:#8b949e; font-weight:600;">Requirement</th>
-              <th style="text-align:center; padding:8px 12px; color:#8b949e; font-weight:600;">Web</th>
-              <th style="text-align:center; padding:8px 12px; color:#8b949e; font-weight:600;">JMA</th>
-              <th style="text-align:center; padding:8px 12px; color:#8b949e; font-weight:600;">Backend</th>
+            <thead><tr style="border-bottom:2px solid #d1d9e0;">
+              <th style="text-align:left; padding:8px 12px; color:#656d76; font-weight:600;">Requirement</th>
+              <th style="text-align:center; padding:8px 12px; color:#656d76; font-weight:600;">Web</th>
+              <th style="text-align:center; padding:8px 12px; color:#656d76; font-weight:600;">JMA</th>
+              <th style="text-align:center; padding:8px 12px; color:#656d76; font-weight:600;">Backend</th>
             </tr></thead>
             <tbody>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Show cancel button when delivery 20+ min late</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td></tr>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Poll anyCarry eligibility API every 30s</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td></tr>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Confirm → cancel → redirect shared flow</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center;"></td></tr>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Cancel verification (poll GetDeliveryCancelled)</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td></tr>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Cancel-specific error prompt</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td></tr>
-              <tr><td style="padding:8px 12px;">Push notification for cancellation confirmation</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td></tr>
+              <tr style="border-bottom:1px solid #eaeef2;"><td style="padding:8px 12px;">Show cancel button when delivery 20+ min late</td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td><td style="padding:8px 12px; text-align:center;"></td></tr>
+              <tr style="border-bottom:1px solid #eaeef2;"><td style="padding:8px 12px;">Poll anyCarry eligibility API every 30s</td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td></tr>
+              <tr style="border-bottom:1px solid #eaeef2;"><td style="padding:8px 12px;">Confirm → cancel → redirect shared flow</td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center;"></td></tr>
+              <tr style="border-bottom:1px solid #eaeef2;"><td style="padding:8px 12px;">Cancel verification (poll GetDeliveryCancelled)</td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td></tr>
+              <tr style="border-bottom:1px solid #eaeef2;"><td style="padding:8px 12px;">Cancel-specific error prompt</td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td><td style="padding:8px 12px; text-align:center;"></td></tr>
+              <tr><td style="padding:8px 12px;">Push notification for cancellation confirmation</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td><td style="padding:8px 12px; text-align:center; color:#1a7f37;">✅</td></tr>
             </tbody>
           </table>
 
-          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Tasks</h3>
+          <h3 style="font-size:1.1em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Tasks</h3>
           <table style="width:100%; border-collapse:collapse; font-size:0.85em; margin-bottom:16px;">
-            <thead><tr style="border-bottom:2px solid #30363d;">
-              <th style="text-align:left; padding:8px 10px; color:#8b949e; font-weight:600; width:2em;">#</th>
-              <th style="text-align:left; padding:8px 10px; color:#8b949e; font-weight:600;">Task</th>
-              <th style="text-align:center; padding:8px 10px; color:#8b949e; font-weight:600; width:3.5em;">Est.</th>
-              <th style="text-align:left; padding:8px 10px; color:#8b949e; font-weight:600;">Affected Files</th>
-              <th style="text-align:left; padding:8px 10px; color:#8b949e; font-weight:600;">Notes</th>
+            <thead><tr style="border-bottom:2px solid #d1d9e0;">
+              <th style="text-align:left; padding:8px 10px; color:#656d76; font-weight:600; width:2em;">#</th>
+              <th style="text-align:left; padding:8px 10px; color:#656d76; font-weight:600;">Task</th>
+              <th style="text-align:center; padding:8px 10px; color:#656d76; font-weight:600; width:3.5em;">Est.</th>
+              <th style="text-align:left; padding:8px 10px; color:#656d76; font-weight:600;">Affected Files</th>
+              <th style="text-align:left; padding:8px 10px; color:#656d76; font-weight:600;">Notes</th>
             </tr></thead>
             <tbody>
-              <tr style="border-bottom:1px solid #21262d;">
-                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">1</td>
+              <tr style="border-bottom:1px solid #eaeef2;">
+                <td style="padding:8px 10px; color:#0969da; font-weight:600;">1</td>
                 <td style="padding:8px 10px;">Eligibility check + polling hook</td>
-                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">1.5d</td>
-                <td style="padding:8px 10px;"><code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">AdmsService.ts</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">useIsEligibleForDelayCancellation.ts</code></td>
-                <td style="padding:8px 10px; color:#8b949e;">New service method (fail-closed) + hook polling every 30s. Scout: existing pattern reusable.</td>
+                <td style="padding:8px 10px; text-align:center; color:#1f2328; font-weight:600;">1.5d</td>
+                <td style="padding:8px 10px;"><code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">AdmsService.ts</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">useIsEligibleForDelayCancellation.ts</code></td>
+                <td style="padding:8px 10px; color:#656d76;">New service method (fail-closed) + hook polling every 30s. Scout: existing pattern reusable.</td>
               </tr>
-              <tr style="border-bottom:1px solid #21262d;">
-                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">2</td>
+              <tr style="border-bottom:1px solid #eaeef2;">
+                <td style="padding:8px 10px; color:#0969da; font-weight:600;">2</td>
                 <td style="padding:8px 10px;">Extract shared cancel flow</td>
-                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">1d</td>
-                <td style="padding:8px 10px;"><code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">Progress.tsx</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">useCancelOrderWithConfirmation.ts</code></td>
-                <td style="padding:8px 10px; color:#8b949e;">Architect: 3 other consumers — verify they still work.</td>
+                <td style="padding:8px 10px; text-align:center; color:#1f2328; font-weight:600;">1d</td>
+                <td style="padding:8px 10px;"><code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">Progress.tsx</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">useCancelOrderWithConfirmation.ts</code></td>
+                <td style="padding:8px 10px; color:#656d76;">Architect: 3 other consumers — verify they still work.</td>
               </tr>
-              <tr style="border-bottom:1px solid #21262d;">
-                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">3</td>
+              <tr style="border-bottom:1px solid #eaeef2;">
+                <td style="padding:8px 10px; color:#0969da; font-weight:600;">3</td>
                 <td style="padding:8px 10px;">DelayCancellationNote + cancel verification</td>
-                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">1.5d</td>
-                <td style="padding:8px 10px;"><code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">DelayCancellationNote.tsx</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">Progress.tsx</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">OrderCancelled.tsx</code></td>
-                <td style="padding:8px 10px; color:#8b949e;">Merged component + verification — same user flow, same PR.</td>
+                <td style="padding:8px 10px; text-align:center; color:#1f2328; font-weight:600;">1.5d</td>
+                <td style="padding:8px 10px;"><code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">DelayCancellationNote.tsx</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">Progress.tsx</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">OrderCancelled.tsx</code></td>
+                <td style="padding:8px 10px; color:#656d76;">Merged component + verification — same user flow, same PR.</td>
               </tr>
-              <tr style="border-bottom:1px solid #21262d;">
-                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">4</td>
+              <tr style="border-bottom:1px solid #eaeef2;">
+                <td style="padding:8px 10px; color:#0969da; font-weight:600;">4</td>
                 <td style="padding:8px 10px;">CancelFailed error prompt + i18n</td>
-                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">0.5d</td>
-                <td style="padding:8px 10px;"><code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">CancelFailed.tsx</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">messages/delivery.ts</code></td>
-                <td style="padding:8px 10px; color:#8b949e;">Scout: <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">simpler</code> — follows existing ErrorPrompt pattern.</td>
+                <td style="padding:8px 10px; text-align:center; color:#1f2328; font-weight:600;">0.5d</td>
+                <td style="padding:8px 10px;"><code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">CancelFailed.tsx</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">messages/delivery.ts</code></td>
+                <td style="padding:8px 10px; color:#656d76;">Scout: <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.85em;">simpler</code> — follows existing ErrorPrompt pattern.</td>
               </tr>
-              <tr style="border-bottom:1px solid #21262d;">
-                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">5</td>
+              <tr style="border-bottom:1px solid #eaeef2;">
+                <td style="padding:8px 10px; color:#0969da; font-weight:600;">5</td>
                 <td style="padding:8px 10px;">QA support &amp; bug fixes</td>
-                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">0.5d</td>
-                <td style="padding:8px 10px; color:#8b949e;">—</td>
-                <td style="padding:8px 10px; color:#8b949e;">Buffer for cancel edge cases (timeout, network, status races).</td>
+                <td style="padding:8px 10px; text-align:center; color:#1f2328; font-weight:600;">0.5d</td>
+                <td style="padding:8px 10px; color:#656d76;">—</td>
+                <td style="padding:8px 10px; color:#656d76;">Buffer for cancel edge cases (timeout, network, status races).</td>
               </tr>
-              <tr style="border-top:2px solid #30363d;">
+              <tr style="border-top:2px solid #d1d9e0;">
                 <td style="padding:8px 10px;"></td>
-                <td style="padding:8px 10px; font-weight:700; color:#e6edf3;">Total</td>
-                <td style="padding:8px 10px; text-align:center; font-weight:700; color:#58a6ff;">5d</td>
+                <td style="padding:8px 10px; font-weight:700; color:#1f2328;">Total</td>
+                <td style="padding:8px 10px; text-align:center; font-weight:700; color:#0969da;">5d</td>
                 <td style="padding:8px 10px;"></td>
                 <td style="padding:8px 10px;"></td>
               </tr>
             </tbody>
           </table>
 
-          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Potential Issues</h3>
+          <h3 style="font-size:1.1em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Potential Issues</h3>
           <ul style="padding-left:20px; margin:0 0 16px;">
-            <li><strong>Status race condition:</strong> User taps cancel while delivery status transitions away from <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code> — hook must clear eligibility immediately on status change.</li>
+            <li><strong>Status race condition:</strong> User taps cancel while delivery status transitions away from <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code> — hook must clear eligibility immediately on status change.</li>
             <li><strong>Polling cleanup:</strong> Both the eligibility interval and the cancellation verification poll must be cleaned up on unmount to prevent memory leaks.</li>
-            <li><strong>Blast radius on Progress.tsx:</strong> Architect flagged 3 other components consuming cancel logic — extracting the hook requires verifying <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">OrderDetail</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">DeliveryTracking</code>, and <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">StatusBar</code> still work.</li>
+            <li><strong>Blast radius on Progress.tsx:</strong> Architect flagged 3 other components consuming cancel logic — extracting the hook requires verifying <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">OrderDetail</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DeliveryTracking</code>, and <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">StatusBar</code> still work.</li>
           </ul>
 
-          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Questions for PM</h3>
+          <h3 style="font-size:1.1em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Questions for PM</h3>
           <ul style="padding-left:20px; margin:0 0 16px;">
             <li>Should the cancel button show for all delivery types (McDelivery + Okihai) or McDelivery only?</li>
             <li>If the cancel verification poll times out after 10s, should we show the error prompt or silently retry?</li>
             <li>The anyCarry eligibility endpoint — is this already deployed to STG, or do we need to coordinate with backend?</li>
           </ul>
 
-          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Estimation Notes</h3>
-          <p style="color:#8b949e;">Merged analyst's original 6 tasks into 4. Scout confirmed <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">AdmsService</code> pattern is reusable (saved 0.5d on task 1). Merged <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">DelayCancellationNote</code> + cancel verification into one task — same user flow, same PR. Architect's blast radius flag on <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code> kept task 2 at 1d despite scout rating <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">as-expected</code>. Added 0.5d QA buffer (5d total qualifies for minimum buffer).</p>
+          <h3 style="font-size:1.1em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Estimation Notes</h3>
+          <p style="color:#656d76;">Merged analyst's original 6 tasks into 4. Scout confirmed <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">AdmsService</code> pattern is reusable (saved 0.5d on task 1). Merged <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DelayCancellationNote</code> + cancel verification into one task — same user flow, same PR. Architect's blast radius flag on <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code> kept task 2 at 1d despite scout rating <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">as-expected</code>. Added 0.5d QA buffer (5d total qualifies for minimum buffer).</p>
         </div>
 
       </div>
@@ -3855,20 +3855,20 @@ Merged analyst's original 6 tasks into 4. Scout confirmed `AdmsService` pattern 
   </div>
 
   <!-- PR Output Overlay -->
-  <div id="pr-output-overlay" onclick="if(event.target===this)closeOverlay('pr-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
-    <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.7); position:relative;">
+  <div id="pr-output-overlay" onclick="if(event.target===this)closeOverlay('pr-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
+    <div style="background:#ffffff; border:1px solid #d1d9e0; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.15); position:relative;">
 
       <!-- Header: Title + toggle + close -->
-      <div style="padding:16px 24px; border-bottom:1px solid #30363d; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+      <div style="padding:16px 24px; border-bottom:1px solid #d1d9e0; display:flex; align-items:center; gap:16px; flex-shrink:0;">
         <div style="flex:1; min-width:0;">
-          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#e6edf3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">[MDX-12272] feat(mcd/mop): add delay cancellation cancel button</div>
+          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#1f2328; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">[MDX-12272] feat(mcd/mop): add delay cancellation cancel button</div>
         </div>
         <!-- Toggle -->
-        <div style="display:flex; border:1px solid #30363d; border-radius:6px; overflow:hidden; flex-shrink:0;">
-          <button class="pr-toggle-btn active" data-mode="raw" onclick="togglePRView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#161b22; color:#e6edf3;">Raw</button>
-          <button class="pr-toggle-btn" data-mode="preview" onclick="togglePRView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #30363d; cursor:pointer; background:transparent; color:#8b949e;">Preview</button>
+        <div style="display:flex; border:1px solid #d1d9e0; border-radius:6px; overflow:hidden; flex-shrink:0;">
+          <button class="pr-toggle-btn active" data-mode="raw" onclick="togglePRView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#f6f8fa; color:#1f2328;">Raw</button>
+          <button class="pr-toggle-btn" data-mode="preview" onclick="togglePRView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #d1d9e0; cursor:pointer; background:transparent; color:#656d76;">Preview</button>
         </div>
-        <button onclick="closeOverlay('pr-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #30363d; background:#161b22; color:#8b949e; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
+        <button onclick="closeOverlay('pr-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #d1d9e0; background:#f6f8fa; color:#656d76; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
       </div>
 
       <!-- Content area -->
@@ -3876,7 +3876,7 @@ Merged analyst's original 6 tasks into 4. Scout confirmed `AdmsService` pattern 
 
         <!-- Raw markdown view -->
         <div id="pr-view-raw" style="padding:20px 24px;">
-          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#e6edf3; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#161b22; border:1px solid #30363d; border-radius:8px; padding:18px 22px;">## Type of change
+          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#1f2328; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:18px 22px;">## Type of change
 Feature
 
 ## Description
@@ -3921,14 +3921,14 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
         </div>
 
         <!-- Preview (rendered) view -->
-        <div id="pr-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#e6edf3; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:0 0 12px;">Type of change</h2>
+        <div id="pr-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#1f2328; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:0 0 12px;">Type of change</h2>
           <p>Feature</p>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Description</h2>
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Description</h2>
           <p>When a delivery is running 20+ min late, we show the cancel button again so the user can bail out. We poll anyCarry every 30s to check if the order qualifies, and after the user cancels, we double-check with <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">GetDeliveryCancelledOrder</code> to make sure it actually went through.</p>
 
-          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; margin:18px 0 10px;">What's new</h3>
+          <h3 style="font-size:1.1em; font-weight:600; color:#1f2328; margin:18px 0 10px;">What's new</h3>
           <ul style="padding-left:20px; margin:0;">
             <li><strong><code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">AdmsService.isEligibleForDelayCancellation</code></strong>: hits anyCarry's API — returns false on error</li>
             <li><strong><code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">useIsEligibleForDelayCancellation</code> hook</strong>: polls every 30s, gated by <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">DS_APPROACHING_STORE</code></li>
@@ -3938,7 +3938,7 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
             <li><strong>Cancel verification</strong>: after cancelling, polls <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">GetDeliveryCancelledOrder</code> to confirm it actually worked</li>
           </ul>
 
-          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; margin:18px 0 10px;">Implementation Details</h3>
+          <h3 style="font-size:1.1em; font-weight:600; color:#1f2328; margin:18px 0 10px;">Implementation Details</h3>
           <p>The cancel button shows up when three things are all true:</p>
           <ol style="padding-left:20px; margin:6px 0;">
             <li>Delivery status is <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">DS_APPROACHING_STORE</code></li>
@@ -3948,21 +3948,21 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
           <p>Right now only 1 and 3 are wired up. Condition 2 has TODOs in the code.</p>
           <p>When the user taps cancel, we re-check with MDAS first — if the driver picked up the order in the last 30s, we show a "sorry, too late" popup instead of cancelling.</p>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Ticket</h2>
-          <p><a href="https://theplanttokyo.atlassian.net/browse/MDX-12272" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDX-12272</a></p>
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Ticket</h2>
+          <p><a href="https://theplanttokyo.atlassian.net/browse/MDX-12272" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-12272</a></p>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Design</h2>
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Design</h2>
           <ul style="padding-left:20px; margin:0;">
             <li>JMA cancel button / cancel flow: Figma</li>
           </ul>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Notes</h2>
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Notes</h2>
           <ul style="padding-left:20px; margin:0;">
-            <li><strong>Backend not ready</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">is_cancel_allowed</code> from MBE doesn't exist yet (<a href="https://theplanttokyo.atlassian.net/browse/MDX-12274" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDX-12274</a>). Stubbed with TODOs for now.</li>
+            <li><strong>Backend not ready</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">is_cancel_allowed</code> from MBE doesn't exist yet (<a href="https://theplanttokyo.atlassian.net/browse/MDX-12274" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-12274</a>). Stubbed with TODOs for now.</li>
             <li><strong>anyCarry API was 404</strong>: as of 2/24 it wasn't live. Use <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">force_redisplay=true</code> in dev to test.</li>
             <li><strong>Scope got bigger</strong>: originally just batched orders, but the batching flag turned out to be unreliable, so it now covers all UberEats 3PR orders.</li>
             <li><strong>Refactor commits</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">fetchWithAuth</code> extraction, <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">useCancelOrderWithConfirmation</code> extraction, <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">isCancelledStatus</code> helper, and cancel error message improvement — all pure refactors, just prep work.</li>
-            <li><strong>Requirements</strong>: <a href="https://theplanttokyo.atlassian.net/browse/MDI-547" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDI-547</a> · System design</li>
+            <li><strong>Requirements</strong>: <a href="https://theplanttokyo.atlassian.net/browse/MDI-547" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDI-547</a> · System design</li>
             <li><strong>Slack threads</strong>: #mcd-delivery-cn technical discussion · #mcd-delivery coordination</li>
           </ul>
         </div>
@@ -4045,19 +4045,19 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
   </div>
 
   <!-- QA Output Overlay -->
-  <div id="qa-output-overlay" onclick="if(event.target===this)closeOverlay('qa-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
-    <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.7); position:relative;">
+  <div id="qa-output-overlay" onclick="if(event.target===this)closeOverlay('qa-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
+    <div style="background:#ffffff; border:1px solid #d1d9e0; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.15); position:relative;">
 
       <!-- Header: Title + toggle + close -->
-      <div style="padding:16px 24px; border-bottom:1px solid #30363d; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+      <div style="padding:16px 24px; border-bottom:1px solid #d1d9e0; display:flex; align-items:center; gap:16px; flex-shrink:0;">
         <div style="flex:1; min-width:0;">
-          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#e6edf3;">QA Handoff Comment — MDX-11961 Okihai Delivery</div>
+          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#1f2328;">QA Handoff Comment — MDX-11961 Okihai Delivery</div>
         </div>
-        <div style="display:flex; border:1px solid #30363d; border-radius:6px; overflow:hidden; flex-shrink:0;">
-          <button class="qa-toggle-btn active" data-mode="raw" onclick="toggleQAView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#161b22; color:#e6edf3;">Raw</button>
-          <button class="qa-toggle-btn" data-mode="preview" onclick="toggleQAView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #30363d; cursor:pointer; background:transparent; color:#8b949e;">Preview</button>
+        <div style="display:flex; border:1px solid #d1d9e0; border-radius:6px; overflow:hidden; flex-shrink:0;">
+          <button class="qa-toggle-btn active" data-mode="raw" onclick="toggleQAView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#f6f8fa; color:#1f2328;">Raw</button>
+          <button class="qa-toggle-btn" data-mode="preview" onclick="toggleQAView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #d1d9e0; cursor:pointer; background:transparent; color:#656d76;">Preview</button>
         </div>
-        <button onclick="closeOverlay('qa-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #30363d; background:#161b22; color:#8b949e; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
+        <button onclick="closeOverlay('qa-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #d1d9e0; background:#f6f8fa; color:#656d76; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
       </div>
 
       <!-- Content area -->
@@ -4065,7 +4065,7 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
 
         <!-- Raw markdown view -->
         <div id="qa-view-raw" style="padding:20px 24px;">
-          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#e6edf3; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#161b22; border:1px solid #30363d; border-radius:8px; padding:18px 22px;">@Susan Wu
+          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#1f2328; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:18px 22px;">@Susan Wu
 
 Thanks so much for always making time to help us catch the tricky stuff! Fresh off the oven — Okihai Default Delivery just landed on STG, ready for your team to take it for a spin whenever you have a slot!
 
@@ -4096,30 +4096,30 @@ Or use an Incognito/Private window for a fresh session.
         </div>
 
         <!-- Preview (rendered) view -->
-        <div id="qa-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#e6edf3; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
-          <p><span style="color:#58a6ff; font-weight:600;">@Susan Wu</span></p>
+        <div id="qa-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#1f2328; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
+          <p><span style="color:#0969da; font-weight:600;">@Susan Wu</span></p>
           <p>Thanks so much for always making time to help us catch the tricky stuff! Fresh off the oven — Okihai Default Delivery just landed on STG, ready for your team to take it for a spin whenever you have a slot!</p>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">What to Test</h2>
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">What to Test</h2>
           <ul style="padding-left:6px; margin:0; list-style:none;">
-            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Okihai popup on first visit</strong> — Go to the payment confirmation screen as a delivery user → a popup should appear explaining that "Drop-off Delivery" (置き配) is now pre-selected. This popup should only appear once.</span></li>
-            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Popup dismissal</strong> — Click OK or click outside the popup → Okihai should remain selected as the delivery method</span></li>
-            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Payment method reset</strong> — When the popup appears for the first time, the payment method should be blank (not pre-filled) → user must manually select a payment method</span></li>
-            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Okihai persists across orders</strong> — Place an order with Okihai → start a new order → Okihai should still be the selected delivery method</span></li>
-            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Hand delivery switch</strong> — Select "Hand delivery at the door" → complete the order → next order should default to Hand delivery</span></li>
-            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Cash payment restriction</strong> — Select "Cash" as payment → Okihai should be greyed out and unavailable</span></li>
-            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#8b949e;">☐</span> <span><strong>Order completion screen</strong> — Complete a delivery order with Okihai → should show "お届け完了（置き配）" and the Okihai image</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#656d76;">☐</span> <span><strong>Okihai popup on first visit</strong> — Go to the payment confirmation screen as a delivery user → a popup should appear explaining that "Drop-off Delivery" (置き配) is now pre-selected. This popup should only appear once.</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#656d76;">☐</span> <span><strong>Popup dismissal</strong> — Click OK or click outside the popup → Okihai should remain selected as the delivery method</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#656d76;">☐</span> <span><strong>Payment method reset</strong> — When the popup appears for the first time, the payment method should be blank (not pre-filled) → user must manually select a payment method</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#656d76;">☐</span> <span><strong>Okihai persists across orders</strong> — Place an order with Okihai → start a new order → Okihai should still be the selected delivery method</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#656d76;">☐</span> <span><strong>Hand delivery switch</strong> — Select "Hand delivery at the door" → complete the order → next order should default to Hand delivery</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#656d76;">☐</span> <span><strong>Cash payment restriction</strong> — Select "Cash" as payment → Okihai should be greyed out and unavailable</span></li>
+            <li style="display:flex; gap:8px; margin-bottom:6px;"><span style="color:#656d76;">☐</span> <span><strong>Order completion screen</strong> — Complete a delivery order with Okihai → should show "お届け完了（置き配）" and the Okihai image</span></li>
           </ul>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">How to Reset</h2>
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">How to Reset</h2>
           <p>To re-trigger the Okihai popup (test it as a "first time" visit), open DevTools Console (F12) and run:</p>
-          <pre style="background:#161b22; border:1px solid #30363d; border-radius:6px; padding:10px 14px; font-family:var(--font-mono); font-size:0.9em; color:#e6edf3; margin:8px 0;">localStorage.removeItem('mcd_delivery_pref_okihai')</pre>
-          <p style="color:#8b949e;">Or use an Incognito/Private window for a fresh session.</p>
+          <pre style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:6px; padding:10px 14px; font-family:var(--font-mono); font-size:0.9em; color:#1f2328; margin:8px 0;">localStorage.removeItem('mcd_delivery_pref_okihai')</pre>
+          <p style="color:#656d76;">Or use an Incognito/Private window for a fresh session.</p>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">References</h2>
+          <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">References</h2>
           <ul style="padding-left:20px; margin:0;">
-            <li>Requirements: <a href="https://theplanttokyo.atlassian.net/browse/MDI-432" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDI-432</a></li>
-            <li>Epic: <a href="https://theplanttokyo.atlassian.net/browse/MDX-11961" target="_blank" rel="noopener" style="color:#58a6ff; text-decoration:none;">MDX-11961</a></li>
+            <li>Requirements: <a href="https://theplanttokyo.atlassian.net/browse/MDI-432" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDI-432</a></li>
+            <li>Epic: <a href="https://theplanttokyo.atlassian.net/browse/MDX-11961" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-11961</a></li>
           </ul>
         </div>
 
@@ -4837,8 +4837,8 @@ function togglePRView(mode) {
   document.querySelectorAll('.pr-toggle-btn').forEach(btn => {
     const active = btn.dataset.mode === mode;
     btn.classList.toggle('active', active);
-    btn.style.background = active ? '#161b22' : 'transparent';
-    btn.style.color = active ? '#e6edf3' : '#8b949e';
+    btn.style.background = active ? '#f6f8fa' : 'transparent';
+    btn.style.color = active ? '#1f2328' : '#656d76';
   });
 }
 
@@ -4851,8 +4851,8 @@ function toggleQAView(mode) {
   document.querySelectorAll('.qa-toggle-btn').forEach(btn => {
     const active = btn.dataset.mode === mode;
     btn.classList.toggle('active', active);
-    btn.style.background = active ? '#161b22' : 'transparent';
-    btn.style.color = active ? '#e6edf3' : '#8b949e';
+    btn.style.background = active ? '#f6f8fa' : 'transparent';
+    btn.style.color = active ? '#1f2328' : '#656d76';
   });
 }
 
@@ -4865,8 +4865,8 @@ function toggleTBView(mode) {
   document.querySelectorAll('.tb-toggle-btn').forEach(btn => {
     const active = btn.dataset.mode === mode;
     btn.classList.toggle('active', active);
-    btn.style.background = active ? '#161b22' : 'transparent';
-    btn.style.color = active ? '#e6edf3' : '#8b949e';
+    btn.style.background = active ? '#f6f8fa' : 'transparent';
+    btn.style.color = active ? '#1f2328' : '#656d76';
   });
 }
 
