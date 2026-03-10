@@ -2377,15 +2377,20 @@ body {
 .pr-output-step.step-active .pr-output-icon { opacity: 1 !important; }
 .pr-output-step.step-active:hover .pipeline-label { opacity: 1; filter: brightness(1.2); }
 
+/* Task Breakdown output step — clickable after CSS animation completes */
+.tb-output-step.step-done { cursor: pointer; }
+.tb-output-step.step-done .tb-output-icon { opacity: 1 !important; }
+.tb-output-step.step-done:hover .pipeline-label { opacity: 1; filter: brightness(1.2); }
+
 /* — PR Output Overlay — */
 html.overlay-open, body.overlay-open { overflow: hidden !important; }
-#pr-output-overlay, #qa-output-overlay { display: none !important; }
-#pr-output-overlay.active, #qa-output-overlay.active { display: flex !important; animation: prOverlayIn 0.25s ease forwards; }
+#pr-output-overlay, #qa-output-overlay, #tb-output-overlay { display: none !important; }
+#pr-output-overlay.active, #qa-output-overlay.active, #tb-output-overlay.active { display: flex !important; animation: prOverlayIn 0.25s ease forwards; }
 @keyframes prOverlayIn {
   0%   { opacity: 0; }
   100% { opacity: 1; }
 }
-#pr-output-overlay.active > div, #qa-output-overlay.active > div {
+#pr-output-overlay.active > div, #qa-output-overlay.active > div, #tb-output-overlay.active > div {
   animation: prOverlaySlideUp 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
 }
 @keyframes prOverlaySlideUp {
@@ -3554,15 +3559,15 @@ $ /loop 5m /babysit-prs
         </div>
         <div class="pipeline-connector" data-after="3"></div>
 
-        <!-- Step 4: OpenSpec Output -->
-        <div class="pipeline-step" data-step="4">
+        <!-- Step 4: OpenSpec Output (clickable after animation) -->
+        <div class="pipeline-step tb-output-step" data-step="4" onclick="if(this.classList.contains('step-done'))openOverlay('tb-output-overlay')">
           <div class="pipeline-node">
             <div class="pipeline-spinner"></div>
             <div class="pipeline-check">&#10003;</div>
           </div>
           <div class="pipeline-label">
-            <span class="pipeline-name">OpenSpec Output</span>
-            <span class="pipeline-desc">Proposal, design &amp; specs</span>
+            <span class="pipeline-name">OpenSpec Output <span class="tb-output-icon" style="opacity:0; transition:opacity 0.3s; font-size:0.8em;">&#x1F517;</span></span>
+            <span class="pipeline-desc">Click to view generated spec</span>
           </div>
         </div>
       </div>
@@ -3572,6 +3577,172 @@ $ /loop 5m /babysit-prs
       </div>
     </div>
 
+  </div>
+
+  <!-- Task Breakdown Output Overlay -->
+  <div id="tb-output-overlay" onclick="if(event.target===this)closeOverlay('tb-output-overlay')" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:3vh 3vw;">
+    <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; width:100%; max-width:860px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 30px 90px rgba(0,0,0,0.7); position:relative;">
+
+      <!-- Header -->
+      <div style="padding:16px 24px; border-bottom:1px solid #30363d; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+        <div style="flex:1; min-width:0;">
+          <div style="font-family:var(--font-sans); font-size:clamp(0.85rem, 1.2vw, 1.1rem); font-weight:700; color:#e6edf3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">[MDX-12272] OpenSpec — Delay Cancellation Cancel Button</div>
+        </div>
+        <div style="display:flex; border:1px solid #30363d; border-radius:6px; overflow:hidden; flex-shrink:0;">
+          <button class="tb-toggle-btn active" data-mode="raw" onclick="toggleTBView('raw')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; cursor:pointer; background:#161b22; color:#e6edf3;">Raw</button>
+          <button class="tb-toggle-btn" data-mode="preview" onclick="toggleTBView('preview')" style="padding:4px 12px; font-family:var(--font-mono); font-size:clamp(0.6rem, 0.75vw, 0.7rem); border:none; border-left:1px solid #30363d; cursor:pointer; background:transparent; color:#8b949e;">Preview</button>
+        </div>
+        <button onclick="closeOverlay('tb-output-overlay')" style="width:28px; height:28px; border-radius:6px; border:1px solid #30363d; background:#161b22; color:#8b949e; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">&times;</button>
+      </div>
+
+      <!-- Content area -->
+      <div style="flex:1; overflow-y:auto; min-height:0;">
+
+        <!-- Raw markdown view -->
+        <div id="tb-view-raw" style="padding:20px 24px;">
+          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#e6edf3; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#161b22; border:1px solid #30363d; border-radius:8px; padding:18px 22px;">## Proposal
+
+Add a "Cancel Order" button to the delivery tracking screen when a delivery is running 20+ minutes late. The button lets users bail out of a delayed order instead of waiting indefinitely.
+
+## Scope
+
+| Area | Impact |
+|------|--------|
+| AdmsService | New `isEligibleForDelayCancellation` method — hits anyCarry API |
+| Hooks | `useIsEligibleForDelayCancellation` — polls every 30s, gated by `DS_APPROACHING_STORE` |
+| Hooks | `useCancelOrderWithConfirmation` — extracted from Progress.tsx for reuse |
+| Components | `DelayCancellationNote` — owns eligibility check + cancel button |
+| Components | `CancelFailed` — specific error prompt for cancel failures |
+| Flow | Cancel verification — polls `GetDeliveryCancelledOrder` after cancel |
+
+## Subtasks
+
+### 1. Add `isEligibleForDelayCancellation` to AdmsService
+- Call anyCarry delay-cancellation eligibility endpoint
+- Return `false` on any error (fail-closed)
+- **Estimate:** 1 SP
+
+### 2. Create `useIsEligibleForDelayCancellation` hook
+- Poll every 30 seconds
+- Only activate when delivery status is `DS_APPROACHING_STORE`
+- Clear interval on unmount or status change
+- **Estimate:** 2 SP
+
+### 3. Extract `useCancelOrderWithConfirmation` hook
+- Pull cancel logic out of `Progress.tsx`
+- Shared confirm → cancel → redirect flow
+- Both existing cancel and new delay-cancel use this hook
+- **Estimate:** 2 SP
+
+### 4. Build `DelayCancellationNote` component
+- Renders cancel button when eligibility hook returns true
+- Calls shared cancel hook on click
+- Disappears when delivery status changes
+- **Estimate:** 2 SP
+
+### 5. Add `CancelFailed` error prompt
+- Replace generic "Unexpected Error" with cancel-specific message
+- Include retry option
+- **Estimate:** 1 SP
+
+### 6. Add cancel verification flow
+- After cancel API succeeds, poll `GetDeliveryCancelledOrder`
+- Confirm cancellation actually went through before redirecting
+- Timeout after 10s with error state
+- **Estimate:** 2 SP
+
+## Design Notes
+
+- **Fail-closed:** If the eligibility API errors, the button stays hidden
+- **Polling cadence:** 30s balances responsiveness vs. API load
+- **Shared hook:** Extracting cancel logic prevents divergence between the two cancel flows
+- **Verification:** Double-checking prevents the user from seeing a "cancelled" state when the backend didn't actually process it
+
+## Total Estimate: 10 SP</pre>
+        </div>
+
+        <!-- Preview (rendered) view -->
+        <div id="tb-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#e6edf3; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:0 0 12px;">Proposal</h2>
+          <p>Add a "Cancel Order" button to the delivery tracking screen when a delivery is running 20+ minutes late. The button lets users bail out of a delayed order instead of waiting indefinitely.</p>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Scope</h2>
+          <table style="width:100%; border-collapse:collapse; font-size:0.9em; margin-bottom:16px;">
+            <thead><tr style="border-bottom:2px solid #30363d;">
+              <th style="text-align:left; padding:8px 12px; color:#8b949e; font-weight:600;">Area</th>
+              <th style="text-align:left; padding:8px 12px; color:#8b949e; font-weight:600;">Impact</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">AdmsService</td><td style="padding:8px 12px;">New <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">isEligibleForDelayCancellation</code> method — hits anyCarry API</td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">Hooks</td><td style="padding:8px 12px;"><code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">useIsEligibleForDelayCancellation</code> — polls every 30s, gated by <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">Hooks</td><td style="padding:8px 12px;"><code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">useCancelOrderWithConfirmation</code> — extracted from Progress.tsx for reuse</td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">Components</td><td style="padding:8px 12px;"><code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">DelayCancellationNote</code> — owns eligibility check + cancel button</td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">Components</td><td style="padding:8px 12px;"><code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">CancelFailed</code> — specific error prompt for cancel failures</td></tr>
+              <tr><td style="padding:8px 12px; color:#58a6ff;">Flow</td><td style="padding:8px 12px;">Cancel verification — polls <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code> after cancel</td></tr>
+            </tbody>
+          </table>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Subtasks</h2>
+
+          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">1. Add <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">isEligibleForDelayCancellation</code> to AdmsService</h3>
+          <ul style="padding-left:20px; margin:0 0 8px;">
+            <li>Call anyCarry delay-cancellation eligibility endpoint</li>
+            <li>Return <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">false</code> on any error (fail-closed)</li>
+            <li><strong>Estimate:</strong> 1 SP</li>
+          </ul>
+
+          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">2. Create <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">useIsEligibleForDelayCancellation</code> hook</h3>
+          <ul style="padding-left:20px; margin:0 0 8px;">
+            <li>Poll every 30 seconds</li>
+            <li>Only activate when delivery status is <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></li>
+            <li>Clear interval on unmount or status change</li>
+            <li><strong>Estimate:</strong> 2 SP</li>
+          </ul>
+
+          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">3. Extract <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">useCancelOrderWithConfirmation</code> hook</h3>
+          <ul style="padding-left:20px; margin:0 0 8px;">
+            <li>Pull cancel logic out of <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">Progress.tsx</code></li>
+            <li>Shared confirm → cancel → redirect flow</li>
+            <li>Both existing cancel and new delay-cancel use this hook</li>
+            <li><strong>Estimate:</strong> 2 SP</li>
+          </ul>
+
+          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">4. Build <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">DelayCancellationNote</code> component</h3>
+          <ul style="padding-left:20px; margin:0 0 8px;">
+            <li>Renders cancel button when eligibility hook returns true</li>
+            <li>Calls shared cancel hook on click</li>
+            <li>Disappears when delivery status changes</li>
+            <li><strong>Estimate:</strong> 2 SP</li>
+          </ul>
+
+          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">5. Add <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">CancelFailed</code> error prompt</h3>
+          <ul style="padding-left:20px; margin:0 0 8px;">
+            <li>Replace generic "Unexpected Error" with cancel-specific message</li>
+            <li>Include retry option</li>
+            <li><strong>Estimate:</strong> 1 SP</li>
+          </ul>
+
+          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">6. Add cancel verification flow</h3>
+          <ul style="padding-left:20px; margin:0 0 8px;">
+            <li>After cancel API succeeds, poll <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code></li>
+            <li>Confirm cancellation actually went through before redirecting</li>
+            <li>Timeout after 10s with error state</li>
+            <li><strong>Estimate:</strong> 2 SP</li>
+          </ul>
+
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Design Notes</h2>
+          <ul style="padding-left:20px; margin:0 0 8px;">
+            <li><strong>Fail-closed:</strong> If the eligibility API errors, the button stays hidden</li>
+            <li><strong>Polling cadence:</strong> 30s balances responsiveness vs. API load</li>
+            <li><strong>Shared hook:</strong> Extracting cancel logic prevents divergence between the two cancel flows</li>
+            <li><strong>Verification:</strong> Double-checking prevents the user from seeing a "cancelled" state when the backend didn't actually process it</li>
+          </ul>
+
+          <p style="margin-top:20px; padding:12px 16px; background:#161b22; border:1px solid #30363d; border-radius:8px; font-weight:600; color:#58a6ff;">Total Estimate: 10 SP</p>
+        </div>
+
+      </div>
+    </div>
   </div>
 </section>
 
@@ -4691,6 +4862,31 @@ function toggleQAView(mode) {
     btn.style.color = active ? '#e6edf3' : '#8b949e';
   });
 }
+
+/* -----------------------------------------------------------------------
+   TASK BREAKDOWN OUTPUT — RAW / PREVIEW TOGGLE
+   ----------------------------------------------------------------------- */
+function toggleTBView(mode) {
+  document.getElementById('tb-view-raw').style.display = mode === 'raw' ? '' : 'none';
+  document.getElementById('tb-view-preview').style.display = mode === 'preview' ? '' : 'none';
+  document.querySelectorAll('.tb-toggle-btn').forEach(btn => {
+    const active = btn.dataset.mode === mode;
+    btn.classList.toggle('active', active);
+    btn.style.background = active ? '#161b22' : 'transparent';
+    btn.style.color = active ? '#e6edf3' : '#8b949e';
+  });
+}
+
+/* — Task Breakdown: mark output step clickable after CSS animation — */
+(function initTBOutputStep() {
+  const step = document.querySelector('.tb-output-step');
+  if (!step) return;
+  const node = step.querySelector('.pipeline-node');
+  if (!node) return;
+  node.addEventListener('animationend', function() {
+    step.classList.add('step-done');
+  });
+})();
 
 function switchTypelessVideo(mode) {
   const map = { natural: 'typeless-vid-natural', ask: 'typeless-vid-ask', translate: 'typeless-vid-translate' };
