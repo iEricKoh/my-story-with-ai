@@ -3600,145 +3600,138 @@ $ /loop 5m /babysit-prs
 
         <!-- Raw markdown view -->
         <div id="tb-view-raw" style="padding:20px 24px;">
-          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#e6edf3; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#161b22; border:1px solid #30363d; border-radius:8px; padding:18px 22px;">## Proposal
+          <pre style="font-family:var(--font-mono); font-size:clamp(0.6rem, 0.78vw, 0.72rem); line-height:1.6; color:#e6edf3; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#161b22; border:1px solid #30363d; border-radius:8px; padding:18px 22px;">## Task Breakdown: MDX-12272 Delay Cancellation Cancel Button
 
-Add a "Cancel Order" button to the delivery tracking screen when a delivery is running 20+ minutes late. The button lets users bail out of a delayed order instead of waiting indefinitely.
+_Reviewed by: Requirements Analyst → Codebase Scout + Project Architect → Senior Estimator_
 
-## Scope
+### Scope
+| Requirement                                     | Web | JMA | Backend |
+|-------------------------------------------------|-----|-----|---------|
+| Show cancel button when delivery 20+ min late   | ✅  |  ✅ |         |
+| Poll anyCarry eligibility API every 30s         | ✅  |     | ✅      |
+| Confirm → cancel → redirect shared flow         | ✅  |     |         |
+| Cancel verification (poll GetDeliveryCancelled)  | ✅  |     | ✅      |
+| Cancel-specific error prompt                    | ✅  |  ✅ |         |
+| Push notification for cancellation confirmation |     |  ✅ | ✅      |
 
-| Area | Impact |
-|------|--------|
-| AdmsService | New `isEligibleForDelayCancellation` method — hits anyCarry API |
-| Hooks | `useIsEligibleForDelayCancellation` — polls every 30s, gated by `DS_APPROACHING_STORE` |
-| Hooks | `useCancelOrderWithConfirmation` — extracted from Progress.tsx for reuse |
-| Components | `DelayCancellationNote` — owns eligibility check + cancel button |
-| Components | `CancelFailed` — specific error prompt for cancel failures |
-| Flow | Cancel verification — polls `GetDeliveryCancelledOrder` after cancel |
+### Tasks
+| # | Task | Est. | Affected Files | Notes |
+|---|------|------|----------------|-------|
+| 1 | Eligibility check + polling hook | 1.5d | `AdmsService.ts`, `useIsEligibleForDelayCancellation.ts` | New service method (fail-closed) + hook polling every 30s, gated by `DS_APPROACHING_STORE`. Scout: existing `AdmsService` pattern in `getDeliveryStatus` is reusable. |
+| 2 | Extract shared cancel flow | 1d | `Progress.tsx`, `useCancelOrderWithConfirmation.ts` | Pull confirm → cancel → redirect logic out of `Progress.tsx` into shared hook. Both existing cancel and delay-cancel reuse it. Architect: `Progress.tsx` has 3 other consumers — verify they still work. |
+| 3 | `DelayCancellationNote` component + cancel verification | 1.5d | `DelayCancellationNote.tsx`, `Progress.tsx`, `OrderCancelled.tsx` | Renders cancel button when eligible, calls shared hook, polls `GetDeliveryCancelledOrder` to confirm. Merged with verification — same user flow. |
+| 4 | `CancelFailed` error prompt + i18n | 0.5d | `CancelFailed.tsx`, `messages/delivery.ts` | Replace generic "Unexpected Error" with cancel-specific message + retry. Scout: `simpler` — follows existing `ErrorPrompt` pattern exactly. |
+| 5 | QA support &amp; bug fixes | 0.5d | — | Buffer for QA back-and-forth on cancel edge cases (timeout, network errors, status race conditions). |
+|   | **Total** | **5d** | | |
 
-## Subtasks
+### Potential Issues
+- **Status race condition:** User taps cancel while delivery status transitions away from `DS_APPROACHING_STORE` — hook must clear eligibility immediately on status change to avoid stale cancel attempts.
+- **Polling cleanup:** If user navigates away mid-poll, both the eligibility interval and the cancellation verification poll must be cleaned up to prevent memory leaks.
+- **Blast radius on Progress.tsx:** Architect flagged 3 other components consuming cancel logic from `Progress.tsx` — extracting the hook requires verifying `OrderDetail`, `DeliveryTracking`, and `StatusBar` still work.
 
-### 1. Add `isEligibleForDelayCancellation` to AdmsService
-- Call anyCarry delay-cancellation eligibility endpoint
-- Return `false` on any error (fail-closed)
-- **Estimate:** 1 SP
+### Questions for PM
+- Should the cancel button show for all delivery types (McDelivery + Okihai) or McDelivery only?
+- If the cancel verification poll times out after 10s, should we show the error prompt or silently retry?
+- The anyCarry eligibility endpoint — is this already deployed to STG, or do we need to coordinate with backend?
 
-### 2. Create `useIsEligibleForDelayCancellation` hook
-- Poll every 30 seconds
-- Only activate when delivery status is `DS_APPROACHING_STORE`
-- Clear interval on unmount or status change
-- **Estimate:** 2 SP
-
-### 3. Extract `useCancelOrderWithConfirmation` hook
-- Pull cancel logic out of `Progress.tsx`
-- Shared confirm → cancel → redirect flow
-- Both existing cancel and new delay-cancel use this hook
-- **Estimate:** 2 SP
-
-### 4. Build `DelayCancellationNote` component
-- Renders cancel button when eligibility hook returns true
-- Calls shared cancel hook on click
-- Disappears when delivery status changes
-- **Estimate:** 2 SP
-
-### 5. Add `CancelFailed` error prompt
-- Replace generic "Unexpected Error" with cancel-specific message
-- Include retry option
-- **Estimate:** 1 SP
-
-### 6. Add cancel verification flow
-- After cancel API succeeds, poll `GetDeliveryCancelledOrder`
-- Confirm cancellation actually went through before redirecting
-- Timeout after 10s with error state
-- **Estimate:** 2 SP
-
-## Design Notes
-
-- **Fail-closed:** If the eligibility API errors, the button stays hidden
-- **Polling cadence:** 30s balances responsiveness vs. API load
-- **Shared hook:** Extracting cancel logic prevents divergence between the two cancel flows
-- **Verification:** Double-checking prevents the user from seeing a "cancelled" state when the backend didn't actually process it
-
-## Total Estimate: 10 SP</pre>
+### Estimation Notes
+Merged analyst's original 6 tasks into 4. Scout confirmed `AdmsService` pattern is reusable (saved 0.5d on task 1). Merged `DelayCancellationNote` + cancel verification into one task — same user flow, same PR. Architect's blast radius flag on `Progress.tsx` kept task 2 at 1d despite scout rating `as-expected`. Added 0.5d QA buffer (5d total qualifies for minimum buffer).</pre>
         </div>
 
         <!-- Preview (rendered) view -->
         <div id="tb-view-preview" style="display:none; padding:20px 24px; font-family:var(--font-sans); color:#e6edf3; line-height:1.7; font-size:clamp(0.7rem, 0.9vw, 0.85rem);">
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:0 0 12px;">Proposal</h2>
-          <p>Add a "Cancel Order" button to the delivery tracking screen when a delivery is running 20+ minutes late. The button lets users bail out of a delayed order instead of waiting indefinitely.</p>
+          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:0 0 12px;">Task Breakdown: MDX-12272 Delay Cancellation Cancel Button</h2>
+          <p style="color:#8b949e; font-style:italic; margin-bottom:16px;">Reviewed by: Requirements Analyst → Codebase Scout + Project Architect → Senior Estimator</p>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Scope</h2>
+          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Scope</h3>
           <table style="width:100%; border-collapse:collapse; font-size:0.9em; margin-bottom:16px;">
             <thead><tr style="border-bottom:2px solid #30363d;">
-              <th style="text-align:left; padding:8px 12px; color:#8b949e; font-weight:600;">Area</th>
-              <th style="text-align:left; padding:8px 12px; color:#8b949e; font-weight:600;">Impact</th>
+              <th style="text-align:left; padding:8px 12px; color:#8b949e; font-weight:600;">Requirement</th>
+              <th style="text-align:center; padding:8px 12px; color:#8b949e; font-weight:600;">Web</th>
+              <th style="text-align:center; padding:8px 12px; color:#8b949e; font-weight:600;">JMA</th>
+              <th style="text-align:center; padding:8px 12px; color:#8b949e; font-weight:600;">Backend</th>
             </tr></thead>
             <tbody>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">AdmsService</td><td style="padding:8px 12px;">New <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">isEligibleForDelayCancellation</code> method — hits anyCarry API</td></tr>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">Hooks</td><td style="padding:8px 12px;"><code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">useIsEligibleForDelayCancellation</code> — polls every 30s, gated by <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></td></tr>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">Hooks</td><td style="padding:8px 12px;"><code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">useCancelOrderWithConfirmation</code> — extracted from Progress.tsx for reuse</td></tr>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">Components</td><td style="padding:8px 12px;"><code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">DelayCancellationNote</code> — owns eligibility check + cancel button</td></tr>
-              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px; color:#58a6ff;">Components</td><td style="padding:8px 12px;"><code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">CancelFailed</code> — specific error prompt for cancel failures</td></tr>
-              <tr><td style="padding:8px 12px; color:#58a6ff;">Flow</td><td style="padding:8px 12px;">Cancel verification — polls <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code> after cancel</td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Show cancel button when delivery 20+ min late</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Poll anyCarry eligibility API every 30s</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Confirm → cancel → redirect shared flow</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center;"></td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Cancel verification (poll GetDeliveryCancelled)</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td></tr>
+              <tr style="border-bottom:1px solid #21262d;"><td style="padding:8px 12px;">Cancel-specific error prompt</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center;"></td></tr>
+              <tr><td style="padding:8px 12px;">Push notification for cancellation confirmation</td><td style="padding:8px 12px; text-align:center;"></td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td><td style="padding:8px 12px; text-align:center; color:#3fb950;">✅</td></tr>
             </tbody>
           </table>
 
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Subtasks</h2>
+          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Tasks</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:0.85em; margin-bottom:16px;">
+            <thead><tr style="border-bottom:2px solid #30363d;">
+              <th style="text-align:left; padding:8px 10px; color:#8b949e; font-weight:600; width:2em;">#</th>
+              <th style="text-align:left; padding:8px 10px; color:#8b949e; font-weight:600;">Task</th>
+              <th style="text-align:center; padding:8px 10px; color:#8b949e; font-weight:600; width:3.5em;">Est.</th>
+              <th style="text-align:left; padding:8px 10px; color:#8b949e; font-weight:600;">Affected Files</th>
+              <th style="text-align:left; padding:8px 10px; color:#8b949e; font-weight:600;">Notes</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #21262d;">
+                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">1</td>
+                <td style="padding:8px 10px;">Eligibility check + polling hook</td>
+                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">1.5d</td>
+                <td style="padding:8px 10px;"><code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">AdmsService.ts</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">useIsEligibleForDelayCancellation.ts</code></td>
+                <td style="padding:8px 10px; color:#8b949e;">New service method (fail-closed) + hook polling every 30s. Scout: existing pattern reusable.</td>
+              </tr>
+              <tr style="border-bottom:1px solid #21262d;">
+                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">2</td>
+                <td style="padding:8px 10px;">Extract shared cancel flow</td>
+                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">1d</td>
+                <td style="padding:8px 10px;"><code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">Progress.tsx</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">useCancelOrderWithConfirmation.ts</code></td>
+                <td style="padding:8px 10px; color:#8b949e;">Architect: 3 other consumers — verify they still work.</td>
+              </tr>
+              <tr style="border-bottom:1px solid #21262d;">
+                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">3</td>
+                <td style="padding:8px 10px;">DelayCancellationNote + cancel verification</td>
+                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">1.5d</td>
+                <td style="padding:8px 10px;"><code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">DelayCancellationNote.tsx</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">Progress.tsx</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">OrderCancelled.tsx</code></td>
+                <td style="padding:8px 10px; color:#8b949e;">Merged component + verification — same user flow, same PR.</td>
+              </tr>
+              <tr style="border-bottom:1px solid #21262d;">
+                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">4</td>
+                <td style="padding:8px 10px;">CancelFailed error prompt + i18n</td>
+                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">0.5d</td>
+                <td style="padding:8px 10px;"><code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">CancelFailed.tsx</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">messages/delivery.ts</code></td>
+                <td style="padding:8px 10px; color:#8b949e;">Scout: <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.85em;">simpler</code> — follows existing ErrorPrompt pattern.</td>
+              </tr>
+              <tr style="border-bottom:1px solid #21262d;">
+                <td style="padding:8px 10px; color:#58a6ff; font-weight:600;">5</td>
+                <td style="padding:8px 10px;">QA support &amp; bug fixes</td>
+                <td style="padding:8px 10px; text-align:center; color:#e6edf3; font-weight:600;">0.5d</td>
+                <td style="padding:8px 10px; color:#8b949e;">—</td>
+                <td style="padding:8px 10px; color:#8b949e;">Buffer for cancel edge cases (timeout, network, status races).</td>
+              </tr>
+              <tr style="border-top:2px solid #30363d;">
+                <td style="padding:8px 10px;"></td>
+                <td style="padding:8px 10px; font-weight:700; color:#e6edf3;">Total</td>
+                <td style="padding:8px 10px; text-align:center; font-weight:700; color:#58a6ff;">5d</td>
+                <td style="padding:8px 10px;"></td>
+                <td style="padding:8px 10px;"></td>
+              </tr>
+            </tbody>
+          </table>
 
-          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">1. Add <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">isEligibleForDelayCancellation</code> to AdmsService</h3>
-          <ul style="padding-left:20px; margin:0 0 8px;">
-            <li>Call anyCarry delay-cancellation eligibility endpoint</li>
-            <li>Return <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">false</code> on any error (fail-closed)</li>
-            <li><strong>Estimate:</strong> 1 SP</li>
+          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Potential Issues</h3>
+          <ul style="padding-left:20px; margin:0 0 16px;">
+            <li><strong>Status race condition:</strong> User taps cancel while delivery status transitions away from <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code> — hook must clear eligibility immediately on status change.</li>
+            <li><strong>Polling cleanup:</strong> Both the eligibility interval and the cancellation verification poll must be cleaned up on unmount to prevent memory leaks.</li>
+            <li><strong>Blast radius on Progress.tsx:</strong> Architect flagged 3 other components consuming cancel logic — extracting the hook requires verifying <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">OrderDetail</code>, <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">DeliveryTracking</code>, and <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">StatusBar</code> still work.</li>
           </ul>
 
-          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">2. Create <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">useIsEligibleForDelayCancellation</code> hook</h3>
-          <ul style="padding-left:20px; margin:0 0 8px;">
-            <li>Poll every 30 seconds</li>
-            <li>Only activate when delivery status is <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></li>
-            <li>Clear interval on unmount or status change</li>
-            <li><strong>Estimate:</strong> 2 SP</li>
+          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Questions for PM</h3>
+          <ul style="padding-left:20px; margin:0 0 16px;">
+            <li>Should the cancel button show for all delivery types (McDelivery + Okihai) or McDelivery only?</li>
+            <li>If the cancel verification poll times out after 10s, should we show the error prompt or silently retry?</li>
+            <li>The anyCarry eligibility endpoint — is this already deployed to STG, or do we need to coordinate with backend?</li>
           </ul>
 
-          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">3. Extract <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">useCancelOrderWithConfirmation</code> hook</h3>
-          <ul style="padding-left:20px; margin:0 0 8px;">
-            <li>Pull cancel logic out of <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">Progress.tsx</code></li>
-            <li>Shared confirm → cancel → redirect flow</li>
-            <li>Both existing cancel and new delay-cancel use this hook</li>
-            <li><strong>Estimate:</strong> 2 SP</li>
-          </ul>
-
-          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">4. Build <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">DelayCancellationNote</code> component</h3>
-          <ul style="padding-left:20px; margin:0 0 8px;">
-            <li>Renders cancel button when eligibility hook returns true</li>
-            <li>Calls shared cancel hook on click</li>
-            <li>Disappears when delivery status changes</li>
-            <li><strong>Estimate:</strong> 2 SP</li>
-          </ul>
-
-          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">5. Add <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">CancelFailed</code> error prompt</h3>
-          <ul style="padding-left:20px; margin:0 0 8px;">
-            <li>Replace generic "Unexpected Error" with cancel-specific message</li>
-            <li>Include retry option</li>
-            <li><strong>Estimate:</strong> 1 SP</li>
-          </ul>
-
-          <h3 style="font-size:1.05em; font-weight:600; color:#e6edf3; margin:16px 0 8px;">6. Add cancel verification flow</h3>
-          <ul style="padding-left:20px; margin:0 0 8px;">
-            <li>After cancel API succeeds, poll <code style="background:#161b22; padding:2px 6px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code></li>
-            <li>Confirm cancellation actually went through before redirecting</li>
-            <li>Timeout after 10s with error state</li>
-            <li><strong>Estimate:</strong> 2 SP</li>
-          </ul>
-
-          <h2 style="font-size:1.3em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Design Notes</h2>
-          <ul style="padding-left:20px; margin:0 0 8px;">
-            <li><strong>Fail-closed:</strong> If the eligibility API errors, the button stays hidden</li>
-            <li><strong>Polling cadence:</strong> 30s balances responsiveness vs. API load</li>
-            <li><strong>Shared hook:</strong> Extracting cancel logic prevents divergence between the two cancel flows</li>
-            <li><strong>Verification:</strong> Double-checking prevents the user from seeing a "cancelled" state when the backend didn't actually process it</li>
-          </ul>
-
-          <p style="margin-top:20px; padding:12px 16px; background:#161b22; border:1px solid #30363d; border-radius:8px; font-weight:600; color:#58a6ff;">Total Estimate: 10 SP</p>
+          <h3 style="font-size:1.1em; font-weight:600; color:#e6edf3; border-bottom:1px solid #30363d; padding-bottom:8px; margin:20px 0 12px;">Estimation Notes</h3>
+          <p style="color:#8b949e;">Merged analyst's original 6 tasks into 4. Scout confirmed <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">AdmsService</code> pattern is reusable (saved 0.5d on task 1). Merged <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">DelayCancellationNote</code> + cancel verification into one task — same user flow, same PR. Architect's blast radius flag on <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code> kept task 2 at 1d despite scout rating <code style="background:#161b22; padding:2px 5px; border-radius:3px; font-size:0.9em;">as-expected</code>. Added 0.5d QA buffer (5d total qualifies for minimum buffer).</p>
         </div>
 
       </div>
