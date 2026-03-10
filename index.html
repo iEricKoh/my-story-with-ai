@@ -3793,8 +3793,8 @@ Merged analyst's original 6 tasks into 4. Scout confirmed `AdmsService` pattern 
 
 When a McDelivery order is running 20+ minutes late, users currently have no way to cancel — they're stuck waiting indefinitely. Adding a cancel button during extended delays gives users control and reduces support escalations.
 
-Ticket: [MDX-12272](https://theplanttokyo.atlassian.net/browse/MDX-12272)
-Requirements: [MDI-498](https://theplanttokyo.atlassian.net/browse/MDI-498)
+Ticket: [MDX-12272](#MDX-12272)
+Requirements: [MDI-498](#MDI-498)
 
 ## What Changes
 
@@ -3815,7 +3815,7 @@ Requirements: [MDI-498](https://theplanttokyo.atlassian.net/browse/MDI-498)
 <h1 style="font-size:1.4em; font-weight:700; color:#1f2328; margin:0 0 16px;">Change: Add Delay Cancellation Cancel Button</h1>
 <h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Why</h2>
 <p>When a McDelivery order is running 20+ minutes late, users currently have no way to cancel — they're stuck waiting indefinitely. Adding a cancel button during extended delays gives users control and reduces support escalations.</p>
-<p style="color:#656d76;">Ticket: <a href="https://theplanttokyo.atlassian.net/browse/MDX-12272" target="_blank" style="color:#0969da; text-decoration:none;">MDX-12272</a><br>Requirements: <a href="https://theplanttokyo.atlassian.net/browse/MDI-498" target="_blank" style="color:#0969da; text-decoration:none;">MDI-498</a></p>
+<p style="color:#656d76;">Ticket: <a href="#MDX-12272" target="_blank" style="color:#0969da; text-decoration:none;">MDX-12272</a><br>Requirements: <a href="#MDI-498" target="_blank" style="color:#0969da; text-decoration:none;">MDI-498</a></p>
 <h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">What Changes</h2>
 <ul style="padding-left:20px; margin:0 0 16px;">
   <li><strong>Eligibility polling:</strong> New service method polls anyCarry API every 30s to check if order qualifies for delay cancellation, gated by <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code> status</li>
@@ -4346,18 +4346,18 @@ Right now only 1 and 3 are wired up. Condition 2 has TODOs in the code.
 When the user taps cancel, we re-check with MDAS first — if the driver picked up the order in the last 30s, we show a "sorry, too late" popup instead of cancelling.
 
 ## Ticket
-[MDX-12272](https://theplanttokyo.atlassian.net/browse/MDX-12272)
+[MDX-12272](#MDX-12272)
 
 ## Design
 - JMA cancel button / cancel flow: [Figma](https://www.figma.com/design/...)
 
 ## Notes
 
-- **Backend not ready**: `is_cancel_allowed` from MBE doesn't exist yet ([MDX-12274](https://theplanttokyo.atlassian.net/browse/MDX-12274)). Stubbed with TODOs for now.
+- **Backend not ready**: `is_cancel_allowed` from MBE doesn't exist yet ([MDX-12274](#MDX-12274)). Stubbed with TODOs for now.
 - **anyCarry API was 404**: as of 2/24 it wasn't live. Use `force_redisplay=true` in dev to test.
 - **Scope got bigger**: originally just batched orders, but the batching flag turned out to be unreliable, so it now covers all UberEats 3PR orders.
 - **Refactor commits**: `fetchWithAuth` extraction, `useCancelOrderWithConfirmation` extraction, `isCancelledStatus` helper, and cancel error message improvement — all pure refactors, just prep work.
-- **Requirements**: [MDI-547](https://theplanttokyo.atlassian.net/browse/MDI-547) · System design
+- **Requirements**: [MDI-547](#MDI-547) · System design
 - **Slack threads**: [#mcd-delivery-cn technical discussion](https://theplant.slack.com/archives/...) · [#mcd-delivery coordination](https://theplant.slack.com/archives/...)</pre>
         </div>
 
@@ -4390,7 +4390,7 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
           <p>When the user taps cancel, we re-check with MDAS first — if the driver picked up the order in the last 30s, we show a "sorry, too late" popup instead of cancelling.</p>
 
           <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Ticket</h2>
-          <p><a href="https://theplanttokyo.atlassian.net/browse/MDX-12272" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-12272</a></p>
+          <p><a href="#MDX-12272" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-12272</a></p>
 
           <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Design</h2>
           <ul style="padding-left:20px; margin:0;">
@@ -4399,11 +4399,11 @@ When the user taps cancel, we re-check with MDAS first — if the driver picked 
 
           <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Notes</h2>
           <ul style="padding-left:20px; margin:0;">
-            <li><strong>Backend not ready</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">is_cancel_allowed</code> from MBE doesn't exist yet (<a href="https://theplanttokyo.atlassian.net/browse/MDX-12274" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-12274</a>). Stubbed with TODOs for now.</li>
+            <li><strong>Backend not ready</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">is_cancel_allowed</code> from MBE doesn't exist yet (<a href="#MDX-12274" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-12274</a>). Stubbed with TODOs for now.</li>
             <li><strong>anyCarry API was 404</strong>: as of 2/24 it wasn't live. Use <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">force_redisplay=true</code> in dev to test.</li>
             <li><strong>Scope got bigger</strong>: originally just batched orders, but the batching flag turned out to be unreliable, so it now covers all UberEats 3PR orders.</li>
             <li><strong>Refactor commits</strong>: <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">fetchWithAuth</code> extraction, <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">useCancelOrderWithConfirmation</code> extraction, <code style="background:rgba(175,184,193,0.2); padding:2px 6px; border-radius:4px; font-family:var(--font-mono); font-size:0.9em;">isCancelledStatus</code> helper, and cancel error message improvement — all pure refactors, just prep work.</li>
-            <li><strong>Requirements</strong>: <a href="https://theplanttokyo.atlassian.net/browse/MDI-547" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDI-547</a> · System design</li>
+            <li><strong>Requirements</strong>: <a href="#MDI-547" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDI-547</a> · System design</li>
             <li><strong>Slack threads</strong>: #mcd-delivery-cn technical discussion · #mcd-delivery coordination</li>
           </ul>
         </div>
@@ -4532,8 +4532,8 @@ Or use an Incognito/Private window for a fresh session.
 
 ## References
 
-- Requirements: [MDI-432](https://theplanttokyo.atlassian.net/browse/MDI-432)
-- Epic: [MDX-11961](https://theplanttokyo.atlassian.net/browse/MDX-11961)</pre>
+- Requirements: [MDI-432](#MDI-432)
+- Epic: [MDX-11961](#MDX-11961)</pre>
         </div>
 
         <!-- Preview (rendered) view -->
@@ -4559,8 +4559,8 @@ Or use an Incognito/Private window for a fresh session.
 
           <h2 style="font-size:1.3em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">References</h2>
           <ul style="padding-left:20px; margin:0;">
-            <li>Requirements: <a href="https://theplanttokyo.atlassian.net/browse/MDI-432" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDI-432</a></li>
-            <li>Epic: <a href="https://theplanttokyo.atlassian.net/browse/MDX-11961" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-11961</a></li>
+            <li>Requirements: <a href="#MDI-432" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDI-432</a></li>
+            <li>Epic: <a href="#MDX-11961" target="_blank" rel="noopener" style="color:#0969da; text-decoration:none;">MDX-11961</a></li>
           </ul>
         </div>
 
