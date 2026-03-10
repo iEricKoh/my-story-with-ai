@@ -3599,7 +3599,7 @@ $ /loop 5m /babysit-prs
       </div>
 
       <!-- Tab content area -->
-      <div id="tb-content-area" style="flex:1; overflow-y:auto; min-height:0;">
+      <div id="tb-content-area" style="flex:1; overflow-y:auto; min-height:0; position:relative;">
 
         <!-- ===== BREAKDOWN PANEL ===== -->
         <div id="tb-panel-breakdown">
@@ -3751,7 +3751,7 @@ Merged analyst's original 6 tasks into 4. Scout confirmed `AdmsService` pattern 
         </div><!-- /tb-panel-breakdown -->
 
         <!-- ===== OPENSPEC PANEL ===== -->
-        <div id="tb-panel-openspec" style="display:none; flex:1; min-height:0;">
+        <div id="tb-panel-openspec" style="display:none; position:absolute; inset:0;">
           <div style="display:flex; height:100%;">
 
             <!-- File sidebar (does not scroll with content) -->
@@ -5322,17 +5322,8 @@ function switchTBTab(tab) {
   // Toggle panels
   document.getElementById('tb-panel-breakdown').style.display = tab === 'breakdown' ? '' : 'none';
   document.getElementById('tb-panel-openspec').style.display = tab === 'openspec' ? 'flex' : 'none';
-  // OpenSpec handles its own scroll — parent becomes flex container
-  var area = document.getElementById('tb-content-area');
-  if (tab === 'openspec') {
-    area.style.overflow = 'hidden';
-    area.style.display = 'flex';
-    area.style.flexDirection = 'column';
-  } else {
-    area.style.overflow = '';
-    area.style.overflowY = 'auto';
-    area.style.display = '';
-  }
+  // When openspec is active, hide parent scroll (openspec scrolls internally)
+  document.getElementById('tb-content-area').style.overflowY = tab === 'openspec' ? 'hidden' : 'auto';
 }
 
 function switchOSFile(file) {
