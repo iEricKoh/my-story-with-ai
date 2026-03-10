@@ -3599,7 +3599,7 @@ $ /loop 5m /babysit-prs
       </div>
 
       <!-- Tab content area -->
-      <div style="flex:1; overflow-y:auto; min-height:0;">
+      <div id="tb-content-area" style="flex:1; overflow-y:auto; min-height:0;">
 
         <!-- ===== BREAKDOWN PANEL ===== -->
         <div id="tb-panel-breakdown">
@@ -3751,11 +3751,11 @@ Merged analyst's original 6 tasks into 4. Scout confirmed `AdmsService` pattern 
         </div><!-- /tb-panel-breakdown -->
 
         <!-- ===== OPENSPEC PANEL ===== -->
-        <div id="tb-panel-openspec" style="display:none; height:100%;">
+        <div id="tb-panel-openspec" style="display:none; flex:1; min-height:0;">
           <div style="display:flex; height:100%;">
 
-            <!-- File sidebar -->
-            <div style="width:clamp(180px, 22%, 220px); border-right:1px solid #d1d9e0; background:#f6f8fa; padding:14px 0; flex-shrink:0; overflow-y:auto;">
+            <!-- File sidebar (does not scroll with content) -->
+            <div style="width:clamp(180px, 22%, 220px); border-right:1px solid #d1d9e0; background:#f6f8fa; padding:14px 0; flex-shrink:0;">
               <div style="padding:0 14px 8px; font-family:var(--font-mono); font-size:clamp(0.55rem, 0.7vw, 0.62rem); color:#656d76; text-transform:uppercase; letter-spacing:0.08em; font-weight:600;">openspec/changes/mdx-12272</div>
               <button class="os-file active" data-file="proposal" onclick="switchOSFile('proposal')" style="display:flex; align-items:center; gap:6px; width:100%; padding:6px 14px; border:none; background:#ffffff; color:#1f2328; font-family:var(--font-mono); font-size:clamp(0.58rem, 0.75vw, 0.68rem); cursor:pointer; text-align:left; border-left:2px solid #0969da;">
                 <span style="color:#0969da;">&#9656;</span> proposal.md
@@ -3773,10 +3773,20 @@ Merged analyst's original 6 tasks into 4. Scout confirmed `AdmsService` pattern 
             </div>
 
             <!-- File content -->
-            <div style="flex:1; overflow-y:auto; min-height:0;">
+            <div style="flex:1; display:flex; flex-direction:column; min-height:0;">
+
+              <div style="padding:10px 20px 0; display:flex; gap:0; flex-shrink:0;">
+                <div style="display:flex; border:1px solid #d1d9e0; border-radius:6px; overflow:hidden;">
+                  <button class="os-toggle-btn active" data-mode="raw" onclick="toggleOSView('raw')" style="padding:3px 10px; font-family:var(--font-mono); font-size:clamp(0.55rem, 0.7vw, 0.65rem); border:none; cursor:pointer; background:#f6f8fa; color:#1f2328;">Raw</button>
+                  <button class="os-toggle-btn" data-mode="preview" onclick="toggleOSView('preview')" style="padding:3px 10px; font-family:var(--font-mono); font-size:clamp(0.55rem, 0.7vw, 0.65rem); border:none; border-left:1px solid #d1d9e0; cursor:pointer; background:transparent; color:#656d76;">Preview</button>
+                </div>
+              </div>
+
+              <div style="flex:1; overflow-y:auto; min-height:0;">
 
               <!-- proposal.md -->
               <div class="os-content active" data-file="proposal" style="padding:20px 24px;">
+                <div class="os-raw">
                 <pre style="font-family:var(--font-mono); font-size:clamp(0.58rem, 0.75vw, 0.68rem); line-height:1.65; color:#1f2328; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:18px 22px;"># Change: Add Delay Cancellation Cancel Button
 
 ## Why
@@ -3800,10 +3810,33 @@ Requirements: [MDI-498](https://theplanttokyo.atlassian.net/browse/MDI-498)
 - Affected areas: DeliveryStatus/Progress (cancel flow extraction + new component), AdmsService (new API method)
 - High-risk: `Progress.tsx` has 3 other consumers of cancel logic; extraction must verify `OrderDetail`, `DeliveryTracking`, and `StatusBar` still work
 - Estimated effort: 5d (4 tasks + 0.5d QA buffer)</pre>
+                </div>
+                <div class="os-preview" style="display:none; padding:0; font-family:var(--font-sans); color:#1f2328; line-height:1.7; font-size:clamp(0.68rem, 0.88vw, 0.82rem);">
+<h1 style="font-size:1.4em; font-weight:700; color:#1f2328; margin:0 0 16px;">Change: Add Delay Cancellation Cancel Button</h1>
+<h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Why</h2>
+<p>When a McDelivery order is running 20+ minutes late, users currently have no way to cancel — they're stuck waiting indefinitely. Adding a cancel button during extended delays gives users control and reduces support escalations.</p>
+<p style="color:#656d76;">Ticket: <a href="https://theplanttokyo.atlassian.net/browse/MDX-12272" target="_blank" style="color:#0969da; text-decoration:none;">MDX-12272</a><br>Requirements: <a href="https://theplanttokyo.atlassian.net/browse/MDI-498" target="_blank" style="color:#0969da; text-decoration:none;">MDI-498</a></p>
+<h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">What Changes</h2>
+<ul style="padding-left:20px; margin:0 0 16px;">
+  <li><strong>Eligibility polling:</strong> New service method polls anyCarry API every 30s to check if order qualifies for delay cancellation, gated by <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code> status</li>
+  <li><strong>Shared cancel flow:</strong> Extract confirm → cancel → redirect logic from <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code> into reusable <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">useCancelOrderWithConfirmation</code> hook</li>
+  <li><strong>Cancel button UI:</strong> New <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DelayCancellationNote</code> component renders cancel button when eligible, with cancel verification</li>
+  <li><strong>Error handling:</strong> Cancel-specific error prompt replaces generic "Unexpected Error"</li>
+  <li style="color:#656d76;">Out of scope (JMA): Native app cancel button UI — handled by mobile team</li>
+  <li style="color:#656d76;">Out of scope (Backend): anyCarry eligibility API endpoint — already deployed</li>
+</ul>
+<h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Impact</h2>
+<ul style="padding-left:20px; margin:0;">
+  <li><strong>Affected areas:</strong> DeliveryStatus/Progress (cancel flow extraction + new component), AdmsService (new API method)</li>
+  <li><strong>High-risk:</strong> <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code> has 3 other consumers of cancel logic; extraction must verify <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">OrderDetail</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DeliveryTracking</code>, and <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">StatusBar</code> still work</li>
+  <li><strong>Estimated effort:</strong> 5d (4 tasks + 0.5d QA buffer)</li>
+</ul>
+                </div>
               </div>
 
               <!-- design.md -->
               <div class="os-content" data-file="design" style="display:none; padding:20px 24px;">
+                <div class="os-raw">
                 <pre style="font-family:var(--font-mono); font-size:clamp(0.58rem, 0.75vw, 0.68rem); line-height:1.65; color:#1f2328; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:18px 22px;">## Context
 
 The delivery status screen (`Progress.tsx`) currently owns the cancel order flow inline. MDX-12272 adds a second cancel trigger — a delay-cancellation button that appears when anyCarry reports a 20+ minute delay. Both triggers need to share the same confirm → cancel → redirect logic.
@@ -3828,10 +3861,36 @@ The Architect identified that `Progress.tsx` is consumed by 3 other components (
 - Should the cancel button show for all delivery types (McDelivery + Okihai) or McDelivery only?
 - If verification poll times out after 10s, show error prompt or silently retry?
 - The anyCarry eligibility endpoint — confirmed deployed to STG?</pre>
+                </div>
+                <div class="os-preview" style="display:none; padding:0; font-family:var(--font-sans); color:#1f2328; line-height:1.7; font-size:clamp(0.68rem, 0.88vw, 0.82rem);">
+<h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:0 0 12px;">Context</h2>
+<p>The delivery status screen (<code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code>) currently owns the cancel order flow inline. MDX-12272 adds a second cancel trigger — a delay-cancellation button that appears when anyCarry reports a 20+ minute delay. Both triggers need to share the same confirm → cancel → redirect logic.</p>
+<p>The Architect identified that <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code> is consumed by 3 other components (<code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">OrderDetail</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DeliveryTracking</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">StatusBar</code>), making the cancel logic extraction a blast-radius concern.</p>
+<h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Decisions</h2>
+<ul style="padding-left:20px; margin:0 0 16px;">
+  <li><strong>Extract cancel hook first (Task 2):</strong> Pull <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">useCancelOrderWithConfirmation</code> out of <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code> before building the new component. This ensures both cancel flows share identical logic from day one — no divergence.</li>
+  <li><strong>Fail-closed eligibility:</strong> <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">AdmsService.isEligibleForDelayCancellation</code> returns <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">false</code> on any error. The cancel button stays hidden if the API is flaky.</li>
+  <li><strong>Poll-based eligibility (30s):</strong> WebSocket would be more responsive but anyCarry doesn't support it. 30s polling balances UX vs. API load. Polling only activates when status is <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code>.</li>
+  <li><strong>Cancel verification:</strong> After cancel API success, poll <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code> for up to 10s to confirm backend processed it.</li>
+</ul>
+<h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Risks / Trade-offs</h2>
+<ul style="padding-left:20px; margin:0 0 16px;">
+  <li><strong style="color:#cf222e;">Blast radius on Progress.tsx (HIGH)</strong> → Mitigate by running existing test suites for all 3 consumer components after extraction.</li>
+  <li><strong style="color:#bf8700;">Status race condition (MEDIUM)</strong> → Hook must watch delivery status changes and immediately clear eligibility. Use cleanup in useEffect.</li>
+  <li><strong style="color:#1a7f37;">Polling memory leak (LOW)</strong> → Both polls must clear on unmount. Standard useEffect cleanup.</li>
+</ul>
+<h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:20px 0 12px;">Open Questions</h2>
+<ul style="padding-left:20px; margin:0;">
+  <li>Should the cancel button show for all delivery types (McDelivery + Okihai) or McDelivery only?</li>
+  <li>If verification poll times out after 10s, show error prompt or silently retry?</li>
+  <li>The anyCarry eligibility endpoint — confirmed deployed to STG?</li>
+</ul>
+                </div>
               </div>
 
               <!-- tasks.md -->
               <div class="os-content" data-file="tasks" style="display:none; padding:20px 24px;">
+                <div class="os-raw">
                 <pre style="font-family:var(--font-mono); font-size:clamp(0.58rem, 0.75vw, 0.68rem); line-height:1.65; color:#1f2328; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:18px 22px;"># Tasks: Delay Cancellation Cancel Button
 
 ## 1. Eligibility check + polling hook (1.5d)
@@ -3863,10 +3922,50 @@ The Architect identified that `Progress.tsx` is consumed by 3 other components (
 ## 5. QA support &amp; bug fixes (0.5d)
 - [ ] 5.1 Support QA testing on STG — cancel edge cases (timeout, network errors, status race conditions)
 - [ ] 5.2 Fix reported bugs from QA cycle</pre>
+                </div>
+                <div class="os-preview" style="display:none; padding:0; font-family:var(--font-sans); color:#1f2328; line-height:1.7; font-size:clamp(0.68rem, 0.88vw, 0.82rem);">
+<h1 style="font-size:1.3em; font-weight:700; color:#1f2328; margin:0 0 20px;">Tasks: Delay Cancellation Cancel Button</h1>
+<h2 style="font-size:1.05em; font-weight:600; color:#1f2328; margin:16px 0 10px;">1. Eligibility check + polling hook <span style="color:#656d76; font-weight:400;">(1.5d)</span></h2>
+<ul style="padding-left:6px; margin:0 0 12px; list-style:none;">
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>1.1 Add <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">isEligibleForDelayCancellation</code> method to <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">AdmsService.ts</code> — call anyCarry endpoint, return <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">false</code> on error</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>1.2 Create <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">useIsEligibleForDelayCancellation.ts</code> hook — poll every 30s, gated by <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>1.3 Add cleanup: clear interval on unmount or status change</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>1.4 Write unit tests for service method and hook</span></li>
+</ul>
+<h2 style="font-size:1.05em; font-weight:600; color:#1f2328; margin:16px 0 10px;">2. Extract shared cancel flow <span style="color:#656d76; font-weight:400;">(1d)</span></h2>
+<ul style="padding-left:6px; margin:0 0 12px; list-style:none;">
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>2.1 Create <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">useCancelOrderWithConfirmation.ts</code> — extract logic from <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code></span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>2.2 Refactor <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code> to use the new shared hook</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>2.3 Verify <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">OrderDetail</code>, <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DeliveryTracking</code>, and <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">StatusBar</code> still work</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>2.4 Write unit tests, run existing suites for consumers</span></li>
+</ul>
+<h2 style="font-size:1.05em; font-weight:600; color:#1f2328; margin:16px 0 10px;">3. DelayCancellationNote + cancel verification <span style="color:#656d76; font-weight:400;">(1.5d)</span></h2>
+<ul style="padding-left:6px; margin:0 0 12px; list-style:none;">
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>3.1 Create <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DelayCancellationNote.tsx</code> — renders cancel button when eligible</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>3.2 Wire to <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">useCancelOrderWithConfirmation</code> hook</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>3.3 Add cancel verification: poll <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code> for up to 10s</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>3.4 Handle verification timeout — show CancelFailed prompt</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>3.5 Integrate into <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">Progress.tsx</code></span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>3.6 Write unit tests for rendering, polling, and timeout</span></li>
+</ul>
+<h2 style="font-size:1.05em; font-weight:600; color:#1f2328; margin:16px 0 10px;">4. CancelFailed error prompt + i18n <span style="color:#656d76; font-weight:400;">(0.5d)</span></h2>
+<ul style="padding-left:6px; margin:0 0 12px; list-style:none;">
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>4.1 Create <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">CancelFailed.tsx</code> following existing ErrorPrompt pattern</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>4.2 Add i18n messages to <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">messages/delivery.ts</code> (JA + EN)</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>4.3 Include retry button that re-triggers cancel flow</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>4.4 Write unit tests for rendering and retry action</span></li>
+</ul>
+<h2 style="font-size:1.05em; font-weight:600; color:#1f2328; margin:16px 0 10px;">5. QA support &amp; bug fixes <span style="color:#656d76; font-weight:400;">(0.5d)</span></h2>
+<ul style="padding-left:6px; margin:0 0 12px; list-style:none;">
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>5.1 Support QA testing on STG — cancel edge cases</span></li>
+  <li style="display:flex; gap:8px; margin-bottom:5px;"><span style="color:#656d76;">&#9744;</span> <span>5.2 Fix reported bugs from QA cycle</span></li>
+</ul>
+                </div>
               </div>
 
               <!-- spec.md -->
               <div class="os-content" data-file="spec" style="display:none; padding:20px 24px;">
+                <div class="os-raw">
                 <pre style="font-family:var(--font-mono); font-size:clamp(0.58rem, 0.75vw, 0.68rem); line-height:1.65; color:#1f2328; white-space:pre-wrap; word-wrap:break-word; margin:0; background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:18px 22px;"># McDelivery Delivery Status — Delay Cancellation
 
 ## ADDED Requirements
@@ -3957,8 +4056,121 @@ The system SHALL display a cancel-specific error message when cancellation fails
 - **GIVEN** the CancelFailed error prompt is displayed
 - **WHEN** user taps the retry button
 - **THEN** the system SHALL re-initiate the cancel flow from the confirmation step</pre>
+                </div>
+                <div class="os-preview" style="display:none; padding:0; font-family:var(--font-sans); color:#1f2328; line-height:1.7; font-size:clamp(0.68rem, 0.88vw, 0.82rem);">
+<h1 style="font-size:1.3em; font-weight:700; color:#1f2328; margin:0 0 16px;">McDelivery Delivery Status — Delay Cancellation</h1>
+<h2 style="font-size:1.15em; font-weight:600; color:#1f2328; border-bottom:1px solid #d1d9e0; padding-bottom:8px; margin:16px 0 12px;">ADDED Requirements</h2>
+
+<h3 style="font-size:1em; font-weight:600; color:#1f2328; margin:16px 0 8px;">Requirement: Delay Cancellation Eligibility Check</h3>
+<p>The system SHALL poll the anyCarry API every 30 seconds to determine if an order is eligible for delay cancellation. Eligibility checking SHALL only be active when the delivery status is <code style="background:#f6f8fa; padding:2px 5px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code>.</p>
+
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: Order is eligible for delay cancellation</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> delivery status is <code style="background:#fff; padding:1px 4px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></div>
+    <div><strong style="color:#0969da;">AND</strong> the anyCarry API returns eligible = true</div>
+    <div><strong style="color:#0969da;">WHEN</strong> the eligibility poll completes</div>
+    <div><strong style="color:#1a7f37;">THEN</strong> the delay cancellation button SHALL be displayed</div>
+  </div>
+</div>
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: Order is not eligible</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> delivery status is <code style="background:#fff; padding:1px 4px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></div>
+    <div><strong style="color:#0969da;">AND</strong> the anyCarry API returns eligible = false</div>
+    <div><strong style="color:#0969da;">WHEN</strong> the eligibility poll completes</div>
+    <div><strong style="color:#cf222e;">THEN</strong> the delay cancellation button SHALL NOT be displayed</div>
+  </div>
+</div>
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: Eligibility API errors (fail-closed)</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> delivery status is <code style="background:#fff; padding:1px 4px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></div>
+    <div><strong style="color:#0969da;">AND</strong> the anyCarry API request fails with any error</div>
+    <div><strong style="color:#0969da;">WHEN</strong> the eligibility poll completes</div>
+    <div><strong style="color:#cf222e;">THEN</strong> the delay cancellation button SHALL NOT be displayed</div>
+    <div><strong style="color:#1a7f37;">AND</strong> the system SHALL retry on the next 30s polling cycle</div>
+  </div>
+</div>
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: Status changes away from approaching store</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> delivery status was <code style="background:#fff; padding:1px 4px; border-radius:3px; font-size:0.9em;">DS_APPROACHING_STORE</code></div>
+    <div><strong style="color:#0969da;">AND</strong> the delay cancellation button was displayed</div>
+    <div><strong style="color:#0969da;">WHEN</strong> delivery status changes to any other status</div>
+    <div><strong style="color:#cf222e;">THEN</strong> the delay cancellation button SHALL be immediately hidden</div>
+    <div><strong style="color:#cf222e;">AND</strong> eligibility polling SHALL stop</div>
+  </div>
+</div>
+
+<hr style="border:none; border-top:1px solid #d1d9e0; margin:20px 0;">
+
+<h3 style="font-size:1em; font-weight:600; color:#1f2328; margin:16px 0 8px;">Requirement: Delay Cancellation Flow</h3>
+<p>The system SHALL allow users to cancel a delayed order through a confirmation dialog, using the same confirm → cancel → redirect flow as the existing cancel action.</p>
+
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: User initiates delay cancellation</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> the delay cancellation button is displayed</div>
+    <div><strong style="color:#0969da;">WHEN</strong> user taps the cancel button</div>
+    <div><strong style="color:#1a7f37;">THEN</strong> the system SHALL show a confirmation dialog</div>
+  </div>
+</div>
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: User confirms cancellation</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> the confirmation dialog is displayed</div>
+    <div><strong style="color:#0969da;">WHEN</strong> user confirms the cancellation</div>
+    <div><strong style="color:#1a7f37;">THEN</strong> the system SHALL call the cancel API</div>
+    <div><strong style="color:#1a7f37;">AND</strong> poll <code style="background:#fff; padding:1px 4px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code> to verify</div>
+  </div>
+</div>
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: Cancel verification succeeds</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> user confirmed cancellation</div>
+    <div><strong style="color:#0969da;">AND</strong> the cancel API returned success</div>
+    <div><strong style="color:#0969da;">WHEN</strong> <code style="background:#fff; padding:1px 4px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code> confirms the order is cancelled</div>
+    <div><strong style="color:#1a7f37;">THEN</strong> the system SHALL redirect to the cancelled order screen</div>
+  </div>
+</div>
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: Cancel verification times out</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> user confirmed cancellation</div>
+    <div><strong style="color:#0969da;">AND</strong> the cancel API returned success</div>
+    <div><strong style="color:#0969da;">WHEN</strong> <code style="background:#fff; padding:1px 4px; border-radius:3px; font-size:0.9em;">GetDeliveryCancelledOrder</code> does not confirm within 10 seconds</div>
+    <div><strong style="color:#cf222e;">THEN</strong> the system SHALL display the CancelFailed error prompt</div>
+    <div><strong style="color:#1a7f37;">AND</strong> the error prompt SHALL include a retry option</div>
+  </div>
+</div>
+
+<hr style="border:none; border-top:1px solid #d1d9e0; margin:20px 0;">
+
+<h3 style="font-size:1em; font-weight:600; color:#1f2328; margin:16px 0 8px;">Requirement: Cancel-specific Error Handling</h3>
+<p>The system SHALL display a cancel-specific error message when cancellation fails, instead of the generic "Unexpected Error" prompt.</p>
+
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: Cancel API fails</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> user confirmed cancellation</div>
+    <div><strong style="color:#0969da;">WHEN</strong> the cancel API returns an error</div>
+    <div><strong style="color:#cf222e;">THEN</strong> the system SHALL display the CancelFailed error prompt</div>
+    <div><strong style="color:#1a7f37;">AND</strong> the prompt SHALL include a retry button</div>
+  </div>
+</div>
+<div style="background:#f6f8fa; border:1px solid #d1d9e0; border-radius:8px; padding:12px 16px; margin:8px 0 12px;">
+  <div style="font-weight:600; font-size:0.9em; color:#656d76; margin-bottom:6px;">Scenario: User retries after failure</div>
+  <div style="font-size:0.9em; line-height:1.8;">
+    <div><strong style="color:#0969da;">GIVEN</strong> the CancelFailed error prompt is displayed</div>
+    <div><strong style="color:#0969da;">WHEN</strong> user taps the retry button</div>
+    <div><strong style="color:#1a7f37;">THEN</strong> the system SHALL re-initiate the cancel flow from the confirmation step</div>
+  </div>
+</div>
+                </div>
               </div>
 
+              </div>
             </div>
           </div>
         </div><!-- /tb-panel-openspec -->
@@ -5109,7 +5321,18 @@ function switchTBTab(tab) {
   });
   // Toggle panels
   document.getElementById('tb-panel-breakdown').style.display = tab === 'breakdown' ? '' : 'none';
-  document.getElementById('tb-panel-openspec').style.display = tab === 'openspec' ? '' : 'none';
+  document.getElementById('tb-panel-openspec').style.display = tab === 'openspec' ? 'flex' : 'none';
+  // OpenSpec handles its own scroll — parent becomes flex container
+  var area = document.getElementById('tb-content-area');
+  if (tab === 'openspec') {
+    area.style.overflow = 'hidden';
+    area.style.display = 'flex';
+    area.style.flexDirection = 'column';
+  } else {
+    area.style.overflow = '';
+    area.style.overflowY = 'auto';
+    area.style.display = '';
+  }
 }
 
 function switchOSFile(file) {
@@ -5126,6 +5349,17 @@ function switchOSFile(file) {
   document.querySelectorAll('.os-content').forEach(el => {
     el.style.display = el.dataset.file === file ? '' : 'none';
   });
+}
+
+function toggleOSView(mode) {
+  document.querySelectorAll('.os-toggle-btn').forEach(btn => {
+    const active = btn.dataset.mode === mode;
+    btn.classList.toggle('active', active);
+    btn.style.background = active ? '#f6f8fa' : 'transparent';
+    btn.style.color = active ? '#1f2328' : '#656d76';
+  });
+  document.querySelectorAll('.os-raw').forEach(el => el.style.display = mode === 'raw' ? '' : 'none');
+  document.querySelectorAll('.os-preview').forEach(el => el.style.display = mode === 'preview' ? '' : 'none');
 }
 
 /* — Task Breakdown: mark output step clickable after CSS animation — */
