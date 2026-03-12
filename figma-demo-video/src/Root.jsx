@@ -5,6 +5,7 @@ import { TaskBreakdownDemo } from "./TaskBreakdownDemo";
 import { QAHandoffDemo } from "./QAHandoffDemo";
 import { TypelessDemo, TypelessNaturalSpeech, TypelessAskAnything, TypelessTranslation } from "./TypelessDemo";
 import { PRGeneratorDemo } from "./PRGeneratorDemo";
+import { BeanAndBrewShowcase } from "./BeanAndBrewShowcase";
 
 export const RemotionRoot = () => {
   return (
@@ -77,6 +78,14 @@ export const RemotionRoot = () => {
         id="TypelessTranslation"
         component={TypelessTranslation}
         durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BeanAndBrewShowcase"
+        component={BeanAndBrewShowcase}
+        durationInFrames={1860}
         fps={30}
         width={1920}
         height={1080}
